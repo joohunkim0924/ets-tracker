@@ -71,10 +71,28 @@ export default function Settings() {
 
       <div className="flex-1 px-6 space-y-5">
         <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">NAME</Label>
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">LAST NAME</Label>
           <Input
-            value={data.soldier_name}
-            onChange={(e) => setData({ ...data, soldier_name: e.target.value })}
+            value={data.last_name}
+            onChange={(e) => setData({ ...data, last_name: e.target.value })}
+            className="bg-secondary border-border text-foreground font-inter h-12"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">FIRST NAME</Label>
+          <Input
+            value={data.first_name}
+            onChange={(e) => setData({ ...data, first_name: e.target.value })}
+            className="bg-secondary border-border text-foreground font-inter h-12"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PREFERRED NAME <span className="normal-case tracking-normal text-muted-foreground/50">(optional)</span></Label>
+          <Input
+            value={data.preferred_name}
+            onChange={(e) => setData({ ...data, preferred_name: e.target.value })}
             className="bg-secondary border-border text-foreground font-inter h-12"
           />
         </div>

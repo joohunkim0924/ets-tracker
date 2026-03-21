@@ -11,7 +11,7 @@ const RANKS = [
 ];
 
 export default function StepIdentity({ data, onChange, onNext }) {
-  const canProceed = data.name && data.rank && data.mos;
+  const canProceed = data.last_name && data.first_name && data.rank && data.mos;
 
   return (
     <div className="space-y-6">
@@ -23,12 +23,36 @@ export default function StepIdentity({ data, onChange, onNext }) {
       <div className="space-y-5">
         <div className="space-y-2">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
-            NAME
+            LAST NAME
           </Label>
           <Input
-            placeholder="Last, First"
-            value={data.name || ''}
-            onChange={(e) => onChange({ ...data, name: e.target.value })}
+            placeholder="Smith"
+            value={data.last_name || ''}
+            onChange={(e) => onChange({ ...data, last_name: e.target.value })}
+            className="bg-secondary border-border text-foreground font-inter placeholder:text-muted-foreground/50 h-12"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
+            FIRST NAME
+          </Label>
+          <Input
+            placeholder="John"
+            value={data.first_name || ''}
+            onChange={(e) => onChange({ ...data, first_name: e.target.value })}
+            className="bg-secondary border-border text-foreground font-inter placeholder:text-muted-foreground/50 h-12"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
+            PREFERRED NAME <span className="text-muted-foreground/50 normal-case tracking-normal">(optional)</span>
+          </Label>
+          <Input
+            placeholder="e.g. Johnny"
+            value={data.preferred_name || ''}
+            onChange={(e) => onChange({ ...data, preferred_name: e.target.value })}
             className="bg-secondary border-border text-foreground font-inter placeholder:text-muted-foreground/50 h-12"
           />
         </div>

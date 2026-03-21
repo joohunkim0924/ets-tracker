@@ -86,7 +86,10 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col items-center px-6 pt-4">
         {/* Days remaining - hero number */}
         <CountdownDisplay
-          daysRemaining={Math.max(daysRemaining, 0)}
+          daysRemaining={daysRemaining}
+          hoursRemaining={hoursRemaining}
+          minutesRemaining={minutesRemaining}
+          secondsRemaining={secondsRemaining}
           etsDate={format(etsDate, 'dd MMM yyyy').toUpperCase()}
         />
 

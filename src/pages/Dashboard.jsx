@@ -33,16 +33,29 @@ export default function Dashboard() {
     );
   }
 
-  const today = new Date();
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const enlistmentDate = parseISO(user.enlistment_date);
   const etsDate = parseISO(user.ets_date);
   const pcsDate = user.pcs_date ? parseISO(user.pcs_date) : null;
 
+  const totalMs = etsDate - enlistmentDate;
+  const elapsedMs = now - enlistmentDate;
+  const percentage = Math.min(Math.max((elapsedMs / totalMs) * 100, 0), 100);
+
   const totalDays = differenceInDays(etsDate, enlistmentDate);
-  const daysServed = differenceInDays(today, enlistmentDate);
-  const daysRemaining = differenceInDays(etsDate, today);
-  const percentage = Math.min(Math.max((daysServed / totalDays) * 100, 0), 100);
-  const pcsDaysRemaining = pcsDate ? differenceInDays(pcsDate, today) : null;
+  const daysServed = differenceInDays(now, enlistmentDate);
+  const msRemaining = Math.max(etsDate - now, 0);
+  const daysRemaining = Math.floor(msRemaining / (1000 * 60 * 60 * 24));
+  const hoursRemaining = Math.floor((msRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutesRemaining = Math.floor((msRemaining % (1000 * 60 * 60)) / (1000 * 60));
+  const secondsRemaining = Math.floor((msRemaining % (1000 * 60)) / 1000);
+  const pcsDaysRemaining = pcsDate ? differenceInDays(pcsDate, now) : null;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

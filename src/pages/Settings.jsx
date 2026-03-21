@@ -114,11 +114,18 @@ export default function Settings() {
 
         <div className="space-y-2">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">MOS</Label>
-          <Input
-            value={data.mos}
-            onChange={(e) => setData({ ...data, mos: e.target.value })}
-            className="bg-secondary border-border text-foreground font-inter h-12"
-          />
+          <Select value={data.mos} onValueChange={(val) => setData({ ...data, mos: val })}>
+            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
+              <SelectValue placeholder="Select MOS" />
+            </SelectTrigger>
+            <SelectContent className="max-h-64">
+              {MOS_LIST.map((m) => (
+                <SelectItem key={m.code} value={m.code}>
+                  {m.code} — {m.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">

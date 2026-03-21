@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { MOS_LIST } from "@/lib/mos-list";
 
 const RANKS = [
   "PV1", "PV2", "PFC", "SPC", "CPL",

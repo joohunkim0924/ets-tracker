@@ -11,7 +11,9 @@ export default function Onboarding() {
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [data, setData] = useState({
-    name: '',
+    last_name: '',
+    first_name: '',
+    preferred_name: '',
     rank: '',
     mos: '',
     enlistment_date: '',
@@ -22,7 +24,9 @@ export default function Onboarding() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     await base44.auth.updateMe({
-      soldier_name: data.name,
+      last_name: data.last_name,
+      first_name: data.first_name,
+      preferred_name: data.preferred_name || null,
       rank: data.rank,
       mos: data.mos,
       enlistment_date: data.enlistment_date,

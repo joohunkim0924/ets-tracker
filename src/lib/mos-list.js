@@ -1,0 +1,262 @@
+export const MOS_LIST = [
+  // Infantry
+  { code: "11A", title: "Infantry Officer" },
+  { code: "11B", title: "Infantryman" },
+  { code: "11C", title: "Indirect Fire Infantryman" },
+  { code: "11X", title: "Infantry Enlistment Option" },
+  { code: "11Z", title: "Infantry Senior Sergeant" },
+
+  // Combat Engineer
+  { code: "12A", title: "Engineer Officer" },
+  { code: "12B", title: "Combat Engineer" },
+  { code: "12C", title: "Bridge Crewmember" },
+  { code: "12D", title: "Diver" },
+  { code: "12G", title: "Quarrying Specialist" },
+  { code: "12H", title: "Construction Engineering Supervisor" },
+  { code: "12K", title: "Plumber" },
+  { code: "12M", title: "Firefighter" },
+  { code: "12N", title: "Horizontal Construction Engineer" },
+  { code: "12P", title: "Prime Power Production Specialist" },
+  { code: "12Q", title: "Power Line Distribution Specialist" },
+  { code: "12R", title: "Interior Electrician" },
+  { code: "12T", title: "Technical Engineer" },
+  { code: "12V", title: "Concrete & Asphalt Equipment Operator" },
+  { code: "12W", title: "Carpentry and Masonry Specialist" },
+  { code: "12X", title: "General Engineering Supervisor" },
+  { code: "12Y", title: "Geospatial Engineer" },
+  { code: "12Z", title: "Combat Engineering Senior Sergeant" },
+
+  // Field Artillery
+  { code: "13A", title: "Field Artillery Officer" },
+  { code: "13B", title: "Cannon Crewmember" },
+  { code: "13D", title: "Field Artillery Automated Tactical Data Systems Specialist" },
+  { code: "13E", title: "Cannon Fire Direction Specialist" },
+  { code: "13F", title: "Fire Support Specialist" },
+  { code: "13J", title: "Fire Control Specialist" },
+  { code: "13M", title: "Multiple Launch Rocket System Crewmember" },
+  { code: "13P", title: "MLRS Operations/Fire Direction Specialist" },
+  { code: "13R", title: "Field Artillery Firefinder Radar Operator" },
+  { code: "13S", title: "Field Artillery Surveyor/Meteorological Crewmember" },
+  { code: "13T", title: "Field Artillery Surveyor" },
+  { code: "13W", title: "Field Artillery Meteorological Crewmember" },
+  { code: "13Z", title: "Field Artillery Senior Sergeant" },
+
+  // Air Defense Artillery
+  { code: "14A", title: "Air Defense Artillery Officer" },
+  { code: "14E", title: "Patriot Fire Control Enhanced Operator/Maintainer" },
+  { code: "14G", title: "Air Defense Battle Management System Operator" },
+  { code: "14H", title: "Air Defense Enhanced Early Warning System Operator" },
+  { code: "14J", title: "Air Defense C2 Tactical Operations Center Enhanced Operator/Maintainer" },
+  { code: "14P", title: "Air and Missile Defense Crewmember" },
+  { code: "14S", title: "Air and Missile Defense Crewmember" },
+  { code: "14T", title: "Patriot Launching Station Enhanced Operator/Maintainer" },
+  { code: "14Z", title: "Air Defense Artillery Senior Sergeant" },
+
+  // Aviation
+  { code: "15A", title: "Aviation Officer" },
+  { code: "15B", title: "Aircraft Powerplant Repairer" },
+  { code: "15C", title: "Aviation MOS" },
+  { code: "15D", title: "Aircraft Powertrain Repairer" },
+  { code: "15E", title: "Unmanned Aircraft Systems Repairer" },
+  { code: "15F", title: "Aircraft Electrician" },
+  { code: "15G", title: "Aircraft Structural Repairer" },
+  { code: "15H", title: "Aircraft Pneudraulics Repairer" },
+  { code: "15J", title: "OH-58D Armament/Electrical/Avionics Systems Repairer" },
+  { code: "15K", title: "Aircraft Components Repair Supervisor" },
+  { code: "15M", title: "UH-1 Helicopter Repairer" },
+  { code: "15N", title: "Avionic Mechanic" },
+  { code: "15P", title: "Aviation Operations Specialist" },
+  { code: "15Q", title: "Air Traffic Control Operator" },
+  { code: "15R", title: "AH-64 Attack Helicopter Repairer" },
+  { code: "15S", title: "OH-58D/ARH Scout Helicopter Repairer" },
+  { code: "15T", title: "UH-60 Helicopter Repairer" },
+  { code: "15U", title: "CH-47 Helicopter Repairer" },
+  { code: "15V", title: "Observation/Scout Helicopter Repairer" },
+  { code: "15W", title: "Unmanned Aircraft Systems Operator" },
+  { code: "15X", title: "AH-64A Armament/Electrical/Avionics Systems Repairer" },
+  { code: "15Y", title: "AH-64D Armament/Electrical/Avionics Systems Repairer" },
+  { code: "15Z", title: "Aircraft Maintenance Senior Sergeant" },
+
+  // Special Forces
+  { code: "18A", title: "Special Forces Officer" },
+  { code: "18B", title: "Special Forces Weapons Sergeant" },
+  { code: "18C", title: "Special Forces Engineer Sergeant" },
+  { code: "18D", title: "Special Forces Medical Sergeant" },
+  { code: "18E", title: "Special Forces Communications Sergeant" },
+  { code: "18F", title: "Special Forces Assistant Operations & Intelligence Sergeant" },
+  { code: "18X", title: "Special Forces Candidate" },
+  { code: "18Z", title: "Special Forces Senior Sergeant" },
+
+  // Civil Affairs
+  { code: "38A", title: "Civil Affairs Officer" },
+  { code: "38B", title: "Civil Affairs Specialist" },
+
+  // Psychological Operations
+  { code: "37A", title: "Psychological Operations Officer" },
+  { code: "37F", title: "Psychological Operations Specialist" },
+
+  // Armor
+  { code: "19A", title: "Armor Officer" },
+  { code: "19D", title: "Cavalry Scout" },
+  { code: "19K", title: "Armor Crewman" },
+  { code: "19Z", title: "Armor Senior Sergeant" },
+
+  // Medical
+  { code: "68A", title: "Biomedical Equipment Specialist" },
+  { code: "68B", title: "Orthopedic Specialist" },
+  { code: "68C", title: "Practical Nursing Specialist" },
+  { code: "68D", title: "Operating Room Specialist" },
+  { code: "68E", title: "Dental Specialist" },
+  { code: "68F", title: "Physical Therapy Specialist" },
+  { code: "68G", title: "Patient Administration Specialist" },
+  { code: "68H", title: "Optical Laboratory Specialist" },
+  { code: "68J", title: "Medical Logistics Specialist" },
+  { code: "68K", title: "Medical Laboratory Specialist" },
+  { code: "68L", title: "Occupational Therapy Specialist" },
+  { code: "68M", title: "Nutrition Care Specialist" },
+  { code: "68N", title: "Cardiovascular Specialist" },
+  { code: "68P", title: "Radiology Specialist" },
+  { code: "68Q", title: "Pharmacy Specialist" },
+  { code: "68R", title: "Veterinary Food Inspection Specialist" },
+  { code: "68S", title: "Preventive Medicine Specialist" },
+  { code: "68T", title: "Animal Care Specialist" },
+  { code: "68U", title: "Driver/Wheeled Vehicle Mechanic" },
+  { code: "68V", title: "Respiratory Specialist" },
+  { code: "68W", title: "Combat Medic Specialist" },
+  { code: "68X", title: "Mental Health Specialist" },
+  { code: "68Z", title: "Chief Medical NCO" },
+
+  // Signal
+  { code: "25A", title: "Signal Officer" },
+  { code: "25B", title: "Information Technology Specialist" },
+  { code: "25C", title: "Radio Operator-Maintainer" },
+  { code: "25D", title: "Cyber Network Defender" },
+  { code: "25E", title: "Electromagnetic Spectrum Manager" },
+  { code: "25F", title: "Network Switching Systems Operator-Maintainer" },
+  { code: "25H", title: "Cable Systems Installer-Maintainer" },
+  { code: "25L", title: "Cable Systems Installer-Maintainer" },
+  { code: "25M", title: "Multimedia Illustrator" },
+  { code: "25N", title: "Nodal Network Systems Operator-Maintainer" },
+  { code: "25P", title: "Microwave Systems Operator-Maintainer" },
+  { code: "25Q", title: "Multichannel Transmission Systems Operator-Maintainer" },
+  { code: "25R", title: "Visual Information Equipment Operator-Maintainer" },
+  { code: "25S", title: "Satellite Communication Systems Operator-Maintainer" },
+  { code: "25T", title: "Satellite/Microwave Systems Chief" },
+  { code: "25U", title: "Signal Support Systems Specialist" },
+  { code: "25V", title: "Combat Documentation/Production Specialist" },
+  { code: "25W", title: "Telecommunications Operations Chief" },
+  { code: "25X", title: "Chief Signal NCO" },
+  { code: "25Z", title: "Visual Information Operations Chief" },
+
+  // Intelligence
+  { code: "35A", title: "Military Intelligence Officer" },
+  { code: "35D", title: "All Source Intelligence Officer" },
+  { code: "35E", title: "Counter Intelligence Agent" },
+  { code: "35F", title: "Intelligence Analyst" },
+  { code: "35G", title: "Geospatial Intelligence Imagery Analyst" },
+  { code: "35H", title: "Collection Manager" },
+  { code: "35L", title: "Counterintelligence Special Agent" },
+  { code: "35M", title: "Human Intelligence Collector" },
+  { code: "35N", title: "Signals Intelligence Analyst" },
+  { code: "35P", title: "Cryptologic Linguist" },
+  { code: "35Q", title: "Cryptologic Network Warfare Specialist" },
+  { code: "35S", title: "Signals Collector/Analyst" },
+  { code: "35T", title: "Military Intelligence Systems Maintainer/Integrator" },
+  { code: "35V", title: "Imagery Analyst" },
+  { code: "35X", title: "Intelligence Senior Sergeant/Chief Intelligence Sergeant" },
+  { code: "35Y", title: "Chief Intelligence Sergeant" },
+  { code: "35Z", title: "Signals Intelligence (SIGINT) Senior Sergeant/Chief SIGINT Sergeant" },
+
+  // Cyber
+  { code: "17A", title: "Cyber Operations Officer" },
+  { code: "17C", title: "Cyber Operations Specialist" },
+  { code: "17E", title: "Electronic Warfare Specialist" },
+
+  // Military Police
+  { code: "31A", title: "Military Police Officer" },
+  { code: "31B", title: "Military Police" },
+  { code: "31D", title: "Criminal Investigation Agent" },
+  { code: "31E", title: "Internment/Resettlement Specialist" },
+  { code: "31K", title: "Military Working Dog Handler" },
+  { code: "31Z", title: "Military Police Senior Sergeant" },
+
+  // Finance
+  { code: "36A", title: "Financial Management Officer" },
+  { code: "36B", title: "Financial Management Technician" },
+
+  // Adjutant General
+  { code: "42A", title: "Human Resources Specialist" },
+  { code: "42B", title: "Human Resources Officer" },
+  { code: "42F", title: "Human Resources Information Systems Management" },
+
+  // Logistics / Quartermaster
+  { code: "89A", title: "Ammunition Stock Control and Accounting Specialist" },
+  { code: "89B", title: "Ammunition Specialist" },
+  { code: "89D", title: "Explosive Ordnance Disposal Specialist" },
+  { code: "92A", title: "Automated Logistical Specialist" },
+  { code: "92F", title: "Petroleum Supply Specialist" },
+  { code: "92G", title: "Food Service Specialist" },
+  { code: "92L", title: "Petroleum Laboratory Specialist" },
+  { code: "92M", title: "Mortuary Affairs Specialist" },
+  { code: "92R", title: "Parachute Rigger" },
+  { code: "92S", title: "Shower/Laundry and Clothing Repair Specialist" },
+  { code: "92W", title: "Water Treatment Specialist" },
+  { code: "92Y", title: "Unit Supply Specialist" },
+  { code: "92Z", title: "Senior Noncommissioned Logistician" },
+
+  // Transportation
+  { code: "88A", title: "Transportation Officer" },
+  { code: "88H", title: "Cargo Specialist" },
+  { code: "88K", title: "Watercraft Operator" },
+  { code: "88L", title: "Watercraft Engineer" },
+  { code: "88M", title: "Motor Transport Operator" },
+  { code: "88N", title: "Transportation Management Coordinator" },
+  { code: "88P", title: "Railway Equipment Repairer" },
+  { code: "88T", title: "Railway Section Repairer" },
+  { code: "88U", title: "Railway Operations Chief" },
+  { code: "88Z", title: "Transportation Senior Sergeant" },
+
+  // Maintenance / Ordnance
+  { code: "91A", title: "M1 Armor Crewman" },
+  { code: "91B", title: "Wheeled Vehicle Mechanic" },
+  { code: "91C", title: "Utilities Equipment Repairer" },
+  { code: "91D", title: "Power-Generation Equipment Repairer" },
+  { code: "91E", title: "Allied Trades Specialist" },
+  { code: "91F", title: "Small Arms/Artillery Repairer" },
+  { code: "91G", title: "Fire Control Repairer" },
+  { code: "91H", title: "Track Vehicle Repairer" },
+  { code: "91J", title: "Quartermaster and Chemical Equipment Repairer" },
+  { code: "91L", title: "Construction Equipment Repairer" },
+  { code: "91M", title: "Bradley Fighting Vehicle System Maintainer" },
+  { code: "91P", title: "Artillery Mechanic" },
+  { code: "91S", title: "Stryker Systems Maintainer" },
+  { code: "91X", title: "Maintenance Supervisor" },
+  { code: "91Z", title: "Mechanical Maintenance Supervisor" },
+
+  // Chemical
+  { code: "74A", title: "Chemical Officer" },
+  { code: "74D", title: "CBRN Specialist" },
+
+  // Chaplain
+  { code: "56A", title: "Chaplain" },
+  { code: "56M", title: "Religious Affairs Specialist" },
+
+  // Judge Advocate
+  { code: "27A", title: "Judge Advocate Officer" },
+  { code: "27D", title: "Paralegal Specialist" },
+
+  // Band
+  { code: "02A", title: "Army Bandmaster" },
+  { code: "42R", title: "Army Musician" },
+
+  // Public Affairs
+  { code: "46A", title: "Public Affairs Officer" },
+  { code: "46Q", title: "Public Affairs Specialist" },
+  { code: "46R", title: "Public Affairs Broadcast Specialist" },
+
+  // Recruiting & Retention
+  { code: "79R", title: "Recruiter" },
+  { code: "79S", title: "Career Counselor" },
+  { code: "79T", title: "Recruiting and Retention NCO" },
+  { code: "79V", title: "Retention and Transition NCO" },
+];

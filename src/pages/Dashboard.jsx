@@ -57,7 +57,7 @@ export default function Dashboard() {
               {user.rank} • {user.mos}
             </p>
             <p className="text-sm font-inter font-semibold text-foreground">
-              {user.soldier_name}
+              {user.preferred_name || user.first_name} {user.last_name}
             </p>
           </div>
         </div>

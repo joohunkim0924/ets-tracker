@@ -22,7 +22,9 @@ export default function Settings() {
     const load = async () => {
       const me = await base44.auth.me();
       setData({
-        soldier_name: me.soldier_name || '',
+        last_name: me.last_name || '',
+      first_name: me.first_name || '',
+      preferred_name: me.preferred_name || '',
         rank: me.rank || '',
         mos: me.mos || '',
         enlistment_date: me.enlistment_date || '',

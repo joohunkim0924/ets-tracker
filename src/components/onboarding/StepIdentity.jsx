@@ -78,12 +78,18 @@ export default function StepIdentity({ data, onChange, onNext }) {
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
             MOS
           </Label>
-          <Input
-            placeholder="e.g. 11B, 68W, 25B"
-            value={data.mos || ''}
-            onChange={(e) => onChange({ ...data, mos: e.target.value })}
-            className="bg-secondary border-border text-foreground font-inter placeholder:text-muted-foreground/50 h-12"
-          />
+          <Select value={data.mos || ''} onValueChange={(val) => onChange({ ...data, mos: val })}>
+            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
+              <SelectValue placeholder="Select MOS" />
+            </SelectTrigger>
+            <SelectContent className="max-h-64">
+              {MOS_LIST.map((m) => (
+                <SelectItem key={m.code} value={m.code}>
+                  {m.code} — {m.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

@@ -8,7 +8,6 @@ import AddScoreModal from '@/components/aft/AddScoreModal';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', unit: 'lbs' },
-  { key: 'power_throw', label: 'Power Throw', pointsKey: 'power_throw_points', unit: 'm' },
   { key: 'pushups', label: 'Push-Ups', pointsKey: 'pushups_points', unit: 'reps' },
   { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', pointsKey: 'sprint_drag_carry_points', unit: 'sec' },
   { key: 'plank', label: 'Plank', pointsKey: 'plank_points', unit: 'sec' },
@@ -23,10 +22,17 @@ export default function AFT() {
   const [tab, setTab] = useState('OVERVIEW');
   const [showAdd, setShowAdd] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
+  const [userAge, setUserAge] = useState(null);
+  const [userGender, setUserGender] = useState(null);
 
   const load = async () => {
-    const data = await base44.entities.AFTScore.list('-date');
+    const [data, me] = await Promise.all([
+      base44.entities.AFTScore.list('-date'),
+      base44.auth.me(),
+    ]);
     setScores(data);
+    setUserAge(me.age || null);
+    setUserGender(me.gender || null);
     setLoading(false);
   };
 
@@ -196,7 +202,7 @@ export default function AFT() {
         )}
       </div>
 
-      {showAdd && <AddScoreModal onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); load(); }} />}
+      {showAdd && <AddScoreModal onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); load(); }} userAge={userAge} userGender={userGender} />}
       <BottomNav />
     </div>
   );

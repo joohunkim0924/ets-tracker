@@ -82,9 +82,14 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Main countdown */}
-      <div className="flex-1 flex flex-col items-center px-6 pt-4">
-        {/* Days remaining - hero number */}
+      {/* Main content */}
+      <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24">
+        {/* Circular progress */}
+        <div className="mb-6">
+          <CircularProgress percentage={percentage} />
+        </div>
+
+        {/* Days remaining */}
         <CountdownDisplay
           daysRemaining={daysRemaining}
           hoursRemaining={hoursRemaining}
@@ -93,24 +98,13 @@ export default function Dashboard() {
           etsDate={format(etsDate, 'dd MMM yyyy').toUpperCase()}
         />
 
-        {/* Circular progress */}
-        <div className="my-8">
-          <CircularProgress percentage={percentage} />
-        </div>
-
         {/* Stats grid */}
-        <div className="w-full grid grid-cols-3 gap-3 mb-4">
+        <div className="w-full grid grid-cols-2 gap-3 mt-6 mb-4">
           <StatsCard
             label="DAYS SERVED"
             value={Math.max(daysServed, 0).toLocaleString()}
             unit="DAYS"
             highlight="green"
-          />
-          <StatsCard
-            label="DAYS LEFT"
-            value={daysRemaining.toLocaleString()}
-            unit="DAYS"
-            highlight="red"
           />
           <StatsCard
             label="CONTRACT"
@@ -146,6 +140,7 @@ export default function Dashboard() {
           </p>
         </div>
       </div>
+      <BottomNav />
     </div>
   );
 }

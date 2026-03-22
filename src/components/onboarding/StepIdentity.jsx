@@ -75,6 +75,30 @@ export default function StepIdentity({ data, onChange, onNext }) {
         </div>
 
         <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">AGE</Label>
+          <Input
+            type="number"
+            placeholder="25"
+            value={data.age || ''}
+            onChange={(e) => onChange({ ...data, age: e.target.value })}
+            className="bg-secondary border-border text-foreground font-mono placeholder:text-muted-foreground/50 h-12"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">GENDER</Label>
+          <Select value={data.gender || ''} onValueChange={(val) => onChange({ ...data, gender: val })}>
+            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="male">Male</SelectItem>
+              <SelectItem value="female">Female</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
             MOS
           </Label>

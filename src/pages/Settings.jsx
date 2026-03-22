@@ -31,6 +31,8 @@ export default function Settings() {
         enlistment_date: me.enlistment_date || '',
         ets_date: me.ets_date || '',
         pcs_date: me.pcs_date || '',
+        age: me.age || '',
+        gender: me.gender || '',
       });
       setLoading(false);
     };
@@ -146,6 +148,30 @@ export default function Settings() {
             onChange={(e) => setData({ ...data, ets_date: e.target.value })}
             className="bg-secondary border-border text-foreground font-mono h-12"
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">AGE</Label>
+          <Input
+            type="number"
+            placeholder="25"
+            value={data.age}
+            onChange={(e) => setData({ ...data, age: e.target.value })}
+            className="bg-secondary border-border text-foreground font-mono h-12"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">GENDER</Label>
+          <Select value={data.gender} onValueChange={(val) => setData({ ...data, gender: val })}>
+            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="male">Male</SelectItem>
+              <SelectItem value="female">Female</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">

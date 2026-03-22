@@ -12,7 +12,7 @@ const RANKS = [
 ];
 
 export default function StepIdentity({ data, onChange, onNext }) {
-  const canProceed = data.last_name && data.first_name && data.rank && data.mos;
+  const canProceed = data.last_name && data.first_name && data.rank && data.mos && data.age && data.gender;
 
   return (
     <div className="space-y-6">

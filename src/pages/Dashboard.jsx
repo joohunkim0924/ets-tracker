@@ -11,6 +11,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     const loadUser = async () => {
@@ -25,6 +26,11 @@ export default function Dashboard() {
     loadUser();
   }, [navigate]);
 
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -32,13 +38,6 @@ export default function Dashboard() {
       </div>
     );
   }
-
-  const [now, setNow] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const enlistmentDate = parseISO(user.enlistment_date);
   const etsDate = parseISO(user.ets_date);

@@ -1,41 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { X } from 'lucide-react';
+import { calculatePoints } from '@/lib/aft-scoring';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', unit: 'lbs', pointsKey: 'deadlift_points' },
-  { key: 'power_throw', label: 'Standing Power Throw', unit: 'm', pointsKey: 'power_throw_points' },
   { key: 'pushups', label: 'Hand-Release Push-Ups', unit: 'reps', pointsKey: 'pushups_points' },
   { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', unit: 'sec', pointsKey: 'sprint_drag_carry_points' },
   { key: 'plank', label: 'Plank', unit: 'sec', pointsKey: 'plank_points' },
   { key: 'two_mile_run', label: '2-Mile Run', unit: 'sec', pointsKey: 'two_mile_run_points' },
 ];
 
-export default function AddScoreModal({ onClose, onSaved }) {
+export default function AddScoreModal({ onClose, onSaved, userAge, userGender }) {
   const today = new Date().toISOString().split('T')[0];
   const [form, setForm] = useState({ date: today });
   const [saving, setSaving] = useState(false);
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const setRaw = (ev, value) => {
+    const raw = value === '' ? '' : Number(value);
+    const pts = raw !== '' ? calculatePoints(ev.key, userGender, userAge, raw) : '';
+    setForm(f => ({ ...f, [ev.key]: value, [ev.pointsKey]: pts ?? '' }));
+  };
 
   const handleSave = async () => {
     setSaving(true);
-    const payload = { ...form };
-    // compute total
+    const payload = { date: form.date };
     let total = 0;
-    EVENTS.forEach(e => { total += Number(payload[e.pointsKey] || 0); });
-    payload.total_score = total;
-    // convert numerics
-    [...EVENTS.map(e => e.key), ...EVENTS.map(e => e.pointsKey)].forEach(k => {
-      if (payload[k] !== undefined && payload[k] !== '') payload[k] = Number(payload[k]);
+    EVENTS.forEach(ev => {
+      if (form[ev.key] !== '' && form[ev.key] !== undefined) payload[ev.key] = Number(form[ev.key]);
+      const pts = Number(form[ev.pointsKey] || 0);
+      payload[ev.pointsKey] = pts;
+      total += pts;
     });
+    payload.total_score = total;
     await base44.entities.AFTScore.create(payload);
     setSaving(false);
     onSaved();
   };
+
+  const noProfile = !userAge || !userGender;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
@@ -45,9 +51,15 @@ export default function AddScoreModal({ onClose, onSaved }) {
           <button onClick={onClose}><X className="w-5 h-5 text-muted-foreground" /></button>
         </div>
 
+        {noProfile && (
+          <div className="mb-4 p-3 bg-accent/10 border border-accent/30 rounded-xl text-xs text-accent-foreground font-inter">
+            ⚠️ Add your age and gender in Settings for automatic point calculation.
+          </div>
+        )}
+
         <div className="space-y-2 mb-4">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">TEST DATE</Label>
-          <Input type="date" value={form.date} onChange={e => set('date', e.target.value)} className="h-12 font-mono bg-secondary border-border" />
+          <Input type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} className="h-12 font-mono bg-secondary border-border" />
         </div>
 
         {EVENTS.map(ev => (
@@ -59,24 +71,27 @@ export default function AddScoreModal({ onClose, onSaved }) {
                 <Input
                   type="number"
                   placeholder="0"
-                  value={form[ev.key] || ''}
-                  onChange={e => set(ev.key, e.target.value)}
+                  value={form[ev.key] ?? ''}
+                  onChange={e => setRaw(ev, e.target.value)}
                   className="h-10 font-mono bg-background border-border"
                 />
               </div>
               <div className="space-y-1">
-                <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">POINTS</Label>
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={form[ev.pointsKey] || ''}
-                  onChange={e => set(ev.pointsKey, e.target.value)}
-                  className="h-10 font-mono bg-background border-border"
-                />
+                <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">POINTS {!noProfile ? '(auto)' : ''}</Label>
+                <div className="h-10 px-3 bg-muted/50 border border-border rounded-md flex items-center font-mono text-sm text-primary font-bold">
+                  {form[ev.pointsKey] !== '' && form[ev.pointsKey] !== undefined ? form[ev.pointsKey] : '—'}
+                </div>
               </div>
             </div>
           </div>
         ))}
+
+        <div className="flex items-center justify-between px-4 py-3 bg-primary/10 rounded-xl border border-primary/20 mb-4">
+          <span className="text-xs font-inter font-semibold uppercase tracking-widest text-muted-foreground">TOTAL</span>
+          <span className="text-2xl font-mono font-black text-primary">
+            {EVENTS.reduce((sum, ev) => sum + Number(form[ev.pointsKey] || 0), 0)}
+          </span>
+        </div>
 
         <Button onClick={handleSave} disabled={saving} className="w-full h-12 font-inter font-semibold uppercase tracking-wider">
           {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : 'SAVE SCORE'}

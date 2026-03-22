@@ -98,7 +98,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats grid */}
-        <div className="w-full grid grid-cols-2 gap-3 mb-4">
+        <div className="w-full grid grid-cols-3 gap-3 mb-4">
           <StatsCard
             label="DAYS SERVED"
             value={Math.max(daysServed, 0).toLocaleString()}
@@ -106,7 +106,13 @@ export default function Dashboard() {
             highlight="green"
           />
           <StatsCard
-            label="CONTRACT LENGTH"
+            label="DAYS LEFT"
+            value={daysRemaining.toLocaleString()}
+            unit="DAYS"
+            highlight="red"
+          />
+          <StatsCard
+            label="CONTRACT"
             value={totalDays.toLocaleString()}
             unit="DAYS"
           />

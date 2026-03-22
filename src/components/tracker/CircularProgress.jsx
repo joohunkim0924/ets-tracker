@@ -38,8 +38,8 @@ export default function CircularProgress({ percentage }) {
       </svg>
       {/* Center content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-5xl font-mono font-bold text-foreground tracking-tight">
-          {percentage.toFixed(1)}%
+        <span className="text-3xl font-mono font-bold text-foreground tracking-tight">
+          {percentage.toFixed(8)}%
         </span>
         <span className="text-xs font-inter uppercase tracking-widest text-muted-foreground mt-2">
           COMPLETE

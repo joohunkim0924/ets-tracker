@@ -6,6 +6,7 @@ import { Shield, Settings, MapPin } from 'lucide-react';
 import CircularProgress from '../components/tracker/CircularProgress';
 import CountdownDisplay from '../components/tracker/CountdownDisplay';
 import StatsCard from '../components/tracker/StatsCard';
+import BottomNav from '@/components/layout/BottomNav';
 
 export default function Dashboard() {
   const navigate = useNavigate();

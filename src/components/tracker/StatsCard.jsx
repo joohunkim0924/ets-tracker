@@ -7,7 +7,7 @@ export default function StatsCard({ label, value, unit, highlight }) {
         {label}
       </span>
       <div className="flex items-baseline gap-1.5">
-        <span className={`text-2xl font-mono font-bold ${highlight === 'green' ? 'text-primary' : highlight === 'amber' ? 'text-accent' : 'text-foreground'}`}>
+        <span className={`text-2xl font-mono font-bold ${highlight === 'green' ? 'text-primary' : highlight === 'amber' ? 'text-accent' : highlight === 'red' ? 'text-destructive' : 'text-foreground'}`}>
           {value}
         </span>
         {unit && (

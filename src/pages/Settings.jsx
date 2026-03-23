@@ -20,6 +20,12 @@ export default function Settings() {
   const [data, setData] = useState(null);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [activeTheme, setActiveTheme] = useState(getSavedTheme());
+
+  const handleTheme = (id) => {
+    setActiveTheme(id);
+    applyTheme(id);
+  };
 
   useEffect(() => {
     const load = async () => {

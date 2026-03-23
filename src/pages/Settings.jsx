@@ -67,7 +67,6 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
       <div className="px-6 pt-8 pb-4">
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PROFILE</p>
         <h1 className="text-2xl font-inter font-black text-foreground uppercase tracking-tight">SETTINGS</h1>
@@ -98,141 +97,83 @@ export default function Settings() {
           </div>
         </div>
 
-        <div className="border-t border-border pt-4 space-y-5">
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">LAST NAME</Label>
-          <Input
-            value={data.last_name}
-            onChange={(e) => setData({ ...data, last_name: e.target.value })}
-            className="bg-secondary border-border text-foreground font-inter h-12"
-          />
+        <div className="border-t border-border pt-2 space-y-5">
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">LAST NAME</Label>
+            <Input value={data.last_name} onChange={(e) => setData({ ...data, last_name: e.target.value })} className="bg-secondary border-border text-foreground font-inter h-12" />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">FIRST NAME</Label>
+            <Input value={data.first_name} onChange={(e) => setData({ ...data, first_name: e.target.value })} className="bg-secondary border-border text-foreground font-inter h-12" />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PREFERRED NAME <span className="normal-case tracking-normal text-muted-foreground/50">(optional)</span></Label>
+            <Input value={data.preferred_name} onChange={(e) => setData({ ...data, preferred_name: e.target.value })} className="bg-secondary border-border text-foreground font-inter h-12" />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">RANK</Label>
+            <Select value={data.rank} onValueChange={(val) => setData({ ...data, rank: val })}>
+              <SelectTrigger className="bg-secondary border-border text-foreground h-12"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {RANKS.map((rank) => <SelectItem key={rank} value={rank}>{rank}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">MOS</Label>
+            <Select value={data.mos} onValueChange={(val) => setData({ ...data, mos: val })}>
+              <SelectTrigger className="bg-secondary border-border text-foreground h-12"><SelectValue placeholder="Select MOS" /></SelectTrigger>
+              <SelectContent className="max-h-64">
+                {MOS_LIST.map((m) => <SelectItem key={m.code} value={m.code}>{m.code} — {m.title}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ENLISTMENT DATE</Label>
+            <Input type="date" value={data.enlistment_date} onChange={(e) => setData({ ...data, enlistment_date: e.target.value })} className="bg-secondary border-border text-foreground font-mono h-12" />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ETS DATE</Label>
+            <Input type="date" value={data.ets_date} onChange={(e) => setData({ ...data, ets_date: e.target.value })} className="bg-secondary border-border text-foreground font-mono h-12" />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">AGE</Label>
+            <Input type="number" placeholder="25" value={data.age} onChange={(e) => setData({ ...data, age: e.target.value })} className="bg-secondary border-border text-foreground font-mono h-12" />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">GENDER</Label>
+            <Select value={data.gender} onValueChange={(val) => setData({ ...data, gender: val })}>
+              <SelectTrigger className="bg-secondary border-border text-foreground h-12"><SelectValue placeholder="Select gender" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PCS DATE (OPTIONAL)</Label>
+            <Input type="date" value={data.pcs_date} onChange={(e) => setData({ ...data, pcs_date: e.target.value })} className="bg-secondary border-border text-foreground font-mono h-12" />
+          </div>
+
+          <Button onClick={handleSave} disabled={saving} className="w-full h-12 bg-primary text-primary-foreground font-inter font-semibold uppercase tracking-wider text-sm hover:bg-primary/90">
+            {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : <><Save className="w-4 h-4 mr-2" /> SAVE CHANGES</>}
+          </Button>
+
+          <Button variant="outline" onClick={() => base44.auth.logout()} className="w-full h-12 border-destructive/30 text-destructive font-inter uppercase tracking-wider text-sm hover:bg-destructive/10">
+            <LogOut className="w-4 h-4 mr-2" /> LOG OUT
+          </Button>
         </div>
 
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">FIRST NAME</Label>
-          <Input
-            value={data.first_name}
-            onChange={(e) => setData({ ...data, first_name: e.target.value })}
-            className="bg-secondary border-border text-foreground font-inter h-12"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PREFERRED NAME <span className="normal-case tracking-normal text-muted-foreground/50">(optional)</span></Label>
-          <Input
-            value={data.preferred_name}
-            onChange={(e) => setData({ ...data, preferred_name: e.target.value })}
-            className="bg-secondary border-border text-foreground font-inter h-12"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">RANK</Label>
-          <Select value={data.rank} onValueChange={(val) => setData({ ...data, rank: val })}>
-            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {RANKS.map((rank) => (
-                <SelectItem key={rank} value={rank}>{rank}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">MOS</Label>
-          <Select value={data.mos} onValueChange={(val) => setData({ ...data, mos: val })}>
-            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
-              <SelectValue placeholder="Select MOS" />
-            </SelectTrigger>
-            <SelectContent className="max-h-64">
-              {MOS_LIST.map((m) => (
-                <SelectItem key={m.code} value={m.code}>
-                  {m.code} — {m.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ENLISTMENT DATE</Label>
-          <Input
-            type="date"
-            value={data.enlistment_date}
-            onChange={(e) => setData({ ...data, enlistment_date: e.target.value })}
-            className="bg-secondary border-border text-foreground font-mono h-12"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ETS DATE</Label>
-          <Input
-            type="date"
-            value={data.ets_date}
-            onChange={(e) => setData({ ...data, ets_date: e.target.value })}
-            className="bg-secondary border-border text-foreground font-mono h-12"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">AGE</Label>
-          <Input
-            type="number"
-            placeholder="25"
-            value={data.age}
-            onChange={(e) => setData({ ...data, age: e.target.value })}
-            className="bg-secondary border-border text-foreground font-mono h-12"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">GENDER</Label>
-          <Select value={data.gender} onValueChange={(val) => setData({ ...data, gender: val })}>
-            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PCS DATE (OPTIONAL)</Label>
-          <Input
-            type="date"
-            value={data.pcs_date}
-            onChange={(e) => setData({ ...data, pcs_date: e.target.value })}
-            className="bg-secondary border-border text-foreground font-mono h-12"
-          />
-        </div>
-
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          className="w-full h-12 bg-primary text-primary-foreground font-inter font-semibold uppercase tracking-wider text-sm hover:bg-primary/90 mt-4"
-        >
-          {saving ? (
-            <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-          ) : (
-            <>
-              <Save className="w-4 h-4 mr-2" /> SAVE CHANGES
-            </>
-          )}
-        </Button>
-
-        <Button
-          variant="outline"
-          onClick={() => base44.auth.logout()}
-          className="w-full h-12 border-destructive/30 text-destructive font-inter uppercase tracking-wider text-sm hover:bg-destructive/10"
-        >
-          <LogOut className="w-4 h-4 mr-2" /> LOG OUT
-        </Button>
-        </div>
-      </div>{/* end space-y-5 scroll container */}
+      </div>
 
       <BottomNav />
     </div>

@@ -98,7 +98,7 @@ export default function Settings() {
           </div>
         </div>
 
-        <div className="border-t border-border pt-4">
+        <div className="border-t border-border pt-4 space-y-5">
         <div className="space-y-2">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">LAST NAME</Label>
           <Input

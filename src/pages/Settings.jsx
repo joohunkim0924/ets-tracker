@@ -232,7 +232,7 @@ export default function Settings() {
           <LogOut className="w-4 h-4 mr-2" /> LOG OUT
         </Button>
         </div>
-      </div>
+      </div>{/* end space-y-5 scroll container */}
 
       <BottomNav />
     </div>

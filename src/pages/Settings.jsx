@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, Save, LogOut } from "lucide-react";
+import { Save, LogOut } from "lucide-react";
 import { MOS_LIST } from "@/lib/mos-list";
+import BottomNav from '@/components/layout/BottomNav';
+import { THEMES, applyTheme, getSavedTheme } from '@/lib/theme';
 
 const RANKS = [
   "PV1", "PV2", "PFC", "SPC", "CPL",

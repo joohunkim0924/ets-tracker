@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Dumbbell, Star } from 'lucide-react';
+import { Shield, Dumbbell, Star, Settings } from 'lucide-react';
 
 const tabs = [
   { path: '/', label: 'ETS', icon: Shield },
   { path: '/aft', label: 'AFT', icon: Dumbbell },
   { path: '/benefits', label: 'Benefits', icon: Star },
+  { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function BottomNav() {

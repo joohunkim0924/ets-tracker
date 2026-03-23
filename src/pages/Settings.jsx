@@ -68,19 +68,37 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-3 px-6 pt-8 pb-6">
-        <button
-          onClick={() => navigate('/')}
-          className="w-10 h-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <h1 className="text-lg font-inter font-bold text-foreground uppercase tracking-[0.1em]">
-          SETTINGS
-        </h1>
+      <div className="px-6 pt-8 pb-4">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PROFILE</p>
+        <h1 className="text-2xl font-inter font-black text-foreground uppercase tracking-tight">SETTINGS</h1>
       </div>
 
-      <div className="flex-1 px-6 space-y-5">
+      <div className="flex-1 px-6 space-y-5 overflow-y-auto pb-28">
+
+        {/* Theme Picker */}
+        <div className="space-y-3">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">APP THEME</Label>
+          <div className="grid grid-cols-3 gap-2">
+            {THEMES.map(t => {
+              const isActive = activeTheme === t.id;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => handleTheme(t.id)}
+                  className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${isActive ? 'border-primary bg-primary/10' : 'border-border bg-secondary hover:border-primary/40'}`}
+                >
+                  <div
+                    className="w-8 h-8 rounded-full border-2 border-white/30 shadow"
+                    style={{ background: `hsl(${t.primary})` }}
+                  />
+                  <span className={`text-[9px] font-inter font-bold uppercase tracking-widest ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>{t.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="border-t border-border pt-4">
         <div className="space-y-2">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">LAST NAME</Label>
           <Input

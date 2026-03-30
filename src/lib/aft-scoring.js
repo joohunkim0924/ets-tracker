@@ -167,31 +167,32 @@ const LOWER_IS_BETTER = new Set(['sprint_drag_carry', 'two_mile_run']);
  * Returns 0 if below minimum, 100 if above maximum.
  */
 export function calculatePoints(event, gender, age, raw) {
-  if (raw === null || raw === undefined || raw === '' || !gender || !age) return null;
-  const g = gender.toLowerCase();
-  const ag = ageGroup(Number(age));
+  const rawNum = Number(raw);
+  const ageNum = Number(age);
+  if (raw === null || raw === undefined || raw === '' || isNaN(rawNum) || rawNum <= 0) return null;
+  if (!gender || !age || isNaN(ageNum) || ageNum <= 0) return null;
+  const g = String(gender).toLowerCase();
+  const ag = ageGroup(ageNum);
   const table = TABLES[event]?.[g]?.[ag];
   if (!table) return null;
 
   const lowerIsBetter = LOWER_IS_BETTER.has(event);
 
   if (lowerIsBetter) {
-    // table: pts ascending, raw descending
-    if (raw > table[0].raw) return 0;
-    if (raw <= table[table.length - 1].raw) return 100;
+    if (rawNum > table[0].raw) return 0;
+    if (rawNum <= table[table.length - 1].raw) return 100;
     for (let i = 0; i < table.length - 1; i++) {
-      if (raw <= table[i].raw && raw > table[i + 1].raw) {
-        const t = (table[i].raw - raw) / (table[i].raw - table[i + 1].raw);
+      if (rawNum <= table[i].raw && rawNum > table[i + 1].raw) {
+        const t = (table[i].raw - rawNum) / (table[i].raw - table[i + 1].raw);
         return Math.round(table[i].pts + t * (table[i + 1].pts - table[i].pts));
       }
     }
   } else {
-    // higher is better
-    if (raw < table[0].raw) return 0;
-    if (raw >= table[table.length - 1].raw) return 100;
+    if (rawNum < table[0].raw) return 0;
+    if (rawNum >= table[table.length - 1].raw) return 100;
     for (let i = 0; i < table.length - 1; i++) {
-      if (raw >= table[i].raw && raw < table[i + 1].raw) {
-        const t = (raw - table[i].raw) / (table[i + 1].raw - table[i].raw);
+      if (rawNum >= table[i].raw && rawNum < table[i + 1].raw) {
+        const t = (rawNum - table[i].raw) / (table[i + 1].raw - table[i].raw);
         return Math.round(table[i].pts + t * (table[i + 1].pts - table[i].pts));
       }
     }

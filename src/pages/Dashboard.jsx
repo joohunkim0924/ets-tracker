@@ -7,6 +7,7 @@ import CircularProgress from '../components/tracker/CircularProgress';
 import CountdownDisplay from '../components/tracker/CountdownDisplay';
 import StatsCard from '../components/tracker/StatsCard';
 import BottomNav from '@/components/layout/BottomNav';
+import FriendTimers from '@/components/tracker/FriendTimers';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -133,8 +134,13 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Friends ETS timers */}
+        <div className="w-full mb-4">
+          <FriendTimers now={now} />
+        </div>
+
         {/* Footer quote */}
-        <div className="w-full text-center py-6">
+        <div className="w-full text-center py-4">
           <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/50 font-inter">
             THIS TOO SHALL PASS
           </p>

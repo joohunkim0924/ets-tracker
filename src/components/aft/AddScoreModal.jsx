@@ -21,8 +21,10 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
 
   const setRaw = (ev, value) => {
     const raw = value === '' ? '' : Number(value);
-    const pts = raw !== '' ? calculatePoints(ev.key, userGender, userAge, raw) : '';
-    setForm(f => ({ ...f, [ev.key]: value, [ev.pointsKey]: pts ?? '' }));
+    const age = userAge ? Number(userAge) : null;
+    const gender = userGender ? String(userGender).toLowerCase() : null;
+    const pts = (raw !== '' && age && gender) ? calculatePoints(ev.key, gender, age, raw) : '';
+    setForm(f => ({ ...f, [ev.key]: value, [ev.pointsKey]: pts !== null && pts !== undefined ? pts : '' }));
   };
 
   const handleSave = async () => {
@@ -51,9 +53,13 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
           <button onClick={onClose}><X className="w-5 h-5 text-muted-foreground" /></button>
         </div>
 
-        {noProfile && (
-          <div className="mb-4 p-3 bg-accent/10 border border-accent/30 rounded-xl text-xs text-accent-foreground font-inter">
-            ⚠️ Add your age and gender in Settings for automatic point calculation.
+        {noProfile ? (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded-xl text-xs text-destructive font-inter">
+            ⚠️ Age and gender not set — go to Settings to enable auto point calculation.
+          </div>
+        ) : (
+          <div className="mb-4 p-3 bg-primary/5 border border-primary/20 rounded-xl text-xs text-muted-foreground font-inter">
+            Auto-calculating for {userGender}, age {userAge}
           </div>
         )}
 

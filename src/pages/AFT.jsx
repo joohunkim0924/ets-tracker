@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { format, parseISO } from 'date-fns';
-import { Plus, TrendingUp, List, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, TrendingUp, List, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import BottomNav from '@/components/layout/BottomNav';
 import AddScoreModal from '@/components/aft/AddScoreModal';
@@ -161,6 +161,12 @@ export default function AFT() {
                             <span className="font-mono text-foreground">{s[ev.key] ?? '—'} {ev.unit} · <span className="text-primary font-semibold">{s[ev.pointsKey] ?? '—'} pts</span></span>
                           </div>
                         ))}
+                        <button
+                          onClick={async () => { await base44.entities.AFTScore.delete(s.id); load(); }}
+                          className="mt-2 flex items-center gap-1.5 text-destructive text-[11px] font-inter font-semibold hover:opacity-70 transition-opacity"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" /> Delete record
+                        </button>
                       </div>
                     )}
                   </div>

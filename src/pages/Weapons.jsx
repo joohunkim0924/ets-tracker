@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { format, parseISO } from 'date-fns';
-import { Plus, ChevronDown, ChevronUp, Target } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Target, Trash2 } from 'lucide-react';
 import BottomNav from '@/components/layout/BottomNav';
 import AddWeaponsModal from '@/components/weapons/AddWeaponsModal';
 
@@ -185,6 +185,12 @@ export default function Weapons() {
                         {r.notes && (
                           <div className="pt-2 border-t border-border text-muted-foreground font-inter">{r.notes}</div>
                         )}
+                        <button
+                          onClick={async () => { await base44.entities.WeaponsRecord.delete(r.id); load(); }}
+                          className="mt-2 flex items-center gap-1.5 text-destructive text-[11px] font-inter font-semibold hover:opacity-70 transition-opacity"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" /> Delete record
+                        </button>
                       </div>
                     )}
                   </div>

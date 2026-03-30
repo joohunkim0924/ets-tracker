@@ -1,0 +1,61 @@
+{
+  "name": "WeaponsRecord",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "weapon": {
+      "type": "string",
+      "description": "Weapon type (e.g. M4, M17)"
+    },
+    "hits": {
+      "type": "number",
+      "description": "Number of hits"
+    },
+    "total_rounds": {
+      "type": "number",
+      "description": "Total rounds fired"
+    },
+    "score": {
+      "type": "number",
+      "description": "Numeric score"
+    },
+    "qualification": {
+      "type": "string",
+      "enum": [
+        "Unqualified",
+        "Marksman",
+        "Sharpshooter",
+        "Expert"
+      ],
+      "description": "Qualification level achieved"
+    },
+    "range": {
+      "type": "string",
+      "description": "Range or location"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "weapon"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

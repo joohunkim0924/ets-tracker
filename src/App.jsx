@@ -12,6 +12,7 @@ import Onboarding from './pages/Onboarding';
 import Settings from './pages/Settings';
 import AFT from './pages/AFT';
 import Benefits from './pages/Benefits';
+import Weapons from './pages/Weapons';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -44,6 +45,7 @@ const AuthenticatedApp = () => {
       <Route path="/settings" element={<Settings />} />
       <Route path="/aft" element={<AFT />} />
       <Route path="/benefits" element={<Benefits />} />
+      <Route path="/weapons" element={<Weapons />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

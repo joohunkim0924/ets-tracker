@@ -167,7 +167,7 @@ const LOWER_IS_BETTER = new Set(['sprint_drag_carry', 'two_mile_run']);
  * Returns 0 if below minimum, 100 if above maximum.
  */
 export function calculatePoints(event, gender, age, raw) {
-  if (!raw || !gender || !age) return null;
+  if (raw === null || raw === undefined || raw === '' || !gender || !age) return null;
   const g = gender.toLowerCase();
   const ag = ageGroup(Number(age));
   const table = TABLES[event]?.[g]?.[ag];

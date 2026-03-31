@@ -96,7 +96,7 @@ export default function PromotionCountdown({ user, now }) {
         <>
           <div className="flex items-center justify-between mb-1">
             <span className="text-[10px] font-mono text-muted-foreground">0%</span>
-            <span className="text-[11px] font-mono font-bold text-primary">{Math.round(pct)}%</span>
+            <span className="text-[11px] font-mono font-bold text-primary">{pct.toFixed(6)}%</span>
             <span className="text-[10px] font-mono text-muted-foreground">100%</span>
           </div>
           <div className="w-full h-2.5 bg-secondary rounded-full overflow-hidden">

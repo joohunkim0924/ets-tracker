@@ -1,0 +1,22 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The role of the user in the app",
+      "enum": [
+        "admin",
+        "user"
+      ]
+    },
+    "promotion_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of upcoming promotion"
+    }
+  },
+  "required": [
+    "role"
+  ]
+}

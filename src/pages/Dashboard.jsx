@@ -8,6 +8,7 @@ import CountdownDisplay from '../components/tracker/CountdownDisplay';
 import StatsCard from '../components/tracker/StatsCard';
 import BottomNav from '@/components/layout/BottomNav';
 import FriendTimers from '@/components/tracker/FriendTimers';
+import PromotionCountdown from '@/components/tracker/PromotionCountdown';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -112,6 +113,11 @@ export default function Dashboard() {
             value={totalDays.toLocaleString()}
             unit="DAYS"
           />
+        </div>
+
+        {/* Promotion countdown */}
+        <div className="w-full mb-4">
+          <PromotionCountdown user={user} now={now} />
         </div>
 
         {/* PCS countdown if applicable */}

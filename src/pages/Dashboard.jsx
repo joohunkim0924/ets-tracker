@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { differenceInDays, format, parseISO } from 'date-fns';
 import { Shield, Settings, MapPin } from 'lucide-react';
+import { UNIT_PATCHES, RANK_INSIGNIA } from '@/lib/army-data';
 import CircularProgress from '../components/tracker/CircularProgress';
 import CountdownDisplay from '../components/tracker/CountdownDisplay';
 import StatsCard from '../components/tracker/StatsCard';
 import BottomNav from '@/components/layout/BottomNav';
 import FriendTimers from '@/components/tracker/FriendTimers';
 import PromotionCountdown from '@/components/tracker/PromotionCountdown';
-import { UNIT_PATCHES } from '@/lib/army-data';
+
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -65,8 +66,16 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between px-6 pt-8 pb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-primary" />
+          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+            {user.rank && RANK_INSIGNIA[user.rank] ? (
+              <img
+                src={RANK_INSIGNIA[user.rank]}
+                alt={user.rank}
+                className="w-8 h-8 object-contain"
+              />
+            ) : (
+              <Shield className="w-5 h-5 text-primary" />
+            )}
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">

@@ -38,6 +38,41 @@ export const UNITS = [
   { value: "ARNG",   label: "Army National Guard (ARNG)" },
 ];
 
+// Rank insignia images (US Army, from Wikimedia Commons)
+export const RANK_INSIGNIA = {
+  // Enlisted
+  "PV1":  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/US_Army_Private_First_Class.png/160px-US_Army_Private_First_Class.png", // no insignia; fallback to shield
+  "PV2":  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/US-E2_insignia.svg/160px-US-E2_insignia.svg.png",
+  "PFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/US-E3_insignia.svg/160px-US-E3_insignia.svg.png",
+  "SPC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/US-E4_SPC_insignia.svg/160px-US-E4_SPC_insignia.svg.png",
+  "CPL":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/US-E4_CPL_insignia.svg/160px-US-E4_CPL_insignia.svg.png",
+  "SGT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/US-E5_insignia.svg/160px-US-E5_insignia.svg.png",
+  "SSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/US-E6_insignia.svg/160px-US-E6_insignia.svg.png",
+  "SFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/US-E7_insignia.svg/160px-US-E7_insignia.svg.png",
+  "MSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/US-E8_MSG_insignia.svg/160px-US-E8_MSG_insignia.svg.png",
+  "1SG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/US-E8_1SG_insignia.svg/160px-US-E8_1SG_insignia.svg.png",
+  "SGM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/US-E9_SGM_insignia.svg/160px-US-E9_SGM_insignia.svg.png",
+  "CSM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/US-E9_CSM_insignia.svg/160px-US-E9_CSM_insignia.svg.png",
+  "SMA":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/US-E9_SMA_insignia.svg/160px-US-E9_SMA_insignia.svg.png",
+  // Warrant Officers
+  "WO1":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/US-WO1_insignia.svg/160px-US-WO1_insignia.svg.png",
+  "CW2":  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/US-CW2_insignia.svg/160px-US-CW2_insignia.svg.png",
+  "CW3":  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/US-CW3_insignia.svg/160px-US-CW3_insignia.svg.png",
+  "CW4":  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/US-CW4_insignia.svg/160px-US-CW4_insignia.svg.png",
+  "CW5":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/US-CW5_insignia.svg/160px-US-CW5_insignia.svg.png",
+  // Officers
+  "2LT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/US-O1_insignia.svg/160px-US-O1_insignia.svg.png",
+  "1LT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/US-O2_insignia.svg/160px-US-O2_insignia.svg.png",
+  "CPT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/US-O3_insignia.svg/160px-US-O3_insignia.svg.png",
+  "MAJ":  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/US-O4_insignia.svg/160px-US-O4_insignia.svg.png",
+  "LTC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/US-O5_insignia.svg/160px-US-O5_insignia.svg.png",
+  "COL":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/US-O6_insignia.svg/160px-US-O6_insignia.svg.png",
+  "BG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/US-O7_insignia.svg/160px-US-O7_insignia.svg.png",
+  "MG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/US-O8_insignia.svg/160px-US-O8_insignia.svg.png",
+  "LTG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/US-O9_insignia.svg/160px-US-O9_insignia.svg.png",
+  "GEN":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/US-O10_insignia.svg/160px-US-O10_insignia.svg.png",
+};
+
 // URLs verified directly from Wikimedia Commons file pages (confirmed file hashes)
 export const UNIT_PATCHES = {
   // Divisions

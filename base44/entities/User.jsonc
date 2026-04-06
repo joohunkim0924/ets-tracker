@@ -14,6 +14,10 @@
       "type": "string",
       "format": "date",
       "description": "Date of upcoming promotion"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Soldier's assigned Army division or component"
     }
   },
   "required": [

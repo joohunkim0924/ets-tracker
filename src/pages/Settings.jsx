@@ -9,11 +9,7 @@ import { Save, LogOut } from "lucide-react";
 import { MOS_LIST } from "@/lib/mos-list";
 import BottomNav from '@/components/layout/BottomNav';
 import { THEMES, applyTheme, getSavedTheme } from '@/lib/theme';
-
-const RANKS = [
-  "PV1", "PV2", "PFC", "SPC", "CPL",
-  "SGT", "SSG", "SFC", "MSG", "1SG", "SGM", "CSM"
-];
+import { RANKS, UNITS } from '@/lib/army-data';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -36,6 +32,7 @@ export default function Settings() {
       preferred_name: me.preferred_name || '',
         rank: me.rank || '',
         mos: me.mos || '',
+        unit: me.unit || '',
         enlistment_date: me.enlistment_date || '',
         ets_date: me.ets_date || '',
         pcs_date: me.pcs_date || '',
@@ -51,6 +48,7 @@ export default function Settings() {
     setSaving(true);
     await base44.auth.updateMe({
       ...data,
+      unit: data.unit || null,
       pcs_date: data.pcs_date || null,
     });
     setSaving(false);
@@ -129,6 +127,16 @@ export default function Settings() {
               <SelectTrigger className="bg-secondary border-border text-foreground h-12"><SelectValue placeholder="Select MOS" /></SelectTrigger>
               <SelectContent className="max-h-64">
                 {MOS_LIST.map((m) => <SelectItem key={m.code} value={m.code}>{m.code} — {m.title}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">UNIT</Label>
+            <Select value={data.unit} onValueChange={(val) => setData({ ...data, unit: val })}>
+              <SelectTrigger className="bg-secondary border-border text-foreground h-12"><SelectValue placeholder="Select unit" /></SelectTrigger>
+              <SelectContent className="max-h-64">
+                {UNITS.map((u) => <SelectItem key={u.value} value={u.value}>{u.label}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>

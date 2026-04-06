@@ -5,11 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { MOS_LIST } from "@/lib/mos-list";
-
-const RANKS = [
-  "PV1", "PV2", "PFC", "SPC", "CPL",
-  "SGT", "SSG", "SFC", "MSG", "1SG", "SGM", "CSM"
-];
+import { RANKS, UNITS } from '@/lib/army-data';
 
 export default function StepIdentity({ data, onChange, onNext }) {
   const canProceed = data.last_name && data.first_name && data.rank && data.mos && data.age && data.gender;
@@ -111,6 +107,22 @@ export default function StepIdentity({ data, onChange, onNext }) {
                 <SelectItem key={m.code} value={m.code}>
                   {m.code} — {m.title}
                 </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
+            UNIT
+          </Label>
+          <Select value={data.unit || ''} onValueChange={(val) => onChange({ ...data, unit: val })}>
+            <SelectTrigger className="bg-secondary border-border text-foreground h-12">
+              <SelectValue placeholder="Select unit" />
+            </SelectTrigger>
+            <SelectContent className="max-h-64">
+              {UNITS.map((u) => (
+                <SelectItem key={u.value} value={u.value}>{u.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>

@@ -9,6 +9,7 @@ import StatsCard from '../components/tracker/StatsCard';
 import BottomNav from '@/components/layout/BottomNav';
 import FriendTimers from '@/components/tracker/FriendTimers';
 import PromotionCountdown from '@/components/tracker/PromotionCountdown';
+import { UNIT_PATCHES } from '@/lib/army-data';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -85,7 +86,18 @@ export default function Dashboard() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24">
+      <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24 relative">
+        {/* Unit patch background */}
+        {user.unit && UNIT_PATCHES[user.unit] && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+            <img
+              src={UNIT_PATCHES[user.unit]}
+              alt=""
+              className="w-72 h-72 object-contain opacity-[0.07]"
+              style={{ filter: 'grayscale(30%)' }}
+            />
+          </div>
+        )}
         {/* Circular progress */}
         <div className="mb-6">
           <CircularProgress percentage={percentage} />

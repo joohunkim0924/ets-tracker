@@ -286,6 +286,12 @@ const CATEGORIES = [
         action: 'Verify with ID.me',
         url: 'https://www.id.me/military',
       },
+      {
+        name: 'GOVX Special Pricing',
+        description: 'Similar to ID.me, verify your status and access special pricing on partners (Oakley, Sports Tickets, etc.).',
+        action: 'Savings For Those Who Serve',
+        url: 'https://www.govx.com/',
+      },
     ],
   },
 ];

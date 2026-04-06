@@ -5,6 +5,7 @@ import { Plus, TrendingUp, List, ChevronDown, ChevronUp, Trash2 } from 'lucide-r
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import BottomNav from '@/components/layout/BottomNav';
 import AddScoreModal from '@/components/aft/AddScoreModal';
+import AFTAnalysis from '@/components/aft/AFTAnalysis';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', unit: 'lbs' },
@@ -202,6 +203,7 @@ export default function AFT() {
                     </div>
                   );
                 })}
+                <AFTAnalysis scores={scores} />
               </div>
             )}
           </>

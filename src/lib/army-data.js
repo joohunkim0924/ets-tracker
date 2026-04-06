@@ -26,7 +26,7 @@ export const UNITS = [
 
 // Wikimedia Commons patch image URLs
 export const UNIT_PATCHES = {
-  "1AD":    "https://en.wikipedia.org/wiki/1st_Armored_Division_(United_States)#/media/File:United_States_Army_1st_Armored_Division_CSIB.svg",
+  "1AD":    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/United_States_Army_1st_Armored_Division_CSIB.svg/960px-United_States_Army_1st_Armored_Division_CSIB.svg.png",
   "1CD":    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/1st_Cavalry_Division_SSI.svg/200px-1st_Cavalry_Division_SSI.svg.png",
   "1ID":    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/1st_Infantry_Division_CSIB.svg/200px-1st_Infantry_Division_CSIB.svg.png",
   "3ID":    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/3rd_Infantry_Division_CSIB.svg/200px-3rd_Infantry_Division_CSIB.svg.png",

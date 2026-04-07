@@ -15,7 +15,7 @@ const EVENTS = [
   { key: 'two_mile_run', label: '2-Mile Run', pointsKey: 'two_mile_run_points', unit: 'sec' },
 ];
 
-const TABS = ['OVERVIEW', 'HISTORY', 'EVENTS ANALYSIS'];
+const TABS = ['OVERVIEW', 'HISTORY', 'EVENTS TREND'];
 
 export default function AFT() {
   const [scores, setScores] = useState([]);
@@ -178,7 +178,7 @@ export default function AFT() {
               </div>
             )}
 
-            {tab === 'EVENTS ANALYSIS' && (
+            {tab === 'EVENTS TREND' && (
               <div className="space-y-4">
                 {EVENTS.map(ev => {
                   const evData = [...scores].reverse().map(s => ({

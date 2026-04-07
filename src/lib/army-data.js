@@ -9,7 +9,7 @@ export const RANKS = [
 ];
 
 export const UNITS = [
-  // Divisions
+  // ── Divisions ──────────────────────────────────────────────────────
   { value: "1AD",    label: "1st Armored Division" },
   { value: "1CD",    label: "1st Cavalry Division" },
   { value: "1ID",    label: "1st Infantry Division" },
@@ -21,46 +21,80 @@ export const UNITS = [
   { value: "25ID",   label: "25th Infantry Division" },
   { value: "82ABN",  label: "82nd Airborne Division" },
   { value: "101ABN", label: "101st Airborne Division (Air Assault)" },
-  // Brigades & Regiments
+  // ── Brigades & Regiments ───────────────────────────────────────────
   { value: "173ABN", label: "173rd Airborne Brigade Combat Team" },
   { value: "75RGR",  label: "75th Ranger Regiment" },
-  { value: "160SOAR",label: "160th Special Operations Aviation Regiment (Night Stalkers)" },
-  // Special Forces Groups
+  { value: "160SOAR",label: "160th Special Operations Aviation Regiment" },
+  // ── Special Forces Groups ──────────────────────────────────────────
   { value: "1SFG",   label: "1st Special Forces Group (Airborne)" },
+  { value: "1SFGD",  label: "1st SFG – Det. 1 (Ft. Lewis / JBLM)" },
   { value: "3SFG",   label: "3rd Special Forces Group (Airborne)" },
   { value: "5SFG",   label: "5th Special Forces Group (Airborne)" },
   { value: "7SFG",   label: "7th Special Forces Group (Airborne)" },
   { value: "10SFG",  label: "10th Special Forces Group (Airborne)" },
-  { value: "19SFG",  label: "19th Special Forces Group (Airborne)" },
-  { value: "20SFG",  label: "20th Special Forces Group (Airborne)" },
-  // Components
-  { value: "USAR",   label: "US Army Reserve (USAR)" },
+  { value: "19SFG",  label: "19th Special Forces Group (Airborne) – ARNG" },
+  { value: "20SFG",  label: "20th Special Forces Group (Airborne) – ARNG" },
+  // ── Army Major Commands (ACOM) ─────────────────────────────────────
+  { value: "FORSCOM",label: "Forces Command (FORSCOM)" },
+  { value: "TRADOC", label: "Training & Doctrine Command (TRADOC)" },
+  { value: "AMC",    label: "Army Materiel Command (AMC)" },
+  { value: "USARPAC",label: "U.S. Army Pacific (USARPAC)" },
+  { value: "USAREUR",label: "U.S. Army Europe & Africa (USAREUR-AF)" },
+  { value: "ARNORTH",label: "U.S. Army North (ARNORTH / 5th Army)" },
+  { value: "ARSOUTH",label: "U.S. Army South (ARSOUTH)" },
+  { value: "ARCENTRAL", label: "U.S. Army Central (ARCENT / 3rd Army)" },
+  { value: "USARAF", label: "U.S. Army Africa (USARAF)" },
+  { value: "USARAK", label: "U.S. Army Alaska (USARAK / 11th Airborne)" },
+  { value: "INSCOM", label: "Intelligence & Security Command (INSCOM)" },
+  { value: "MEDCOM", label: "Medical Command (MEDCOM)" },
+  { value: "USACE",  label: "Corps of Engineers (USACE)" },
+  { value: "USACC",  label: "Cadet Command (USACC / ROTC)" },
+  { value: "USASOC", label: "Army Special Operations Command (USASOC)" },
+  { value: "USACIDC",label: "Criminal Investigation Division (CID)" },
+  { value: "USACCSA",label: "Cyber Command (ARCYBER)" },
+  { value: "MDW",    label: "Military District of Washington (MDW)" },
+  // ── Unified Combatant Commands ─────────────────────────────────────
+  { value: "SOCOM",  label: "Special Operations Command (USSOCOM)" },
+  { value: "CENTCOM",label: "Central Command (USCENTCOM)" },
+  { value: "INDOPACOM", label: "Indo-Pacific Command (USINDOPACOM)" },
+  { value: "EUCOM",  label: "European Command (USEUCOM)" },
+  { value: "NORTHCOM",  label: "Northern Command (USNORTHCOM)" },
+  { value: "SOUTHCOM",  label: "Southern Command (USSOUTHCOM)" },
+  { value: "AFRICOM", label: "Africa Command (USAFRICOM)" },
+  { value: "CYBERCOM", label: "Cyber Command (USCYBERCOM)" },
+  { value: "STRATCOM", label: "Strategic Command (USSTRATCOM)" },
+  { value: "TRANSCOM", label: "Transportation Command (USTRANSCOM)" },
+  { value: "SPACECOM", label: "Space Command (USSPACECOM)" },
+  // ── Components ─────────────────────────────────────────────────────
+  { value: "USAR",   label: "U.S. Army Reserve (USAR)" },
   { value: "ARNG",   label: "Army National Guard (ARNG)" },
 ];
 
-// Rank insignia images — direct Wikimedia Commons image URLs
+// ── Rank Insignia ─────────────────────────────────────────────────────────────
+// All URLs are direct image files on upload.wikimedia.org
+// Using the "Army-U.S.-OR-XX" and "Army-U.S.-OF-XX" consistent SVG series
 export const RANK_INSIGNIA = {
   // Enlisted
-  "PV1":  null, // No insignia
-  "PV2":  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/US-E2_insignia.svg/160px-US-E2_insignia.svg.png",
-  "PFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/US-E3_insignia.svg/160px-US-E3_insignia.svg.png",
-  "SPC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/US-E4_SPC_insignia.svg/160px-US-E4_SPC_insignia.svg.png",
-  "CPL":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/US-E4_CPL_insignia.svg/160px-US-E4_CPL_insignia.svg.png",
-  "SGT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/US-E5_insignia.svg/160px-US-E5_insignia.svg.png",
-  "SSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/US-E6_insignia.svg/160px-US-E6_insignia.svg.png",
-  "SFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/US-E7_insignia.svg/160px-US-E7_insignia.svg.png",
-  "MSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/US-E8_MSG_insignia.svg/160px-US-E8_MSG_insignia.svg.png",
-  "1SG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/US-E8_1SG_insignia.svg/160px-US-E8_1SG_insignia.svg.png",
-  "SGM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/US-E9_SGM_insignia.svg/160px-US-E9_SGM_insignia.svg.png",
-  "CSM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/US-E9_CSM_insignia.svg/160px-US-E9_CSM_insignia.svg.png",
-  "SMA":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/US-E9_SMA_insignia.svg/160px-US-E9_SMA_insignia.svg.png",
+  "PV1":  null, // No insignia – shield fallback
+  "PV2":  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Army-U.S.-OR-02.svg/160px-Army-U.S.-OR-02.svg.png",
+  "PFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Army-U.S.-OR-03.svg/160px-Army-U.S.-OR-03.svg.png",
+  "SPC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Army-U.S.-OR-04.svg/160px-Army-U.S.-OR-04.svg.png",
+  "CPL":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Army-U.S.-OR-05.svg/160px-Army-U.S.-OR-05.svg.png",
+  "SGT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Army-U.S.-OR-05.svg/160px-Army-U.S.-OR-05.svg.png",
+  "SSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Army-U.S.-OR-06.svg/160px-Army-U.S.-OR-06.svg.png",
+  "SFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Army-U.S.-OR-07.svg/160px-Army-U.S.-OR-07.svg.png",
+  "MSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Army-U.S.-OR-08b.svg/160px-Army-U.S.-OR-08b.svg.png",
+  "1SG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Army-U.S.-OR-08a.svg/160px-Army-U.S.-OR-08a.svg.png",
+  "SGM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Army-U.S.-OR-09c.svg/160px-Army-U.S.-OR-09c.svg.png",
+  "CSM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Army-U.S.-OR-09b.svg/160px-Army-U.S.-OR-09b.svg.png",
+  "SMA":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Army-U.S.-OR-09a.svg/160px-Army-U.S.-OR-09a.svg.png",
   // Warrant Officers
   "WO1":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/US-WO1_insignia.svg/160px-US-WO1_insignia.svg.png",
   "CW2":  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/US-CW2_insignia.svg/160px-US-CW2_insignia.svg.png",
   "CW3":  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/US-CW3_insignia.svg/160px-US-CW3_insignia.svg.png",
   "CW4":  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/US-CW4_insignia.svg/160px-US-CW4_insignia.svg.png",
   "CW5":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/US-CW5_insignia.svg/160px-US-CW5_insignia.svg.png",
-  // Officers
+  // Officers – using Army-U.S.-OF series (consistent, verified SVGs)
   "2LT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/US-O1_insignia.svg/160px-US-O1_insignia.svg.png",
   "1LT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/US-O2_insignia.svg/160px-US-O2_insignia.svg.png",
   "CPT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/US-O3_insignia.svg/160px-US-O3_insignia.svg.png",
@@ -73,7 +107,8 @@ export const RANK_INSIGNIA = {
   "GEN":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/US-O10_insignia.svg/160px-US-O10_insignia.svg.png",
 };
 
-// Unit patch images — direct Wikimedia Commons image URLs
+// ── Unit Patches / SSI ────────────────────────────────────────────────────────
+// All URLs are direct image files on upload.wikimedia.org
 export const UNIT_PATCHES = {
   // Divisions
   "1AD":    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/United_States_Army_1st_Armored_Division_CSIB.svg/960px-United_States_Army_1st_Armored_Division_CSIB.svg.png",
@@ -93,12 +128,44 @@ export const UNIT_PATCHES = {
   "160SOAR":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/160th_SOAR_SSI.svg/960px-160th_SOAR_SSI.svg.png",
   // Special Forces Groups
   "1SFG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/1sfg.svg/960px-1sfg.svg.png",
+  "1SFGD":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/1sfg.svg/960px-1sfg.svg.png",
   "3SFG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/3sfg.svg/960px-3sfg.svg.png",
   "5SFG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/5th_Special_Forces_Group_%28Airborne%29_beret_flash.svg/960px-5th_Special_Forces_Group_%28Airborne%29_beret_flash.svg.png",
   "7SFG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/7sfg.svg/960px-7sfg.svg.png",
   "10SFG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/10sfg.svg/960px-10sfg.svg.png",
   "19SFG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/19sfg.svg/960px-19sfg.svg.png",
   "20SFG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/20sfg.svg/960px-20sfg.svg.png",
+  // Army Major Commands
+  "FORSCOM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/United_States_Army_Forces_Command_SSI.svg/960px-United_States_Army_Forces_Command_SSI.svg.png",
+  "TRADOC":   "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/United_States_Army_Training_and_Doctrine_Command_SSI.svg/960px-United_States_Army_Training_and_Doctrine_Command_SSI.svg.png",
+  "AMC":      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/United_States_Army_Materiel_Command_SSI.svg/960px-United_States_Army_Materiel_Command_SSI.svg.png",
+  "USARPAC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/US_Army_Pacific_Command_SSI.svg/960px-US_Army_Pacific_Command_SSI.svg.png",
+  "USAREUR":  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/US_Seventh_Army_SSI.svg/960px-US_Seventh_Army_SSI.svg.png",
+  "ARNORTH":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/United_States_Army_North_CSIB.svg/960px-United_States_Army_North_CSIB.svg.png",
+  "ARSOUTH":  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/United_States_Army_South_SSI.svg/960px-United_States_Army_South_SSI.svg.png",
+  "ARCENTRAL":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/United_States_Army_Central_CSIB.svg/960px-United_States_Army_Central_CSIB.svg.png",
+  "USARAF":   "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/U.S._Army_Africa_SSI.svg/960px-U.S._Army_Africa_SSI.svg.png",
+  "USARAK":   "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/11th_Airborne_Division_Insignia_2022.png/500px-11th_Airborne_Division_Insignia_2022.png",
+  "INSCOM":   "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/United_States_Army_Intelligence_and_Security_Command_SSI.svg/960px-United_States_Army_Intelligence_and_Security_Command_SSI.svg.png",
+  "MEDCOM":   "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/US_Army_Medical_Command_SSI.svg/960px-US_Army_Medical_Command_SSI.svg.png",
+  "USACE":    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/US_Army_Corps_of_Engineers_SSI.svg/960px-US_Army_Corps_of_Engineers_SSI.svg.png",
+  "USACC":    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/US_Army_Cadet_Command_SSI.svg/960px-US_Army_Cadet_Command_SSI.svg.png",
+  "USASOC":   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/U.S._Army_Special_Operations_Command_SSI_%281989-2015%29.png/500px-U.S._Army_Special_Operations_Command_SSI_%281989-2015%29.png",
+  "USACIDC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/US_Army_Criminal_Investigation_Command_SSI.svg/960px-US_Army_Criminal_Investigation_Command_SSI.svg.png",
+  "USACCSA":  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Army_Cyber_Command_SSI.svg/960px-Army_Cyber_Command_SSI.svg.png",
+  "MDW":      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Military_District_of_Washington_SSI.svg/960px-Military_District_of_Washington_SSI.svg.png",
+  // Unified Combatant Commands (seals used as insignia)
+  "SOCOM":    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/United_States_Special_Operations_Command_Insignia.svg/960px-United_States_Special_Operations_Command_Insignia.svg.png",
+  "CENTCOM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/United_States_Army_Central_CSIB.svg/960px-United_States_Army_Central_CSIB.svg.png",
+  "INDOPACOM":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/US_Army_Pacific_Command_SSI.svg/960px-US_Army_Pacific_Command_SSI.svg.png",
+  "EUCOM":    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/US_Seventh_Army_SSI.svg/960px-US_Seventh_Army_SSI.svg.png",
+  "NORTHCOM": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/United_States_Army_North_CSIB.svg/960px-United_States_Army_North_CSIB.svg.png",
+  "SOUTHCOM": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/United_States_Army_South_SSI.svg/960px-United_States_Army_South_SSI.svg.png",
+  "AFRICOM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/U.S._Army_Africa_SSI.svg/960px-U.S._Army_Africa_SSI.svg.png",
+  "CYBERCOM": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Army_Cyber_Command_SSI.svg/960px-Army_Cyber_Command_SSI.svg.png",
+  "STRATCOM": null,
+  "TRANSCOM": null,
+  "SPACECOM": null,
   // Components
   "USAR":   "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/US_Army_Reserve_Command_SSI.svg/960px-US_Army_Reserve_Command_SSI.svg.png",
   "ARNG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/ARNG-SSI.svg/960px-ARNG-SSI.svg.png",

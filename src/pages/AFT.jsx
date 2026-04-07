@@ -137,6 +137,9 @@ export default function AFT() {
                     })}
                   </div>
                 </div>
+
+                {/* AI Analysis */}
+                <AFTAnalysis scores={scores} />
               </div>
             )}
 
@@ -203,7 +206,6 @@ export default function AFT() {
                     </div>
                   );
                 })}
-                <AFTAnalysis scores={scores} />
               </div>
             )}
           </>

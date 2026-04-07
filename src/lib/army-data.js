@@ -73,38 +73,41 @@ export const UNITS = [
 // ── Rank Insignia ─────────────────────────────────────────────────────────────
 // All URLs are direct image files on upload.wikimedia.org
 // Using the "Army-U.S.-OR-XX" and "Army-U.S.-OF-XX" consistent SVG series
+// Source: war.gov (U.S. Department of War) — official government insignia images
+const WAR = "https://www.war.gov/portals/1/Page-Assets/insignias/army";
+
 export const RANK_INSIGNIA = {
-  // Enlisted — Army-U.S.-OR series, 120px (standard Wikimedia step)
-  "PV1":  null, // No insignia – shield fallback
-  "PV2":  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Army-U.S.-OR-02.svg/120px-Army-U.S.-OR-02.svg.png",
-  "PFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Army-U.S.-OR-03.svg/120px-Army-U.S.-OR-03.svg.png",
-  "SPC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Army-U.S.-OR-04.svg/120px-Army-U.S.-OR-04.svg.png",
-  "CPL":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Army-U.S.-OR-05.svg/120px-Army-U.S.-OR-05.svg.png",
-  "SGT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Army-U.S.-OR-05b.svg/120px-Army-U.S.-OR-05b.svg.png",
-  "SSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Army-U.S.-OR-06.svg/120px-Army-U.S.-OR-06.svg.png",
-  "SFC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Army-U.S.-OR-07.svg/120px-Army-U.S.-OR-07.svg.png",
-  "MSG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Army-U.S.-OR-08b.svg/120px-Army-U.S.-OR-08b.svg.png",
-  "1SG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Army-U.S.-OR-08a.svg/120px-Army-U.S.-OR-08a.svg.png",
-  "SGM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Army-U.S.-OR-09c.svg/120px-Army-U.S.-OR-09c.svg.png",
-  "CSM":  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Army-U.S.-OR-09b.svg/120px-Army-U.S.-OR-09b.svg.png",
-  "SMA":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Army-U.S.-OR-09a.svg/120px-Army-U.S.-OR-09a.svg.png",
-  // Warrant Officers — Army-U.S.-WO series, 120px
-  "WO1":  "https://upload.wikimedia.org/wikipedia/commons/9/95/ARMY_WO1.gif",
-  "CW2":  "https://upload.wikimedia.org/wikipedia/commons/d/db/ARMY_CW2.gif",
-  "CW3":  "https://upload.wikimedia.org/wikipedia/commons/f/f3/ARMY_CW3.gif",
-  "CW4":  "https://upload.wikimedia.org/wikipedia/commons/e/e6/ARMY_CW4.gif",
-  "CW5":  "https://upload.wikimedia.org/wikipedia/commons/a/a4/ARMY_CW5.png",
-  // Officers — Army-U.S.-OF series, 120px (verified from SVG category)
-  "2LT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/2LT-Army.jpg/120px-2LT-Army.jpg",
-  "1LT":  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/1LT-Army.jpg/120px-1LT-Army.jpg",
-  "CPT":  "https://upload.wikimedia.org/wikipedia/commons/e/ea/US_ARMY_CPT.gif",
-  "MAJ":  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/09-US_Army_Mess_Uniform-MAJ.svg/120px-09-US_Army_Mess_Uniform-MAJ.svg.png",
-  "LTC":  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/10-US_Army_Mess_Uniform-LTC.svg/120px-10-US_Army_Mess_Uniform-LTC.svg.png",
-  "COL":  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/11-US_Army_Mess_Uniform-COL.svg/120px-11-US_Army_Mess_Uniform-COL.svg.png",
-  "BG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/12-US_Army_Mess_Uniform-BG.svg/120px-12-US_Army_Mess_Uniform-BG.svg.png",
-  "MG":   "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/13-US_Army_Mess_Uniform-MG.svg/120px-13-US_Army_Mess_Uniform-MG.svg.png",
-  "LTG":  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/14-US_Army_Mess_Uniform-LG.svg/120px-14-US_Army_Mess_Uniform-LG.svg.png",
-  "GEN":  "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/15-US_Army_Mess_Uniform-GEN.svg/120px-15-US_Army_Mess_Uniform-GEN.svg.png",
+  // Enlisted
+  "PV1":  null,
+  "PV2":  `${WAR}/E2-private-second-class.png`,
+  "PFC":  `${WAR}/E3-private-first-class.png`,
+  "SPC":  `${WAR}/E4-specialist.png`,
+  "CPL":  `${WAR}/E4-corporal.png`,
+  "SGT":  `${WAR}/E5-sergeant.png`,
+  "SSG":  `${WAR}/E6-staff-sergeant.png`,
+  "SFC":  `${WAR}/E7-sergeant-first-class.png`,
+  "MSG":  `${WAR}/E8-master-sergeant.png`,
+  "1SG":  `${WAR}/E8b-first-sergeant.png`,
+  "SGM":  `${WAR}/E9-sergeant-major.png`,
+  "CSM":  `${WAR}/E9b-command-sergeant-major.png`,
+  "SMA":  `${WAR}/E9c-sergeant-major-of-the-army.png`,
+  // Warrant Officers
+  "WO1":  `${WAR}/W1-warrant-officer-1.png`,
+  "CW2":  `${WAR}/W2-chief-warrant-officer-2.png`,
+  "CW3":  `${WAR}/W3-chief-warrant-officer-3.png`,
+  "CW4":  `${WAR}/W4-chief-warrant-officer-4.png`,
+  "CW5":  `${WAR}/W5-chief-warrant-officer-5.png`,
+  // Officers
+  "2LT":  `${WAR}/O1-second-lieutenant.png`,
+  "1LT":  `${WAR}/O2-first-lieutenant.png`,
+  "CPT":  `${WAR}/O3-captain.png`,
+  "MAJ":  `${WAR}/O4-major.png`,
+  "LTC":  `${WAR}/O5-lieutenant-colonel.png`,
+  "COL":  `${WAR}/O6-colonel.png`,
+  "BG":   `${WAR}/O7-brigadier-general.png`,
+  "MG":   `${WAR}/O8-major-general.png`,
+  "LTG":  `${WAR}/O9-lieutenant-general.png`,
+  "GEN":  `${WAR}/O10-general.png`,
 };
 
 // ── Unit Patches / SSI ────────────────────────────────────────────────────────

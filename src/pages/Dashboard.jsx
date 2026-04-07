@@ -96,13 +96,13 @@ export default function Dashboard() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24 relative">
-        {/* Unit patch background */}
+        {/* Unit patch background — top quarter */}
         {user.unit && UNIT_PATCHES[user.unit] && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1/4 flex items-center justify-center pointer-events-none overflow-hidden">
             <img
               src={UNIT_PATCHES[user.unit]}
               alt=""
-              className="w-72 h-72 object-contain opacity-[0.07]"
+              className="w-48 h-48 object-contain opacity-[0.07]"
               style={{ filter: 'grayscale(30%)' }}
             />
           </div>

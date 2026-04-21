@@ -114,7 +114,7 @@ export default function FriendTimers({ now }) {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">FRIENDS ETS</p>
+        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">BATTLE BUDDIES</p>
         <button
           onClick={() => setShowAdd(true)}
           className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-primary font-inter font-semibold"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,12 +7,20 @@ import { X } from 'lucide-react';
 import { calculatePoints } from '@/lib/aft-scoring';
 
 const EVENTS = [
-  { key: 'deadlift', label: 'Deadlift', unit: 'lbs', pointsKey: 'deadlift_points' },
-  { key: 'pushups', label: 'Hand-Release Push-Ups', unit: 'reps', pointsKey: 'pushups_points' },
-  { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', unit: 'sec', pointsKey: 'sprint_drag_carry_points' },
-  { key: 'plank', label: 'Plank', unit: 'sec', pointsKey: 'plank_points' },
-  { key: 'two_mile_run', label: '2-Mile Run', unit: 'sec', pointsKey: 'two_mile_run_points' },
+  { key: 'deadlift', label: 'Deadlift', unit: 'lbs', pointsKey: 'deadlift_points', timeInput: false },
+  { key: 'pushups', label: 'Hand-Release Push-Ups', unit: 'reps', pointsKey: 'pushups_points', timeInput: false },
+  { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', unit: 'MM:SS', pointsKey: 'sprint_drag_carry_points', timeInput: true },
+  { key: 'plank', label: 'Plank', unit: 'MM:SS', pointsKey: 'plank_points', timeInput: true },
+  { key: 'two_mile_run', label: '2-Mile Run', unit: 'MM:SS', pointsKey: 'two_mile_run_points', timeInput: true },
 ];
+
+// Convert "MM:SS" string to total seconds
+function parseMMSS(str) {
+  if (!str || !str.includes(':')) return null;
+  const [m, s] = str.split(':').map(Number);
+  if (isNaN(m) || isNaN(s)) return null;
+  return m * 60 + s;
+}
 
 export default function AddScoreModal({ onClose, onSaved, userAge, userGender }) {
   const today = new Date().toISOString().split('T')[0];
@@ -20,11 +28,26 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
   const [saving, setSaving] = useState(false);
 
   const setRaw = (ev, value) => {
-    const raw = value === '' ? '' : Number(value);
     const age = userAge ? Number(userAge) : null;
     const gender = userGender ? String(userGender).toLowerCase() : null;
-    const pts = (raw !== '' && age && gender) ? calculatePoints(ev.key, gender, age, raw) : '';
-    setForm(f => ({ ...f, [ev.key]: value, [ev.pointsKey]: pts !== null && pts !== undefined ? pts : '' }));
+
+    let rawSeconds = null;
+    if (ev.timeInput) {
+      rawSeconds = parseMMSS(value);
+    } else {
+      rawSeconds = value === '' ? null : Number(value);
+    }
+
+    const pts = (rawSeconds !== null && age && gender)
+      ? calculatePoints(ev.key, gender, age, rawSeconds)
+      : '';
+
+    setForm(f => ({
+      ...f,
+      [ev.key]: value,
+      [`${ev.key}_seconds`]: rawSeconds,
+      [ev.pointsKey]: pts !== null && pts !== undefined ? pts : '',
+    }));
   };
 
   const handleSave = async () => {
@@ -32,7 +55,12 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
     const payload = { date: form.date };
     let total = 0;
     EVENTS.forEach(ev => {
-      if (form[ev.key] !== '' && form[ev.key] !== undefined) payload[ev.key] = Number(form[ev.key]);
+      if (ev.timeInput) {
+        const secs = form[`${ev.key}_seconds`];
+        if (secs !== null && secs !== undefined) payload[ev.key] = secs;
+      } else {
+        if (form[ev.key] !== '' && form[ev.key] !== undefined) payload[ev.key] = Number(form[ev.key]);
+      }
       const pts = Number(form[ev.pointsKey] || 0);
       payload[ev.pointsKey] = pts;
       total += pts;
@@ -75,8 +103,8 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
               <div className="space-y-1">
                 <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">RAW ({ev.unit})</Label>
                 <Input
-                  type="number"
-                  placeholder="0"
+                  type={ev.timeInput ? 'text' : 'number'}
+                  placeholder={ev.timeInput ? '0:00' : '0'}
                   value={form[ev.key] ?? ''}
                   onChange={e => setRaw(ev, e.target.value)}
                   className="h-10 font-mono bg-background border-border"

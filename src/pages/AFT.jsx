@@ -8,12 +8,19 @@ import AddScoreModal from '@/components/aft/AddScoreModal';
 import AFTAnalysis from '@/components/aft/AFTAnalysis';
 
 const EVENTS = [
-  { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', unit: 'lbs' },
-  { key: 'pushups', label: 'Push-Ups', pointsKey: 'pushups_points', unit: 'reps' },
-  { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', pointsKey: 'sprint_drag_carry_points', unit: 'sec' },
-  { key: 'plank', label: 'Plank', pointsKey: 'plank_points', unit: 'sec' },
-  { key: 'two_mile_run', label: '2-Mile Run', pointsKey: 'two_mile_run_points', unit: 'sec' },
+  { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', unit: 'lbs', timeFormat: false },
+  { key: 'pushups', label: 'Push-Ups', pointsKey: 'pushups_points', unit: 'reps', timeFormat: false },
+  { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', pointsKey: 'sprint_drag_carry_points', unit: '', timeFormat: true },
+  { key: 'plank', label: 'Plank', pointsKey: 'plank_points', unit: '', timeFormat: true },
+  { key: 'two_mile_run', label: '2-Mile Run', pointsKey: 'two_mile_run_points', unit: '', timeFormat: true },
 ];
+
+const formatMMSS = (secs) => {
+  if (secs === null || secs === undefined || secs === '—') return '—';
+  const m = Math.floor(Number(secs) / 60);
+  const s = Number(secs) % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+};
 
 const TABS = ['OVERVIEW', 'HISTORY', 'EVENTS TREND'];
 
@@ -129,7 +136,7 @@ export default function AFT() {
                         <div key={ev.key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                           <span className="text-xs font-inter text-foreground">{ev.label}</span>
                           <div className="flex items-center gap-3 text-right">
-                            <span className="text-xs font-mono text-muted-foreground">{raw !== '—' ? `${raw} ${ev.unit}` : '—'}</span>
+                            <span className="text-xs font-mono text-muted-foreground">{raw !== '—' ? ev.timeFormat ? formatMMSS(raw) : `${raw} ${ev.unit}` : '—'}</span>
                             <span className="text-sm font-mono font-bold text-primary w-10 text-right">{pts}</span>
                           </div>
                         </div>
@@ -162,7 +169,7 @@ export default function AFT() {
                         {EVENTS.map(ev => (
                           <div key={ev.key} className="flex justify-between text-xs py-1">
                             <span className="font-inter text-muted-foreground">{ev.label}</span>
-                            <span className="font-mono text-foreground">{s[ev.key] ?? '—'} {ev.unit} · <span className="text-primary font-semibold">{s[ev.pointsKey] ?? '—'} pts</span></span>
+                            <span className="font-mono text-foreground">{s[ev.key] !== undefined && s[ev.key] !== null ? (ev.timeFormat ? formatMMSS(s[ev.key]) : `${s[ev.key]} ${ev.unit}`) : '—'} · <span className="text-primary font-semibold">{s[ev.pointsKey] ?? '—'} pts</span></span>
                           </div>
                         ))}
                         <button
@@ -198,7 +205,7 @@ export default function AFT() {
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                             <XAxis dataKey="date" tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }} />
                             <YAxis tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }} domain={['auto', 'auto']} />
-                            <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, fontSize: 11 }} formatter={(v) => [`${v} ${ev.unit}`, 'Raw']} />
+                            <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, fontSize: 11 }} formatter={(v) => [ev.timeFormat ? formatMMSS(v) : `${v} ${ev.unit}`, 'Raw']} />
                             <Line type="monotone" dataKey="raw" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: 'hsl(var(--primary))', r: 3 }} />
                           </LineChart>
                         </ResponsiveContainer>

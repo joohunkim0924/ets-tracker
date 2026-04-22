@@ -35,7 +35,7 @@ export default function AddWeaponsModal({ onClose, onSaved }) {
     };
     if (form.hits !== '') payload.hits = Number(form.hits);
     if (form.total_rounds !== '') payload.total_rounds = Number(form.total_rounds);
-    if (form.score !== '') payload.score = Number(form.score);
+    if (form.score !== '') payload.score = Math.max(0, Number(form.score));
     await base44.entities.WeaponsRecord.create(payload);
     setSaving(false);
     onSaved();
@@ -82,7 +82,7 @@ export default function AddWeaponsModal({ onClose, onSaved }) {
 
           <div className="space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">SCORE (optional)</Label>
-            <Input type="number" placeholder="e.g. 36" value={form.score} onChange={e => set('score', e.target.value)} className="h-12 font-mono bg-secondary border-border" />
+            <Input type="number" min="0" placeholder="e.g. 36" value={form.score} onChange={e => set('score', e.target.value)} className="h-12 font-mono bg-secondary border-border" />
           </div>
 
           <div className="space-y-2">

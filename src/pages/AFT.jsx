@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { format, parseISO } from 'date-fns';
-import { Plus, TrendingUp, List, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Trash2, Pencil } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import BottomNav from '@/components/layout/BottomNav';
 import AddScoreModal from '@/components/aft/AddScoreModal';
@@ -29,6 +29,7 @@ export default function AFT() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('OVERVIEW');
   const [showAdd, setShowAdd] = useState(false);
+  const [editingScore, setEditingScore] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [userAge, setUserAge] = useState(null);
   const [userGender, setUserGender] = useState(null);
@@ -172,12 +173,20 @@ export default function AFT() {
                             <span className="font-mono text-foreground">{s[ev.key] !== undefined && s[ev.key] !== null ? (ev.timeFormat ? formatMMSS(s[ev.key]) : `${s[ev.key]} ${ev.unit}`) : '—'} · <span className="text-primary font-semibold">{s[ev.pointsKey] ?? '—'} pts</span></span>
                           </div>
                         ))}
-                        <button
-                          onClick={async () => { await base44.entities.AFTScore.delete(s.id); load(); }}
-                          className="mt-2 flex items-center gap-1.5 text-destructive text-[11px] font-inter font-semibold hover:opacity-70 transition-opacity"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" /> Delete record
-                        </button>
+                        <div className="mt-2 flex items-center gap-4">
+                          <button
+                            onClick={() => { setEditingScore(s); setExpandedId(null); }}
+                            className="flex items-center gap-1.5 text-primary text-[11px] font-inter font-semibold hover:opacity-70 transition-opacity"
+                          >
+                            <Pencil className="w-3.5 h-3.5" /> Edit record
+                          </button>
+                          <button
+                            onClick={async () => { await base44.entities.AFTScore.delete(s.id); load(); }}
+                            className="flex items-center gap-1.5 text-destructive text-[11px] font-inter font-semibold hover:opacity-70 transition-opacity"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" /> Delete record
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -220,6 +229,7 @@ export default function AFT() {
       </div>
 
       {showAdd && <AddScoreModal onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); load(); }} userAge={userAge} userGender={userGender} />}
+      {editingScore && <AddScoreModal onClose={() => setEditingScore(null)} onSaved={() => { setEditingScore(null); load(); }} userAge={userAge} userGender={userGender} existingScore={editingScore} />}
       <BottomNav />
     </div>
   );

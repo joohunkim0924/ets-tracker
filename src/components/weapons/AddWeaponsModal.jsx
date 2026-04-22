@@ -7,19 +7,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { X } from 'lucide-react';
 
 const WEAPONS = ['M4', 'M17', 'M18', 'M9', 'M240B', 'M249', 'M2', 'M320', 'AT4', 'Mk19'];
-
 const QUALIFICATIONS = ['Unqualified', 'Marksman', 'Sharpshooter', 'Expert'];
 
-const QUAL_COLORS = {
-  Unqualified: 'text-destructive',
-  Marksman: 'text-muted-foreground',
-  Sharpshooter: 'text-accent-foreground',
-  Expert: 'text-primary',
-};
-
-export default function AddWeaponsModal({ onClose, onSaved }) {
+export default function AddWeaponsModal({ onClose, onSaved, existingRecord }) {
   const today = new Date().toISOString().split('T')[0];
-  const [form, setForm] = useState({ date: today, weapon: '', hits: '', total_rounds: '', score: '', qualification: '', range: '', notes: '' });
+  const isEditing = !!existingRecord;
+
+  const [form, setForm] = useState({
+    date: existingRecord?.date || today,
+    weapon: existingRecord?.weapon || '',
+    hits: existingRecord?.hits !== undefined ? String(existingRecord.hits) : '',
+    total_rounds: existingRecord?.total_rounds !== undefined ? String(existingRecord.total_rounds) : '',
+    score: existingRecord?.score !== undefined ? String(existingRecord.score) : '',
+    qualification: existingRecord?.qualification || '',
+    range: existingRecord?.range || '',
+    notes: existingRecord?.notes || '',
+  });
   const [saving, setSaving] = useState(false);
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -36,7 +39,12 @@ export default function AddWeaponsModal({ onClose, onSaved }) {
     if (form.hits !== '') payload.hits = Number(form.hits);
     if (form.total_rounds !== '') payload.total_rounds = Number(form.total_rounds);
     if (form.score !== '') payload.score = Math.max(0, Number(form.score));
-    await base44.entities.WeaponsRecord.create(payload);
+
+    if (isEditing) {
+      await base44.entities.WeaponsRecord.update(existingRecord.id, payload);
+    } else {
+      await base44.entities.WeaponsRecord.create(payload);
+    }
     setSaving(false);
     onSaved();
   };
@@ -47,7 +55,9 @@ export default function AddWeaponsModal({ onClose, onSaved }) {
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
       <div className="bg-background w-full rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto pb-20">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-base font-inter font-bold uppercase tracking-widest">LOG WEAPONS RECORD</h2>
+          <h2 className="text-base font-inter font-bold uppercase tracking-widest">
+            {isEditing ? 'EDIT WEAPONS RECORD' : 'LOG WEAPONS RECORD'}
+          </h2>
           <button onClick={onClose}><X className="w-5 h-5 text-muted-foreground" /></button>
         </div>
 
@@ -108,7 +118,7 @@ export default function AddWeaponsModal({ onClose, onSaved }) {
           </div>
 
           <Button onClick={handleSave} disabled={saving || !canSave} className="w-full h-12 font-inter font-semibold uppercase tracking-wider mt-2">
-            {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : 'SAVE RECORD'}
+            {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : isEditing ? 'UPDATE RECORD' : 'SAVE RECORD'}
           </Button>
         </div>
       </div>

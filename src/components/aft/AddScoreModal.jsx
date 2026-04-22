@@ -14,7 +14,6 @@ const EVENTS = [
   { key: 'two_mile_run', label: '2-Mile Run', unit: 'MM:SS', pointsKey: 'two_mile_run_points', timeInput: true },
 ];
 
-// Convert "MM:SS" string to total seconds
 function parseMMSS(str) {
   if (!str || !str.includes(':')) return null;
   const [m, s] = str.split(':').map(Number);
@@ -22,10 +21,32 @@ function parseMMSS(str) {
   return m * 60 + s;
 }
 
-export default function AddScoreModal({ onClose, onSaved, userAge, userGender }) {
-  const today = new Date().toISOString().split('T')[0];
-  const [form, setForm] = useState({ date: today });
+function formatMMSS(secs) {
+  if (secs === null || secs === undefined) return '';
+  const m = Math.floor(Number(secs) / 60);
+  const s = Number(secs) % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function buildInitialForm(existingScore) {
+  if (!existingScore) return { date: new Date().toISOString().split('T')[0] };
+  const form = { date: existingScore.date };
+  EVENTS.forEach(ev => {
+    const raw = existingScore[ev.key];
+    if (raw !== undefined && raw !== null) {
+      form[ev.key] = ev.timeInput ? formatMMSS(raw) : String(raw);
+      if (ev.timeInput) form[`${ev.key}_seconds`] = raw;
+    }
+    const pts = existingScore[ev.pointsKey];
+    if (pts !== undefined && pts !== null) form[ev.pointsKey] = pts;
+  });
+  return form;
+}
+
+export default function AddScoreModal({ onClose, onSaved, userAge, userGender, existingScore }) {
+  const [form, setForm] = useState(() => buildInitialForm(existingScore));
   const [saving, setSaving] = useState(false);
+  const isEditing = !!existingScore;
 
   const setRaw = (ev, value) => {
     const age = userAge ? Number(userAge) : null;
@@ -66,7 +87,12 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
       total += pts;
     });
     payload.total_score = total;
-    await base44.entities.AFTScore.create(payload);
+
+    if (isEditing) {
+      await base44.entities.AFTScore.update(existingScore.id, payload);
+    } else {
+      await base44.entities.AFTScore.create(payload);
+    }
     setSaving(false);
     onSaved();
   };
@@ -77,7 +103,9 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
       <div className="bg-background w-full rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto pb-20">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-base font-inter font-bold uppercase tracking-widest">LOG AFT SCORE</h2>
+          <h2 className="text-base font-inter font-bold uppercase tracking-widest">
+            {isEditing ? 'EDIT AFT SCORE' : 'LOG AFT SCORE'}
+          </h2>
           <button onClick={onClose}><X className="w-5 h-5 text-muted-foreground" /></button>
         </div>
 
@@ -128,7 +156,7 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender })
         </div>
 
         <Button onClick={handleSave} disabled={saving} className="w-full h-12 font-inter font-semibold uppercase tracking-wider">
-          {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : 'SAVE SCORE'}
+          {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : isEditing ? 'UPDATE SCORE' : 'SAVE SCORE'}
         </Button>
       </div>
     </div>

@@ -177,7 +177,7 @@ export default function Settings() {
           </Button>
 
           <Button variant="outline" onClick={() => base44.auth.logout()} className="w-full h-12 border-destructive/30 text-destructive font-inter uppercase tracking-wider text-sm hover:bg-destructive/10">
-            <LogOut className="w-4 h-4 mr-2" /> LOG OUT
+            <LogOut className="w-4 h-4 mr-2" /> RESET OFFLINE DATA
           </Button>
         </div>
 

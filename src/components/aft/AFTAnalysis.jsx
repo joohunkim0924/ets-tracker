@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Sparkles, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -26,6 +25,97 @@ const levelColors = {
 
 const levelLabels = { weak: 'WEAK', moderate: 'MODERATE', strong: 'STRONG' };
 
+const TRAINING_GUIDANCE = {
+  deadlift: [
+    'Trap-bar or barbell deadlift: 5 sets of 5 reps at challenging weight',
+    'Romanian deadlift: 3 sets of 8 reps',
+    'Farmer carries: 4 rounds of 40 meters',
+    'Sandbag pick-and-carry: 5 rounds of 30 meters',
+  ],
+  pushups: [
+    'Hand-release push-up intervals: 6 rounds of max reps in 45 seconds',
+    'Tempo push-ups: 4 sets of 10 reps with a 3-second descent',
+    'Incline or banded burnout set: 3 sets to near failure',
+    'Plank shoulder taps: 3 sets of 20 total reps',
+  ],
+  sprint_drag_carry: [
+    'Sprint repeats: 6 x 50 meters with 60-90 seconds rest',
+    'Sled drag or heavy backward walk: 5 rounds of 25 meters',
+    'Lateral shuffle drill: 4 rounds of 20 meters each direction',
+    'Kettlebell carry circuit: 4 rounds of 1 minute work',
+  ],
+  plank: [
+    'Front plank holds: 4 rounds of 45-90 seconds',
+    'RKC plank: 5 rounds of 20-30 seconds',
+    'Side planks: 3 rounds per side',
+    'Dead bugs or hollow-body holds: 3 sets of 12-15 reps',
+  ],
+  two_mile_run: [
+    'Interval run: 6 x 400 meters at faster-than-goal pace',
+    'Tempo run: 1-2 miles at uncomfortable but sustainable pace',
+    'Easy recovery run: 20-30 minutes conversational pace',
+    'Hill sprints: 8 rounds of 20 seconds uphill',
+  ],
+};
+
+function buildWeeklyPlan(focusAreas) {
+  const focusLabels = focusAreas.map((event) => event.label.toLowerCase());
+  const runFocus = focusLabels.includes('2-mile run');
+  const carryFocus = focusLabels.includes('sprint-drag-carry');
+  const upperFocus = focusLabels.includes('push-ups');
+  const coreFocus = focusLabels.includes('plank');
+
+  return [
+    `**Day 1** - Strength focus: deadlift work, loaded carries, and core finisher${carryFocus ? ' with extra drag or shuttle work' : ''}.`,
+    `**Day 2** - Running focus: interval session plus easy cooldown jog${runFocus ? ' with goal-pace repeats' : ''}.`,
+    `**Day 3** - Upper body and trunk: push-up ladder, shoulder stability, plank progressions${upperFocus || coreFocus ? ' with one extra accessory round' : ''}.`,
+    '**Day 4** - Recovery: mobility, light walk, easy bike, and 15 minutes of stretching.',
+    '**Day 5** - Full AFT prep circuit: practice transitions, short sprint work, and one event-specific finisher for each weak area.',
+  ];
+}
+
+function generateOfflineAnalysis(latest, previous, eventSummary) {
+  const focusAreas = eventSummary.filter((event) => event.level === 'weak' || event.level === 'moderate');
+  const strongAreas = eventSummary.filter((event) => event.level === 'strong');
+  const totalDelta = previous ? (latest.total_score || 0) - (previous.total_score || 0) : null;
+
+  const overallAssessment = [
+    `Your latest recorded AFT score is **${latest.total_score || 0}**.${totalDelta !== null ? ` That is **${totalDelta >= 0 ? '+' : ''}${totalDelta}** points compared with your previous score.` : ''}`,
+    strongAreas.length
+      ? `Your strongest events right now are ${strongAreas.map((event) => `**${event.label}**`).join(', ')}. Keep those sharp while you bring the weaker events up.`
+      : 'You have room to build across every event, which means consistent training should translate into visible gains quickly.',
+  ];
+
+  const priorityFocus = focusAreas.length
+    ? focusAreas.map((event) => `### ${event.label}\n${TRAINING_GUIDANCE[event.key].map((item) => `- ${item}`).join('\n')}`)
+    : ['All tracked events are in a strong range right now. Focus on maintenance work, recovery, and one full AFT rehearsal every 1-2 weeks.'];
+
+  const nutrition = [
+    '- Eat a solid protein serving at each meal to support recovery and strength gains.',
+    '- Hydrate early in the day and add electrolytes when training hard in the heat.',
+    '- Put most of your carbs around hard run days and sprint-drag-carry sessions.',
+    '- Keep one quick field-friendly snack on hand, like jerky, protein bars, or trail mix.',
+    '- Prioritize 7+ hours of sleep whenever mission tempo allows, especially before test practice days.',
+  ];
+
+  return [
+    '## Overall Assessment',
+    ...overallAssessment,
+    '',
+    '## Priority Focus Areas',
+    ...priorityFocus,
+    '',
+    '## Weekly Workout Plan',
+    ...buildWeeklyPlan(focusAreas),
+    '',
+    '## Nutrition & Recovery',
+    ...nutrition,
+    '',
+    '## Motivational Close',
+    'Stay consistent, keep the sessions simple, and stack small wins. Even in the field, disciplined work and recovery will move your score in the right direction.',
+  ].join('\n');
+}
+
 export default function AFTAnalysis({ scores }) {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -41,33 +131,9 @@ export default function AFTAnalysis({ scores }) {
     level: getLevel(latest[ev.pointsKey]),
   }));
 
-  const generate = async () => {
+  const generate = () => {
     setLoading(true);
-    setAnalysis(null);
-
-    const breakdown = eventSummary
-      .map(e => `- ${e.label}: ${e.pts !== null ? `${e.pts} pts (${e.level})` : 'no data'}`)
-      .join('\n');
-
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a US Army fitness coach analyzing a soldier's AFT (Army Fitness Test) results.
-
-Latest scores:
-${breakdown}
-
-Score tiers: weak = below 80 pts, moderate = 80–89 pts, strong = 90+ pts.
-
-Provide a personalized, encouraging fitness plan. Structure your response with these sections:
-1. **Overall Assessment** — 2-3 sentences of honest encouragement and appreciation for their effort, acknowledging their strengths.
-2. **Priority Focus Areas** — For each weak/moderate event, give 3-4 specific exercises or drills to improve it (with sets/reps/duration). Skip strong events.
-3. **Weekly Workout Plan** — A 5-day structured weekly schedule targeting the weak areas while maintaining strengths.
-4. **Nutrition & Recovery** — 4-5 specific, actionable nutrition tips tailored to the demands of their weak events.
-5. **Motivational Close** — 1-2 sentences of genuine encouragement.
-
-Keep it practical, specific, and military-fitness focused. Be direct but supportive. Use markdown formatting.`,
-    });
-
-    setAnalysis(result);
+    setAnalysis(generateOfflineAnalysis(latest, scores[1], eventSummary));
     setLoading(false);
   };
 

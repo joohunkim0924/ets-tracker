@@ -90,3 +90,46 @@
     font-family: var(--font-inter);
   }
 }
+
+/* src/index.css */
+
+@layer base {
+  :root {
+    /* This ensures your app fills the screen and doesn't bounce weirdly */
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+  }
+
+  html, body {
+    /* Prevents the "rubber-band" scrolling effect on iOS */
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    /* Touch actions: pan-x/pan-y prevent accidental zooming */
+    touch-action: manipulation;
+  }
+
+  #root {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Stops the "Select All / Copy" popup from appearing when 
+     a soldier holds down a button too long */
+  * {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Allows typing in inputs while keeping the rest of the app "locked" */
+  input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}

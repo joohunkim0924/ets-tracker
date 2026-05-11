@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { generateAftAnalysis } from '@/api/aftAnalysisClient';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points' },
@@ -120,6 +121,8 @@ export default function AFTAnalysis({ scores }) {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(true);
+  const [error, setError] = useState('');
+  const [model, setModel] = useState('');
 
   const latest = scores[0];
 
@@ -131,10 +134,25 @@ export default function AFTAnalysis({ scores }) {
     level: getLevel(latest[ev.pointsKey]),
   }));
 
-  const generate = () => {
+  const generate = async () => {
     setLoading(true);
-    setAnalysis(generateOfflineAnalysis(latest, scores[1], eventSummary));
-    setLoading(false);
+    setError('');
+
+    try {
+      const result = await generateAftAnalysis({
+        latest,
+        previous: scores[1],
+        eventSummary,
+      });
+      setAnalysis(result.analysis);
+      setModel(result.model || '');
+    } catch (apiError) {
+      setAnalysis(generateOfflineAnalysis(latest, scores[1], eventSummary));
+      setModel('');
+      setError(`${apiError.message} Showing local backup analysis.`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -197,6 +215,16 @@ export default function AFTAnalysis({ scores }) {
 
       {!loading && analysis && expanded && (
         <div className="px-5 py-4">
+          {model && (
+            <p className="mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
+              Generated with {model}
+            </p>
+          )}
+          {error && (
+            <p className="mb-3 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-muted-foreground font-inter">
+              {error}
+            </p>
+          )}
           <ReactMarkdown
             className="text-sm prose prose-sm max-w-none text-foreground [&_h1]:text-sm [&_h1]:font-bold [&_h1]:uppercase [&_h1]:tracking-widest [&_h1]:text-primary [&_h2]:text-sm [&_h2]:font-bold [&_h2]:uppercase [&_h2]:tracking-widest [&_h2]:text-primary [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:space-y-1 [&_li]:text-xs [&_p]:text-xs [&_p]:leading-relaxed"
           >

@@ -11,6 +11,27 @@ import BottomNav from '@/components/layout/BottomNav';
 import FriendTimers from '@/components/tracker/FriendTimers';
 import PromotionCountdown from '@/components/tracker/PromotionCountdown';
 
+function UnitPatchWatermark({ src, unit }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) return null;
+
+  return (
+    <div className="absolute top-0 left-0 right-0 h-56 flex items-center justify-center pointer-events-none overflow-hidden z-0">
+      <img
+        key={src}
+        src={src}
+        alt={`${unit} unit patch`}
+        className="w-56 h-56 object-contain opacity-[0.16]"
+        style={{ filter: 'grayscale(20%) saturate(85%)' }}
+        loading="eager"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -95,34 +116,27 @@ export default function Dashboard() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24 relative">
+      <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24 relative overflow-hidden">
         {/* Unit patch background — top quarter */}
-        {user.unit && UNIT_PATCHES[user.unit] && (
-          <div className="absolute top-0 left-0 right-0 h-1/4 flex items-center justify-center pointer-events-none overflow-hidden">
-            <img
-              src={UNIT_PATCHES[user.unit]}
-              alt=""
-              className="w-48 h-48 object-contain opacity-[0.07]"
-              style={{ filter: 'grayscale(30%)' }}
-            />
-          </div>
-        )}
+        <UnitPatchWatermark src={UNIT_PATCHES[user.unit]} unit={user.unit} />
         {/* Circular progress */}
-        <div className="mb-6">
+        <div className="mb-6 relative z-10">
           <CircularProgress percentage={percentage} />
         </div>
 
         {/* Days remaining */}
-        <CountdownDisplay
-          daysRemaining={daysRemaining}
-          hoursRemaining={hoursRemaining}
-          minutesRemaining={minutesRemaining}
-          secondsRemaining={secondsRemaining}
-          etsDate={format(etsDate, 'dd MMM yyyy').toUpperCase()}
-        />
+        <div className="relative z-10 w-full">
+          <CountdownDisplay
+            daysRemaining={daysRemaining}
+            hoursRemaining={hoursRemaining}
+            minutesRemaining={minutesRemaining}
+            secondsRemaining={secondsRemaining}
+            etsDate={format(etsDate, 'dd MMM yyyy').toUpperCase()}
+          />
+        </div>
 
         {/* Stats grid */}
-        <div className="w-full grid grid-cols-2 gap-3 mt-6 mb-4">
+        <div className="w-full grid grid-cols-2 gap-3 mt-6 mb-4 relative z-10">
           <StatsCard
             label="DAYS SERVED"
             value={Math.max(daysServed, 0).toLocaleString()}
@@ -137,13 +151,13 @@ export default function Dashboard() {
         </div>
 
         {/* Promotion countdown */}
-        <div className="w-full mb-4">
+        <div className="w-full mb-4 relative z-10">
           <PromotionCountdown user={user} now={now} />
         </div>
 
         {/* PCS countdown if applicable */}
         {pcsDate && pcsDaysRemaining !== null && (
-          <div className="w-full bg-card rounded-xl border border-border p-5 flex items-center gap-4 mb-4">
+          <div className="w-full bg-card rounded-xl border border-border p-5 flex items-center gap-4 mb-4 relative z-10">
             <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
               <MapPin className="w-5 h-5 text-accent" />
             </div>
@@ -162,12 +176,12 @@ export default function Dashboard() {
         )}
 
         {/* Friends ETS timers */}
-        <div className="w-full mb-4">
+        <div className="w-full mb-4 relative z-10">
           <FriendTimers now={now} />
         </div>
 
         {/* Footer quote */}
-        <div className="w-full text-center py-4">
+        <div className="w-full text-center py-4 relative z-10">
           <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/50 font-inter">
             THIS TOO SHALL PASS
           </p>

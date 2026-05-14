@@ -28,6 +28,7 @@ function extractText(responseJson) {
 
   const output = Array.isArray(responseJson.output) ? responseJson.output : [];
   return output
+    .filter((item) => item.type === 'message' || item.role === 'assistant')
     .flatMap((item) => (Array.isArray(item.content) ? item.content : []))
     .map((content) => content.text || content.output_text || '')
     .filter(Boolean)
@@ -35,8 +36,23 @@ function extractText(responseJson) {
     .trim();
 }
 
+function normalizeAnalysis(text) {
+  const startMatch = text.match(/(?:^|\n)\s*(?:#{1,3}\s*)?(?:\*\*)?Overall Assessment(?:\*\*)?/i);
+  if (!startMatch || startMatch.index === undefined) return text;
+  return text.slice(startMatch.index).trim();
+}
+
 export default async function handler(req, res) {
+  const allowedOrigin = process.env.AFT_ANALYSIS_ALLOWED_ORIGIN || '*';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Cache-Control');
   res.setHeader('Cache-Control', 'no-store, max-age=0');
+
+  if (req.method === 'OPTIONS') {
+    res.status(204).end();
+    return;
+  }
 
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -112,7 +128,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const analysis = extractText(responseJson);
+    const analysis = normalizeAnalysis(extractText(responseJson));
     if (!analysis) {
       res.status(502).json({ error: 'Groq returned an empty analysis.' });
       return;

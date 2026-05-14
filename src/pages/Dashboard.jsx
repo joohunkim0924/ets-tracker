@@ -59,6 +59,8 @@ export default function Dashboard() {
   const minutesRemaining = Math.floor((msRemaining % (1000 * 60 * 60)) / (1000 * 60));
   const secondsRemaining = Math.floor((msRemaining % (1000 * 60)) / 1000);
   const pcsDaysRemaining = pcsDate ? differenceInDays(pcsDate, now) : null;
+  const unitKey = user.unit ? String(user.unit).trim().toUpperCase() : '';
+  const unitPatch = UNIT_PATCHES[unitKey];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -99,8 +101,8 @@ export default function Dashboard() {
         <div className="mb-6 relative z-10">
           <CircularProgress
             percentage={percentage}
-            patchSrc={UNIT_PATCHES[user.unit]}
-            patchAlt={user.unit ? `${user.unit} unit patch` : ''}
+            patchSrc={unitPatch}
+            patchAlt={unitKey ? `${unitKey} unit patch` : ''}
           />
         </div>
 

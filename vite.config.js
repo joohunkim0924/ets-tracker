@@ -3,32 +3,38 @@ import react from '@vitejs/plugin-react'
 import path from 'node:path'
 import { VitePWA } from 'vite-plugin-pwa'
 
-function aiApiDevServer() {
+function registerAftAnalysisApi(middlewares) {
+  middlewares.use('/api/aft-analysis', async (req, res) => {
+    if (req.method !== 'POST') {
+      res.statusCode = 405;
+      res.setHeader('Allow', 'POST');
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Method not allowed' }));
+      return;
+    }
+
+    res.status = (statusCode) => {
+      res.statusCode = statusCode;
+      return res;
+    };
+    res.json = (payload) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(payload));
+    };
+
+    const { default: handler } = await import('./api/aft-analysis.js');
+    await handler(req, res);
+  });
+}
+
+function aiApiServer() {
   return {
-    name: 'ai-api-dev-server',
-    apply: 'serve',
+    name: 'ai-api-server',
     configureServer(server) {
-      server.middlewares.use('/api/aft-analysis', async (req, res) => {
-        if (req.method !== 'POST') {
-          res.statusCode = 405;
-          res.setHeader('Allow', 'POST');
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ error: 'Method not allowed' }));
-          return;
-        }
-
-        res.status = (statusCode) => {
-          res.statusCode = statusCode;
-          return res;
-        };
-        res.json = (payload) => {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(payload));
-        };
-
-        const { default: handler } = await import('./api/aft-analysis.js');
-        await handler(req, res);
-      });
+      registerAftAnalysisApi(server.middlewares);
+    },
+    configurePreviewServer(server) {
+      registerAftAnalysisApi(server.middlewares);
     },
   };
 }
@@ -42,7 +48,7 @@ export default defineConfig(({ mode }) => {
     base: '/',
     plugins: [
       react(),
-      aiApiDevServer(),
+      aiApiServer(),
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',

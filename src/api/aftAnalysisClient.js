@@ -1,5 +1,7 @@
+const API_BASE_URL = (import.meta.env.VITE_AFT_ANALYSIS_API_BASE_URL || '').replace(/\/$/, '');
+
 export async function generateAftAnalysis({ scores, latest, previous, eventSummary, trendSummary, requestId }) {
-  const response = await fetch('/api/aft-analysis', {
+  const response = await fetch(`${API_BASE_URL}/api/aft-analysis`, {
     method: 'POST',
     cache: 'no-store',
     headers: {

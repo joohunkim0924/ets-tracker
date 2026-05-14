@@ -11,28 +11,6 @@ import BottomNav from '@/components/layout/BottomNav';
 import FriendTimers from '@/components/tracker/FriendTimers';
 import PromotionCountdown from '@/components/tracker/PromotionCountdown';
 
-function UnitPatchWatermark({ src, unit }) {
-  const [failed, setFailed] = useState(false);
-
-  if (!src || failed) return null;
-
-  return (
-    <div className="absolute top-0 left-0 right-0 h-56 flex items-center justify-center pointer-events-none overflow-hidden z-0">
-      <img
-        key={src}
-        src={src}
-        alt={`${unit} unit patch`}
-        className="w-56 h-56 object-contain opacity-[0.16]"
-        style={{ filter: 'grayscale(20%) saturate(85%)' }}
-        loading="eager"
-        decoding="async"
-        referrerPolicy="no-referrer"
-        onError={() => setFailed(true)}
-      />
-    </div>
-  );
-}
-
 export default function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -117,11 +95,13 @@ export default function Dashboard() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24 relative overflow-hidden">
-        {/* Unit patch background — top quarter */}
-        <UnitPatchWatermark src={UNIT_PATCHES[user.unit]} unit={user.unit} />
         {/* Circular progress */}
         <div className="mb-6 relative z-10">
-          <CircularProgress percentage={percentage} />
+          <CircularProgress
+            percentage={percentage}
+            patchSrc={UNIT_PATCHES[user.unit]}
+            patchAlt={user.unit ? `${user.unit} unit patch` : ''}
+          />
         </div>
 
         {/* Days remaining */}

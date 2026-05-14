@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sparkles, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { generateAftAnalysis } from '@/api/aftAnalysisClient';
 
 const EVENTS = [
-  { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points' },
-  { key: 'pushups', label: 'Push-Ups', pointsKey: 'pushups_points' },
-  { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', pointsKey: 'sprint_drag_carry_points' },
-  { key: 'plank', label: 'Plank', pointsKey: 'plank_points' },
-  { key: 'two_mile_run', label: '2-Mile Run', pointsKey: 'two_mile_run_points' },
+  { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', timeBased: false },
+  { key: 'pushups', label: 'Push-Ups', pointsKey: 'pushups_points', timeBased: false },
+  { key: 'sprint_drag_carry', label: 'Sprint-Drag-Carry', pointsKey: 'sprint_drag_carry_points', timeBased: true },
+  { key: 'plank', label: 'Plank', pointsKey: 'plank_points', timeBased: true },
+  { key: 'two_mile_run', label: '2-Mile Run', pointsKey: 'two_mile_run_points', timeBased: true },
 ];
 
 function getLevel(pts) {
@@ -26,95 +26,97 @@ const levelColors = {
 
 const levelLabels = { weak: 'WEAK', moderate: 'MODERATE', strong: 'STRONG' };
 
-const TRAINING_GUIDANCE = {
-  deadlift: [
-    'Trap-bar or barbell deadlift: 5 sets of 5 reps at challenging weight',
-    'Romanian deadlift: 3 sets of 8 reps',
-    'Farmer carries: 4 rounds of 40 meters',
-    'Sandbag pick-and-carry: 5 rounds of 30 meters',
-  ],
-  pushups: [
-    'Hand-release push-up intervals: 6 rounds of max reps in 45 seconds',
-    'Tempo push-ups: 4 sets of 10 reps with a 3-second descent',
-    'Incline or banded burnout set: 3 sets to near failure',
-    'Plank shoulder taps: 3 sets of 20 total reps',
-  ],
-  sprint_drag_carry: [
-    'Sprint repeats: 6 x 50 meters with 60-90 seconds rest',
-    'Sled drag or heavy backward walk: 5 rounds of 25 meters',
-    'Lateral shuffle drill: 4 rounds of 20 meters each direction',
-    'Kettlebell carry circuit: 4 rounds of 1 minute work',
-  ],
-  plank: [
-    'Front plank holds: 4 rounds of 45-90 seconds',
-    'RKC plank: 5 rounds of 20-30 seconds',
-    'Side planks: 3 rounds per side',
-    'Dead bugs or hollow-body holds: 3 sets of 12-15 reps',
-  ],
-  two_mile_run: [
-    'Interval run: 6 x 400 meters at faster-than-goal pace',
-    'Tempo run: 1-2 miles at uncomfortable but sustainable pace',
-    'Easy recovery run: 20-30 minutes conversational pace',
-    'Hill sprints: 8 rounds of 20 seconds uphill',
-  ],
-};
+const THINKING_STEPS = [
+  'Packaging full AFT score history',
+  'Measuring total score trend',
+  'Comparing event-by-event changes',
+  'Finding priority training focus',
+  'Building workout and recovery plan',
+  'Finalizing Groq analysis',
+];
 
-function buildWeeklyPlan(focusAreas) {
-  const focusLabels = focusAreas.map((event) => event.label.toLowerCase());
-  const runFocus = focusLabels.includes('2-mile run');
-  const carryFocus = focusLabels.includes('sprint-drag-carry');
-  const upperFocus = focusLabels.includes('push-ups');
-  const coreFocus = focusLabels.includes('plank');
+function formatRawValue(event, value) {
+  if (value === null || value === undefined || value === '') return null;
+  if (!event.timeBased) return Number(value);
 
-  return [
-    `**Day 1** - Strength focus: deadlift work, loaded carries, and core finisher${carryFocus ? ' with extra drag or shuttle work' : ''}.`,
-    `**Day 2** - Running focus: interval session plus easy cooldown jog${runFocus ? ' with goal-pace repeats' : ''}.`,
-    `**Day 3** - Upper body and trunk: push-up ladder, shoulder stability, plank progressions${upperFocus || coreFocus ? ' with one extra accessory round' : ''}.`,
-    '**Day 4** - Recovery: mobility, light walk, easy bike, and 15 minutes of stretching.',
-    '**Day 5** - Full AFT prep circuit: practice transitions, short sprint work, and one event-specific finisher for each weak area.',
-  ];
+  const totalSeconds = Number(value);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
-function generateOfflineAnalysis(latest, previous, eventSummary) {
-  const focusAreas = eventSummary.filter((event) => event.level === 'weak' || event.level === 'moderate');
-  const strongAreas = eventSummary.filter((event) => event.level === 'strong');
-  const totalDelta = previous ? (latest.total_score || 0) - (previous.total_score || 0) : null;
+function buildTrendSummary(scores) {
+  const chronologicalScores = [...scores].reverse();
+  const oldest = chronologicalScores[0];
+  const latest = scores[0];
+  const previous = scores[1];
 
-  const overallAssessment = [
-    `Your latest recorded AFT score is **${latest.total_score || 0}**.${totalDelta !== null ? ` That is **${totalDelta >= 0 ? '+' : ''}${totalDelta}** points compared with your previous score.` : ''}`,
-    strongAreas.length
-      ? `Your strongest events right now are ${strongAreas.map((event) => `**${event.label}**`).join(', ')}. Keep those sharp while you bring the weaker events up.`
-      : 'You have room to build across every event, which means consistent training should translate into visible gains quickly.',
-  ];
+  const eventTrends = EVENTS.map((event) => {
+    const records = chronologicalScores
+      .map((score) => ({
+        date: score.date,
+        raw: score[event.key] ?? null,
+        points: score[event.pointsKey] ?? null,
+      }))
+      .filter((record) => record.raw !== null || record.points !== null);
 
-  const priorityFocus = focusAreas.length
-    ? focusAreas.map((event) => `### ${event.label}\n${TRAINING_GUIDANCE[event.key].map((item) => `- ${item}`).join('\n')}`)
-    : ['All tracked events are in a strong range right now. Focus on maintenance work, recovery, and one full AFT rehearsal every 1-2 weeks.'];
+    const first = records[0] || null;
+    const last = records[records.length - 1] || null;
 
-  const nutrition = [
-    '- Eat a solid protein serving at each meal to support recovery and strength gains.',
-    '- Hydrate early in the day and add electrolytes when training hard in the heat.',
-    '- Put most of your carbs around hard run days and sprint-drag-carry sessions.',
-    '- Keep one quick field-friendly snack on hand, like jerky, protein bars, or trail mix.',
-    '- Prioritize 7+ hours of sleep whenever mission tempo allows, especially before test practice days.',
-  ];
+    return {
+      key: event.key,
+      label: event.label,
+      records,
+      first_raw: first ? formatRawValue(event, first.raw) : null,
+      latest_raw: last ? formatRawValue(event, last.raw) : null,
+      points_delta: first && last && first.points !== null && last.points !== null
+        ? Number(last.points) - Number(first.points)
+        : null,
+      latest_level: getLevel(latest?.[event.pointsKey]),
+    };
+  });
 
-  return [
-    '## Overall Assessment',
-    ...overallAssessment,
-    '',
-    '## Priority Focus Areas',
-    ...priorityFocus,
-    '',
-    '## Weekly Workout Plan',
-    ...buildWeeklyPlan(focusAreas),
-    '',
-    '## Nutrition & Recovery',
-    ...nutrition,
-    '',
-    '## Motivational Close',
-    'Stay consistent, keep the sessions simple, and stack small wins. Even in the field, disciplined work and recovery will move your score in the right direction.',
-  ].join('\n');
+  return {
+    score_count: scores.length,
+    date_range: {
+      first: oldest?.date || null,
+      latest: latest?.date || null,
+    },
+    total_score: {
+      oldest: oldest?.total_score ?? null,
+      previous: previous?.total_score ?? null,
+      latest: latest?.total_score ?? null,
+      delta_from_oldest: oldest && latest ? Number(latest.total_score || 0) - Number(oldest.total_score || 0) : null,
+      delta_from_previous: previous && latest ? Number(latest.total_score || 0) - Number(previous.total_score || 0) : null,
+    },
+    events: eventTrends,
+  };
+}
+
+function ThinkingProgress({ stepIndex, progress }) {
+  const currentStep = THINKING_STEPS[Math.min(stepIndex, THINKING_STEPS.length - 1)];
+
+  return (
+    <div className="border-t border-border bg-secondary/60 px-5 py-4">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter font-semibold">
+          Thinking
+        </span>
+        <span className="text-[10px] font-mono text-primary">
+          {Math.round(progress)}%
+        </span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-background border border-border">
+        <div
+          className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <p className="mt-2 text-xs text-muted-foreground font-inter">
+        {currentStep}
+      </p>
+    </div>
+  );
 }
 
 export default function AFTAnalysis({ scores }) {
@@ -123,33 +125,62 @@ export default function AFTAnalysis({ scores }) {
   const [expanded, setExpanded] = useState(true);
   const [error, setError] = useState('');
   const [model, setModel] = useState('');
+  const [source, setSource] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
+
+  useEffect(() => {
+    if (!loading) return undefined;
+
+    setProgress(8);
+    setStepIndex(0);
+
+    const interval = window.setInterval(() => {
+      setProgress((current) => Math.min(current + 9, 94));
+      setStepIndex((current) => Math.min(current + 1, THINKING_STEPS.length - 1));
+    }, 1400);
+
+    return () => window.clearInterval(interval);
+  }, [loading]);
 
   const latest = scores[0];
 
   if (!latest) return null;
 
   const eventSummary = EVENTS.map(ev => ({
+    key: ev.key,
     label: ev.label,
     pts: latest[ev.pointsKey] ?? null,
     level: getLevel(latest[ev.pointsKey]),
   }));
+  const trendSummary = buildTrendSummary(scores);
 
   const generate = async () => {
     setLoading(true);
     setError('');
+    setExpanded(true);
+    setSource('');
+    setAnalysis(null);
+    setModel('');
 
     try {
       const result = await generateAftAnalysis({
+        scores,
         latest,
         previous: scores[1],
         eventSummary,
+        trendSummary,
+        requestId: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       });
       setAnalysis(result.analysis);
       setModel(result.model || '');
+      setSource(result.source || '');
+      setProgress(100);
+      setStepIndex(THINKING_STEPS.length - 1);
     } catch (apiError) {
-      setAnalysis(generateOfflineAnalysis(latest, scores[1], eventSummary));
       setModel('');
-      setError(`${apiError.message} Showing local backup analysis.`);
+      setSource('');
+      setError(`${apiError.message} Check that the Groq API route is running and GROQ_API_KEY is configured.`);
     } finally {
       setLoading(false);
     }
@@ -201,15 +232,26 @@ export default function AFTAnalysis({ scores }) {
 
       {/* Analysis content */}
       {loading && (
-        <div className="flex flex-col items-center justify-center py-12 gap-3">
-          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-muted-foreground font-inter">Generating your personalized plan…</p>
-        </div>
+        <>
+          <div className="flex flex-col items-center justify-center py-12 gap-3">
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs text-muted-foreground font-inter">Generating your personalized plan…</p>
+          </div>
+          <ThinkingProgress stepIndex={stepIndex} progress={progress} />
+        </>
       )}
 
       {!loading && !analysis && (
         <div className="px-5 py-8 text-center">
-          <p className="text-xs text-muted-foreground font-inter">Tap <strong>Analyze</strong> to generate a personalized workout plan based on your latest scores.</p>
+          <p className="text-xs text-muted-foreground font-inter">Tap <strong>Analyze</strong> to generate a personalized workout plan based on your full AFT history.</p>
+        </div>
+      )}
+
+      {!loading && error && !analysis && (
+        <div className="px-5 pb-5">
+          <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive font-inter">
+            {error}
+          </p>
         </div>
       )}
 
@@ -217,7 +259,7 @@ export default function AFTAnalysis({ scores }) {
         <div className="px-5 py-4">
           {model && (
             <p className="mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
-              Generated with {model}
+              Generated with {model}{source ? ` via ${source}` : ''}
             </p>
           )}
           {error && (

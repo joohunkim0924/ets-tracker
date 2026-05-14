@@ -1,4 +1,4 @@
-const DEFAULT_MODEL = 'gpt-5-mini';
+const DEFAULT_MODEL = 'openai/gpt-oss-20b';
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -21,6 +21,9 @@ function readBody(req) {
 }
 
 function extractText(responseJson) {
+  const chatText = responseJson.choices?.[0]?.message?.content;
+  if (typeof chatText === 'string') return chatText.trim();
+
   if (typeof responseJson.output_text === 'string') return responseJson.output_text.trim();
 
   const output = Array.isArray(responseJson.output) ? responseJson.output : [];
@@ -33,15 +36,17 @@ function extractText(responseJson) {
 }
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: 'OPENAI_API_KEY is not configured.' });
+    res.status(500).json({ error: 'GROQ_API_KEY is not configured.' });
     return;
   }
 
@@ -53,32 +58,37 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { latest, previous, eventSummary } = payload;
-  if (!latest || !Array.isArray(eventSummary)) {
-    res.status(400).json({ error: 'Missing latest score or event summary.' });
+  const { scores, latest, previous, eventSummary, trendSummary, requestId } = payload;
+  if (!Array.isArray(scores) || !latest || !Array.isArray(eventSummary) || !trendSummary) {
+    res.status(400).json({ error: 'Missing AFT score history or event trend summary.' });
     return;
   }
 
-  const model = process.env.OPENAI_AFT_ANALYSIS_MODEL || DEFAULT_MODEL;
+  const model = process.env.GROQ_AFT_ANALYSIS_MODEL || DEFAULT_MODEL;
   const totalDelta = previous ? (latest.total_score || 0) - (previous.total_score || 0) : null;
 
   const instructions = [
     'You are a practical Army fitness coach helping a soldier interpret AFT score history.',
-    'Return Markdown only, with these exact sections: Overall Assessment, Priority Focus Areas, Weekly Workout Plan, Nutrition & Recovery, Motivational Close.',
+    'Analyze the full historical AFT trend, not only the latest score. Compare earliest, previous, and latest scores when available.',
+    'Call out improving, declining, and stagnant events. Use the event trend data to choose priorities.',
+    'Return Markdown only, with these exact sections: Overall Assessment, Historical Trend, Priority Focus Areas, Weekly Workout Plan, Nutrition & Recovery, Motivational Close.',
     'Use concise, specific, field-friendly guidance. Avoid medical claims. If risk of injury is implied, recommend seeing a qualified professional.',
-    'Do not claim to be official Army policy. Do not mention Base44.',
-    'Keep the response under 450 words.',
+    'Do not claim to be official Army policy. Do not mention implementation details.',
+    'Keep the response under 550 words.',
   ].join(' ');
 
   const input = JSON.stringify({
+    request_id: requestId || null,
+    all_scores_newest_first: scores,
     latest_score: latest,
     previous_score: previous || null,
     total_delta: totalDelta,
-    events: eventSummary,
+    latest_event_levels: eventSummary,
+    historical_trends: trendSummary,
   });
 
   try {
-    const openAiResponse = await fetch('https://api.openai.com/v1/responses', {
+    const groqResponse = await fetch('https://api.groq.com/openai/v1/responses', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -88,26 +98,27 @@ export default async function handler(req, res) {
         model,
         instructions,
         input,
-        max_output_tokens: 900,
+        max_output_tokens: 1100,
+        store: false,
       }),
     });
 
-    const responseJson = await openAiResponse.json().catch(() => ({}));
+    const responseJson = await groqResponse.json().catch(() => ({}));
 
-    if (!openAiResponse.ok) {
-      res.status(openAiResponse.status).json({
-        error: responseJson.error?.message || 'OpenAI analysis request failed.',
+    if (!groqResponse.ok) {
+      res.status(groqResponse.status).json({
+        error: responseJson.error?.message || 'Groq analysis request failed.',
       });
       return;
     }
 
     const analysis = extractText(responseJson);
     if (!analysis) {
-      res.status(502).json({ error: 'OpenAI returned an empty analysis.' });
+      res.status(502).json({ error: 'Groq returned an empty analysis.' });
       return;
     }
 
-    res.status(200).json({ analysis, model });
+    res.status(200).json({ analysis, model, source: 'groq-responses' });
   } catch (error) {
     res.status(500).json({ error: error.message || 'Unable to generate AFT analysis.' });
   }

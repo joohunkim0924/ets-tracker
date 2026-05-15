@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sparkles, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { generateAftAnalysis } from '@/api/aftAnalysisClient';
+import { analyzeAftWithAi } from '@/api/aiService';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', timeBased: false },
@@ -32,7 +32,7 @@ const THINKING_STEPS = [
   'Comparing event-by-event changes',
   'Finding priority training focus',
   'Building workout and recovery plan',
-  'Finalizing Groq analysis',
+  'Finalizing Gemini analysis',
 ];
 
 function formatRawValue(event, value) {
@@ -164,13 +164,12 @@ export default function AFTAnalysis({ scores }) {
     setModel('');
 
     try {
-      const result = await generateAftAnalysis({
+      const result = await analyzeAftWithAi({
         scores,
         latest,
         previous: scores[1],
         eventSummary,
         trendSummary,
-        requestId: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       });
       setAnalysis(result.analysis);
       setModel(result.model || '');
@@ -180,7 +179,7 @@ export default function AFTAnalysis({ scores }) {
     } catch (apiError) {
       setModel('');
       setSource('');
-      setError(`${apiError.message} Check that the Groq API route is running and GROQ_API_KEY is configured.`);
+      setError(apiError.message || 'Unable to generate analysis.');
     } finally {
       setLoading(false);
     }
@@ -192,7 +191,9 @@ export default function AFTAnalysis({ scores }) {
       <div className="flex items-center justify-between px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter font-semibold">AI Analysis</span>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter font-semibold">
+            MFT AI Analysis
+          </span>
         </div>
         <div className="flex items-center gap-2">
           {analysis && (
@@ -213,7 +214,7 @@ export default function AFTAnalysis({ scores }) {
             ) : (
               <RefreshCw className="w-3 h-3" />
             )}
-            {analysis ? 'Regenerate' : 'Analyze'}
+            {analysis ? 'Regenerate' : 'Analyze with AI'}
           </button>
         </div>
       </div>
@@ -243,7 +244,10 @@ export default function AFTAnalysis({ scores }) {
 
       {!loading && !analysis && (
         <div className="px-5 py-8 text-center">
-          <p className="text-xs text-muted-foreground font-inter">Tap <strong>Analyze</strong> to generate a personalized workout plan based on your full AFT history.</p>
+          <p className="text-xs text-muted-foreground font-inter">
+            Tap <strong>Analyze with AI</strong> for a Master Fitness Trainer–style review, weaknesses, and a{' '}
+            <strong>4-week</strong> plan.
+          </p>
         </div>
       )}
 
@@ -256,10 +260,11 @@ export default function AFTAnalysis({ scores }) {
       )}
 
       {!loading && analysis && expanded && (
-        <div className="px-5 py-4">
+        <div className="border-t border-border px-5 py-4">
           {model && (
             <p className="mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
-              Generated with {model}{source ? ` via ${source}` : ''}
+              Model: {model}
+              {source ? ` · ${source}` : ''}
             </p>
           )}
           {error && (
@@ -267,11 +272,16 @@ export default function AFTAnalysis({ scores }) {
               {error}
             </p>
           )}
-          <ReactMarkdown
-            className="text-sm prose prose-sm max-w-none text-foreground [&_h1]:text-sm [&_h1]:font-bold [&_h1]:uppercase [&_h1]:tracking-widest [&_h1]:text-primary [&_h2]:text-sm [&_h2]:font-bold [&_h2]:uppercase [&_h2]:tracking-widest [&_h2]:text-primary [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:space-y-1 [&_li]:text-xs [&_p]:text-xs [&_p]:leading-relaxed"
-          >
-            {analysis}
-          </ReactMarkdown>
+          <div className="rounded-xl border border-border bg-secondary/25">
+            <p className="border-b border-border px-4 py-2 text-[10px] font-inter font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Analysis
+            </p>
+            <div className="max-h-[min(58vh,32rem)] overflow-y-auto overscroll-y-contain px-4 py-3">
+              <div className="text-sm max-w-none text-foreground [&_h1]:text-sm [&_h1]:font-bold [&_h1]:uppercase [&_h1]:tracking-widest [&_h1]:text-primary [&_h2]:mt-4 [&_h2]:text-sm [&_h2]:font-bold [&_h2]:uppercase [&_h2]:tracking-widest [&_h2]:text-primary [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:text-foreground [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-4 [&_li]:text-xs [&_li]:my-0.5 [&_p]:text-xs [&_p]:my-2 [&_p]:leading-relaxed [&_code]:rounded [&_code]:bg-background [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[10px]">
+                <ReactMarkdown>{analysis}</ReactMarkdown>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

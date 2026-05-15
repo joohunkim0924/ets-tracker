@@ -3,6 +3,30 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { VitePWA } from 'vite-plugin-pwa';
 
+function registerAiAnalysisApi(middlewares) {
+  middlewares.use('/api/ai-analysis', async (req, res) => {
+    if (req.method !== 'POST' && req.method !== 'OPTIONS') {
+      res.statusCode = 405;
+      res.setHeader('Allow', 'POST, OPTIONS');
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Method not allowed' }));
+      return;
+    }
+
+    res.status = (statusCode) => {
+      res.statusCode = statusCode;
+      return res;
+    };
+    res.json = (payload) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(payload));
+    };
+
+    const { default: handler } = await import('./api/ai-analysis.js');
+    await handler(req, res);
+  });
+}
+
 function registerAftAnalysisApi(middlewares) {
   middlewares.use('/api/aft-analysis', async (req, res) => {
     if (req.method !== 'POST') {
@@ -31,9 +55,11 @@ function aiApiServer() {
   return {
     name: 'ai-api-server',
     configureServer(server) {
+      registerAiAnalysisApi(server.middlewares);
       registerAftAnalysisApi(server.middlewares);
     },
     configurePreviewServer(server) {
+      registerAiAnalysisApi(server.middlewares);
       registerAftAnalysisApi(server.middlewares);
     },
   };
@@ -43,6 +69,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   process.env.GROQ_API_KEY ||= env.GROQ_API_KEY;
   process.env.GROQ_AFT_ANALYSIS_MODEL ||= env.GROQ_AFT_ANALYSIS_MODEL;
+  process.env.VITE_AI_ANALYSIS_KEY ||= env.VITE_AI_ANALYSIS_KEY;
+  process.env.VITE_AI_ANALYSIS_MODEL ||= env.VITE_AI_ANALYSIS_MODEL;
+  process.env.VITE_AI_GATEWAY_BASE_URL ||= env.VITE_AI_GATEWAY_BASE_URL;
 
   return {
     base: '/',

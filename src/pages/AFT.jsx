@@ -148,7 +148,7 @@ export default function AFT() {
                   </div>
                 </div>
 
-                {/* AI Analysis */}
+                {/* MFT-style AI analysis (Gemini). See src/api/aiService.js */}
                 <AFTAnalysis scores={scores} />
               </div>
             )}

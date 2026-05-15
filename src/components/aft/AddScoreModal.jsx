@@ -16,9 +16,30 @@ const EVENTS = [
 
 function parseMMSS(str) {
   if (!str || !str.includes(':')) return null;
-  const [m, s] = str.split(':').map(Number);
+  const [mPart, sPart] = str.split(':');
+  if (sPart === undefined || sPart === '') return null;
+  const m = Number(mPart);
+  const s = Number(sPart);
   if (isNaN(m) || isNaN(s)) return null;
   return m * 60 + s;
+}
+
+/**
+ * While typing MM:SS without a colon: after two minute digits, insert ":" before seconds
+ * (e.g. "123" -> "12:3"). If user already typed ":", keep their minute/second digit groups.
+ */
+function normalizeMmSsInput(raw) {
+  if (raw === '') return '';
+  const firstColon = raw.indexOf(':');
+  if (firstColon !== -1) {
+    const before = raw.slice(0, firstColon).replace(/\D/g, '').slice(0, 3);
+    const after = raw.slice(firstColon + 1).replace(/\D/g, '').slice(0, 2);
+    return `${before}:${after}`;
+  }
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length === 0) return '';
+  if (digits.length <= 2) return digits;
+  return `${digits.slice(0, 2)}:${digits.slice(2, 4)}`;
 }
 
 function formatMMSS(secs) {
@@ -43,7 +64,7 @@ function buildInitialForm(existingScore) {
   return form;
 }
 
-export default function AddScoreModal({ onClose, onSaved, userAge, userGender, existingScore }) {
+export default function AddScoreModal({ onClose, onSaved, userAge, userGender, existingScore = null }) {
   const [form, setForm] = useState(() => buildInitialForm(existingScore));
   const [saving, setSaving] = useState(false);
   const isEditing = !!existingScore;
@@ -53,8 +74,10 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
     const gender = userGender ? String(userGender).toLowerCase() : null;
 
     let rawSeconds = null;
+    let displayValue = value;
     if (ev.timeInput) {
-      rawSeconds = parseMMSS(value);
+      displayValue = normalizeMmSsInput(value);
+      rawSeconds = parseMMSS(displayValue);
     } else {
       rawSeconds = value === '' ? null : Number(value);
     }
@@ -65,7 +88,7 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
 
     setForm(f => ({
       ...f,
-      [ev.key]: value,
+      [ev.key]: displayValue,
       [`${ev.key}_seconds`]: rawSeconds,
       [ev.pointsKey]: pts !== null && pts !== undefined ? pts : '',
     }));
@@ -100,8 +123,8 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
   const noProfile = !userAge || !userGender;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-      <div className="bg-background w-full rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto pb-20">
+    <div className="fixed inset-0 z-50 flex items-end overflow-x-hidden bg-black/50">
+      <div className="w-full max-w-full max-h-[min(90dvh,92svh)] overflow-y-auto overflow-x-hidden rounded-t-2xl bg-background p-modal pb-bottom-scroll">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-base font-inter font-bold uppercase tracking-widest">
             {isEditing ? 'EDIT AFT SCORE' : 'LOG AFT SCORE'}
@@ -132,7 +155,9 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
                 <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">RAW ({ev.unit})</Label>
                 <Input
                   type={ev.timeInput ? 'text' : 'number'}
-                  placeholder={ev.timeInput ? '0:00' : '0'}
+                  inputMode={ev.timeInput ? 'numeric' : 'numeric'}
+                  pattern={ev.timeInput ? '[0-9:]*' : '[0-9]*'}
+                  placeholder={ev.timeInput ? 'MM:SS (e.g. 12:30)' : '0'}
                   value={form[ev.key] ?? ''}
                   onChange={e => setRaw(ev, e.target.value)}
                   className="h-10 font-mono bg-background border-border"

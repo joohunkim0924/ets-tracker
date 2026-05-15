@@ -19,8 +19,8 @@ function AddFriendModal({ onClose, onSaved }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-      <div className="bg-background w-full rounded-t-2xl p-6 space-y-4 pb-10">
+    <div className="fixed inset-0 z-50 flex items-end overflow-x-hidden bg-black/50">
+      <div className="w-full max-w-full space-y-4 rounded-t-2xl bg-background p-modal pb-bottom-scroll">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-inter font-bold uppercase tracking-widest">ADD FRIEND</h2>
           <button onClick={onClose}><X className="w-5 h-5 text-muted-foreground" /></button>
@@ -53,7 +53,7 @@ function AddFriendModal({ onClose, onSaved }) {
 
 function FriendCard({ friend, now, onDelete }) {
   const etsDate = parseISO(friend.ets_date);
-  const msRemaining = Math.max(etsDate - now, 0);
+  const msRemaining = Math.max(etsDate.getTime() - now.getTime(), 0);
   const daysRemaining = Math.floor(msRemaining / (1000 * 60 * 60 * 24));
   const hoursRemaining = Math.floor((msRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutesRemaining = Math.floor((msRemaining % (1000 * 60 * 60)) / (1000 * 60));
@@ -62,7 +62,7 @@ function FriendCard({ friend, now, onDelete }) {
   const isETS = msRemaining === 0;
 
   return (
-    <div className="min-w-[260px] max-w-[260px] bg-card rounded-xl border border-border p-5 flex flex-col gap-2 relative">
+    <div className="relative flex w-[min(100%,var(--app-buddy-card))] max-w-full shrink-0 flex-col gap-2 rounded-xl border border-border bg-card p-card">
       <button
         onClick={() => onDelete(friend.id)}
         className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full bg-secondary text-muted-foreground hover:text-destructive transition-colors"
@@ -112,7 +112,7 @@ export default function FriendTimers({ now }) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0 max-w-full overflow-x-hidden">
       <div className="flex items-center justify-between mb-3">
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">BATTLE BUDDIES</p>
         <button
@@ -131,13 +131,11 @@ export default function FriendTimers({ now }) {
           + Add a friend to track their ETS
         </button>
       ) : (
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-none" style={{ scrollSnapType: 'x mandatory' }}>
+        <div className="flex flex-wrap justify-center gap-3 pb-2">
           {friends.map(f => (
-            <div key={f.id} style={{ scrollSnapAlign: 'start' }}>
-              <FriendCard friend={f} now={now} onDelete={handleDelete} />
-            </div>
+            <FriendCard key={f.id} friend={f} now={now} onDelete={handleDelete} />
           ))}
-          <div className="min-w-[120px] flex items-center justify-center">
+          <div className="flex shrink-0 items-center justify-center">
             <button
               onClick={() => setShowAdd(true)}
               className="w-12 h-12 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"

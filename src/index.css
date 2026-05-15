@@ -100,6 +100,31 @@
     --sar: env(safe-area-inset-right);
     --sab: env(safe-area-inset-bottom);
     --sal: env(safe-area-inset-left);
+
+    /*
+     * Fluid layout tokens (viewport-relative, capped in rem so large phones stay polished).
+     * Used via Tailwind theme extensions: page, header-pt, bottom-scroll, ring, etc.
+     */
+    --app-pad-x: clamp(1rem, 4.2vw + 0.2rem, 1.75rem);
+    --app-header-pt: clamp(1.5rem, 5vw, 2.25rem);
+    --app-header-pb: clamp(0.625rem, 2vw, 1rem);
+    --app-block-gap: clamp(1rem, 3.5vw, 1.75rem);
+    --app-card-pad: clamp(1rem, 3.2vw, 1.35rem);
+    --app-modal-pad: clamp(1rem, 4.5vw, 1.75rem);
+    --app-scroll-bottom: calc(
+      env(safe-area-inset-bottom, 0px) + clamp(4.75rem, 15vw, 6.75rem)
+    );
+    --app-content-max: min(92vw, 30rem);
+    --app-ring-size: min(17.5rem, min(88vw, 82vmin));
+    --app-buddy-card: min(16.25rem, min(78vw, 72vmin));
+    --app-chart-h: clamp(7.5rem, 32vw, 11rem);
+    --app-nav-pad-y: clamp(0.5rem, 2.2vw, 0.75rem);
+    --app-icon-tab: clamp(1rem, 3.5vw, 1.25rem);
+    /* Header / tap targets — scale with the shorter viewport edge like the ring */
+    --app-touch-target: clamp(2.375rem, 11.5vmin, 2.875rem);
+    --app-touch-inner: clamp(1.75rem, 8.5vmin, 2.125rem);
+    --app-icon-header: clamp(1rem, 5.2vmin, 1.25rem);
+    --app-spinner: clamp(1.75rem, 8vmin, 2.125rem);
   }
 
   html, body {
@@ -107,6 +132,7 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
+    max-width: 100%;
     position: fixed;
     /* Touch actions: pan-x/pan-y prevent accidental zooming */
     touch-action: manipulation;
@@ -114,8 +140,13 @@
 
   #root {
     height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    /* Prevent content from rendering under the iPhone status bar / Dynamic Island */
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
   }
 
   /* Stops the "Select All / Copy" popup from appearing when 
@@ -131,5 +162,40 @@
   input, textarea, [contenteditable="true"] {
     -webkit-user-select: text;
     user-select: text;
+  }
+}
+
+@layer components {
+  /* ETS ring: font tracks rendered ring size (cqmin) so % stays in proportion on all phones */
+  .ring-progress-root {
+    container-type: size;
+    container-name: ring;
+  }
+
+  .ring-progress-pct {
+    /* vw + vmin track screen size; cqmin refines to the actual ring box when supported */
+    font-size: clamp(2.125rem, min(14vw, 11vmin), 4.75rem);
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @supports (font-size: 1cqmin) {
+    .ring-progress-pct {
+      font-size: clamp(2.125rem, min(14vw, 26cqmin), 4.75rem);
+    }
+  }
+
+  .ring-progress-label {
+    font-size: clamp(0.625rem, min(2.8vw, 4vmin), 0.8125rem);
+    line-height: 1.2;
+    letter-spacing: 0.35em;
+  }
+
+  @supports (font-size: 1cqmin) {
+    .ring-progress-label {
+      font-size: clamp(0.625rem, min(2.8vw, 6cqmin), 0.8125rem);
+    }
   }
 }

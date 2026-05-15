@@ -9,7 +9,7 @@ import { X } from 'lucide-react';
 const WEAPONS = ['M4', 'M17', 'M18', 'M9', 'M240B', 'M249', 'M2', 'M320', 'AT4', 'Mk19'];
 const QUALIFICATIONS = ['Unqualified', 'Marksman', 'Sharpshooter', 'Expert'];
 
-export default function AddWeaponsModal({ onClose, onSaved, existingRecord }) {
+export default function AddWeaponsModal({ onClose, onSaved, existingRecord = null }) {
   const today = new Date().toISOString().split('T')[0];
   const isEditing = !!existingRecord;
 
@@ -52,8 +52,8 @@ export default function AddWeaponsModal({ onClose, onSaved, existingRecord }) {
   const canSave = form.date && form.weapon;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-      <div className="bg-background w-full rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto pb-20">
+    <div className="fixed inset-0 z-50 flex items-end overflow-x-hidden bg-black/50">
+      <div className="w-full max-w-full max-h-[min(90dvh,92svh)] overflow-y-auto overflow-x-hidden rounded-t-2xl bg-background p-modal pb-bottom-scroll">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-base font-inter font-bold uppercase tracking-widest">
             {isEditing ? 'EDIT WEAPONS RECORD' : 'LOG WEAPONS RECORD'}

@@ -321,7 +321,7 @@ function CategorySection({ cat }) {
   return (
     <div className={`rounded-xl border ${cat.bg} overflow-hidden mb-3`}>
       <button
-        className="w-full flex items-center justify-between px-4 py-3"
+        className="flex w-full flex-shrink-0 items-center justify-between px-page py-3"
         onClick={() => setOpen(o => !o)}
       >
         <div className="flex items-center gap-2">
@@ -332,7 +332,7 @@ function CategorySection({ cat }) {
         {open ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
       </button>
       {open && (
-        <div className="bg-card px-4">
+        <div className="bg-card px-page">
           {cat.benefits.map(b => <BenefitCard key={b.name} benefit={b} />)}
         </div>
       )}
@@ -342,8 +342,8 @@ function CategorySection({ cat }) {
 
 export default function Benefits() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="px-6 pt-8 pb-4">
+    <div className="flex min-h-screen max-w-full flex-col overflow-x-hidden bg-background">
+      <div className="px-page pb-header-pb pt-header-pt">
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">U.S. ARMY</p>
         <h1 className="text-2xl font-inter font-black text-foreground uppercase tracking-tight">SOLDIER BENEFITS</h1>
         <p className="text-xs text-muted-foreground font-inter mt-1">
@@ -351,7 +351,7 @@ export default function Benefits() {
         </p>
       </div>
 
-      <div className="flex-1 px-4 pb-28 overflow-y-auto">
+      <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-page pb-bottom-scroll">
         {CATEGORIES.map(cat => (
           <CategorySection key={cat.id} cat={cat} />
         ))}

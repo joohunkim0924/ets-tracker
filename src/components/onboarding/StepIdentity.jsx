@@ -11,7 +11,7 @@ export default function StepIdentity({ data, onChange, onNext }) {
   const canProceed = data.last_name && data.first_name && data.rank && data.mos && data.age && data.gender;
 
   return (
-    <div className="space-y-6">
+    <div className="w-full min-w-0 space-y-6 overflow-x-hidden">
       <div className="space-y-1">
         <h2 className="text-2xl font-inter font-bold text-foreground">IDENTIFY YOURSELF</h2>
         <p className="text-sm text-muted-foreground">Enter your basic service information.</p>

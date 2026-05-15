@@ -28,8 +28,8 @@ export default function Settings() {
       const me = await base44.auth.me();
       setData({
         last_name: me.last_name || '',
-      first_name: me.first_name || '',
-      preferred_name: me.preferred_name || '',
+        first_name: me.first_name || '',
+        preferred_name: me.preferred_name || '',
         rank: me.rank || '',
         mos: me.mos || '',
         unit: me.unit || '',
@@ -57,20 +57,21 @@ export default function Settings() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen max-w-full overflow-x-hidden bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="px-6 pt-8 pb-4">
+    <div className="min-h-screen max-w-full overflow-x-hidden bg-background flex flex-col">
+      <div className="w-full min-w-0 max-w-full px-page pb-header-pb pt-header-pt">
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PROFILE</p>
         <h1 className="text-2xl font-inter font-black text-foreground uppercase tracking-tight">SETTINGS</h1>
       </div>
 
-      <div className="flex-1 px-6 space-y-5 overflow-y-auto pb-28">
+      <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-page pb-bottom-scroll">
+        <div className="mx-auto min-w-0 w-full max-w-content space-y-5">
 
         {/* Theme Picker */}
         <div className="space-y-3">
@@ -141,14 +142,28 @@ export default function Settings() {
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="min-w-0 max-w-full space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ENLISTMENT DATE</Label>
-            <Input type="date" value={data.enlistment_date} onChange={(e) => setData({ ...data, enlistment_date: e.target.value })} className="bg-secondary border-border text-foreground font-mono h-12" />
+            <div className="w-full min-w-0 max-w-full overflow-hidden">
+              <Input
+                type="date"
+                value={data.enlistment_date}
+                onChange={(e) => setData({ ...data, enlistment_date: e.target.value })}
+                className="box-border !block h-12 w-full min-w-0 max-w-full bg-secondary font-mono text-foreground border-border"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="min-w-0 max-w-full space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ETS DATE</Label>
-            <Input type="date" value={data.ets_date} onChange={(e) => setData({ ...data, ets_date: e.target.value })} className="bg-secondary border-border text-foreground font-mono h-12" />
+            <div className="w-full min-w-0 max-w-full overflow-hidden">
+              <Input
+                type="date"
+                value={data.ets_date}
+                onChange={(e) => setData({ ...data, ets_date: e.target.value })}
+                className="box-border !block h-12 w-full min-w-0 max-w-full bg-secondary font-mono text-foreground border-border"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -167,9 +182,16 @@ export default function Settings() {
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="min-w-0 max-w-full space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PCS DATE (OPTIONAL)</Label>
-            <Input type="date" value={data.pcs_date} onChange={(e) => setData({ ...data, pcs_date: e.target.value })} className="bg-secondary border-border text-foreground font-mono h-12" />
+            <div className="w-full min-w-0 max-w-full overflow-hidden">
+              <Input
+                type="date"
+                value={data.pcs_date}
+                onChange={(e) => setData({ ...data, pcs_date: e.target.value })}
+                className="box-border !block h-12 w-full min-w-0 max-w-full bg-secondary font-mono text-foreground border-border"
+              />
+            </div>
           </div>
 
           <Button onClick={handleSave} disabled={saving} className="w-full h-12 bg-primary text-primary-foreground font-inter font-semibold uppercase tracking-wider text-sm hover:bg-primary/90">
@@ -181,6 +203,7 @@ export default function Settings() {
           </Button>
         </div>
 
+        </div>
       </div>
 
       <BottomNav />

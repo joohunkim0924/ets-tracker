@@ -45,9 +45,9 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen max-w-full overflow-x-hidden bg-background flex flex-col">
       {/* Header */}
-      <div className="pt-12 pb-8 px-6 text-center">
+      <div className="px-page pb-block-gap pt-[clamp(2.25rem,7vw,3.5rem)] text-center">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mb-4">
           <Shield className="w-7 h-7 text-primary" />
         </div>
@@ -57,7 +57,7 @@ export default function Onboarding() {
       </div>
 
       {/* Progress dots */}
-      <div className="flex items-center justify-center gap-2 pb-8">
+      <div className="flex items-center justify-center gap-2 pb-block-gap">
         {[0, 1, 2].map((i) => (
           <div
             key={i}
@@ -69,7 +69,7 @@ export default function Onboarding() {
       </div>
 
       {/* Step content */}
-      <div className="flex-1 px-6 pb-12">
+      <div className="mx-auto flex min-w-0 w-full max-w-content flex-1 px-page pb-12">
         {step === 0 && (
           <StepIdentity
             data={data}

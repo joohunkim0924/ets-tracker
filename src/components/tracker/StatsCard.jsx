@@ -1,17 +1,17 @@
 import React from 'react';
 
-export default function StatsCard({ label, value, unit, highlight }) {
+export default function StatsCard({ label, value, unit, highlight = undefined }) {
   return (
-    <div className="bg-card rounded-xl border border-border p-5 flex flex-col gap-1">
-      <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter font-medium">
+    <div className="flex min-w-0 max-w-full flex-col gap-1 rounded-xl border border-border bg-card p-card">
+      <span className="font-inter font-medium text-[clamp(0.5625rem,2.6vw,0.625rem)] uppercase tracking-[0.2em] text-muted-foreground">
         {label}
       </span>
       <div className="flex items-baseline gap-1.5">
-        <span className={`text-2xl font-mono font-bold ${highlight === 'green' ? 'text-primary' : highlight === 'amber' ? 'text-accent' : highlight === 'red' ? 'text-destructive' : 'text-foreground'}`}>
+        <span className={`font-mono text-stat-value ${highlight === 'green' ? 'text-primary' : highlight === 'amber' ? 'text-accent' : highlight === 'red' ? 'text-destructive' : 'text-foreground'}`}>
           {value}
         </span>
         {unit && (
-          <span className="text-xs uppercase tracking-wider text-muted-foreground font-inter">
+          <span className="font-inter text-[clamp(0.6875rem,3vw,0.75rem)] uppercase tracking-wider text-muted-foreground">
             {unit}
           </span>
         )}

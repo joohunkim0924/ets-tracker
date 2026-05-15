@@ -5,8 +5,8 @@ export default function PageNotFound({}) {
     const pageName = location.pathname.substring(1);
     
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen max-w-full overflow-x-hidden bg-slate-50 px-page py-6 flex items-center justify-center">
+            <div className="max-w-md w-full min-w-0">
                 <div className="text-center space-y-6">
                     {/* 404 Error Code */}
                     <div className="space-y-2">
@@ -19,7 +19,7 @@ export default function PageNotFound({}) {
                         <h2 className="text-2xl font-medium text-slate-800">
                             Page Not Found
                         </h2>
-                        <p className="text-slate-600 leading-relaxed">
+                        <p className="text-slate-600 leading-relaxed break-words">
                             The page <span className="font-medium text-slate-700">"{pageName}"</span> could not be found in this application.
                         </p>
                     </div>

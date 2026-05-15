@@ -4,6 +4,48 @@ module.exports = {
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
   	extend: {
+  		spacing: {
+  			page: 'var(--app-pad-x)',
+  			'header-pt': 'var(--app-header-pt)',
+  			'header-pb': 'var(--app-header-pb)',
+  			'block-gap': 'var(--app-block-gap)',
+  			card: 'var(--app-card-pad)',
+  			modal: 'var(--app-modal-pad)',
+  			'bottom-scroll': 'var(--app-scroll-bottom)',
+  			'nav-y': 'var(--app-nav-pad-y)',
+  		},
+  		width: {
+  			ring: 'var(--app-ring-size)',
+  			'buddy-card': 'var(--app-buddy-card)',
+  		},
+  		height: {
+  			ring: 'var(--app-ring-size)',
+  			chart: 'var(--app-chart-h)',
+  		},
+  		minWidth: {
+  			'buddy-add': 'min(7.5rem, 28vw)',
+  		},
+  		maxWidth: {
+  			content: 'var(--app-content-max)',
+  		},
+  		fontSize: {
+  			countdown: [
+  				'clamp(2.5rem, min(12.5vw, 11vmin), 5rem)',
+  				{ lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '900' },
+  			],
+  			'stat-value': [
+  				'clamp(1.15rem, 4.5vw, 1.5rem)',
+  				{ lineHeight: '1.2', fontWeight: '700' },
+  			],
+  			'ring-pct': [
+  				'clamp(2rem, min(12vw, 10vmin), 3.5rem)',
+  				{ lineHeight: '1.05', fontWeight: '700' },
+  			],
+  			'score-hero': [
+  				'clamp(2rem, 9vw, 3.75rem)',
+  				{ lineHeight: '1', fontWeight: '900' },
+  			],
+  		},
   		fontFamily: {
   			inter: ['var(--font-inter)'],
   			mono: ['var(--font-mono)'],

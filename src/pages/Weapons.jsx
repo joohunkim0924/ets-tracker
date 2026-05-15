@@ -40,9 +40,9 @@ export default function Weapons() {
   const latest = records[0];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col pb-20">
+    <div className="flex min-h-screen max-w-full flex-col overflow-x-hidden bg-background pb-bottom-scroll">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 pt-8 pb-4">
+      <div className="flex items-center justify-between px-page pb-header-pb pt-header-pt">
         <div>
           <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">RECORD</p>
           <h1 className="text-lg font-inter font-bold uppercase tracking-[0.1em]">WEAPONS CARD</h1>
@@ -56,7 +56,7 @@ export default function Weapons() {
       </div>
 
       {/* Tabs */}
-      <div className="flex px-6 gap-1 mb-4">
+      <div className="mb-4 flex min-w-0 w-full max-w-full gap-1 overflow-x-hidden px-page">
         {TABS.map(t => (
           <button
             key={t}
@@ -68,7 +68,7 @@ export default function Weapons() {
         ))}
       </div>
 
-      <div className="flex-1 px-6 overflow-y-auto">
+      <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-page">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -85,7 +85,7 @@ export default function Weapons() {
               <div className="space-y-4">
                 {/* Latest entry */}
                 {latest && (
-                  <div className="bg-card rounded-xl border border-border p-5">
+                  <div className="rounded-xl border border-border bg-card p-card">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-1">LATEST ENTRY</p>
                     <div className="flex items-center justify-between">
                       <div>
@@ -109,7 +109,7 @@ export default function Weapons() {
                 )}
 
                 {/* Per-weapon best */}
-                <div className="bg-card rounded-xl border border-border p-5">
+                <div className="rounded-xl border border-border bg-card p-card">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-3">BY WEAPON</p>
                   <div className="space-y-3">
                     {Object.entries(byWeapon).map(([weapon, recs]) => {
@@ -147,7 +147,7 @@ export default function Weapons() {
                 {records.map(r => (
                   <div key={r.id} className="bg-card rounded-xl border border-border overflow-hidden">
                     <button
-                      className="w-full flex items-center justify-between px-5 py-4"
+                      className="flex w-full items-center justify-between px-card py-4"
                       onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
                     >
                       <div className="text-left">
@@ -164,7 +164,7 @@ export default function Weapons() {
                       </div>
                     </button>
                     {expandedId === r.id && (
-                      <div className="px-5 pb-4 border-t border-border pt-3 space-y-1 text-xs font-mono">
+                      <div className="space-y-1 border-t border-border px-card pb-4 pt-3 text-xs font-mono">
                         {r.hits !== undefined && r.total_rounds !== undefined && (
                           <div className="flex justify-between py-1">
                             <span className="text-muted-foreground font-inter">Hits</span>

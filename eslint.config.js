@@ -6,7 +6,7 @@ import pluginUnusedImports from "eslint-plugin-unused-imports";
 
 export default [
   {
-    ignores: ["dist/**", "ios/App/App/public/**"],
+    ignores: ["dist/**", "ios/**", "android/**"],
   },
   {
     files: [

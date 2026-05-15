@@ -38,7 +38,10 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div
+          className="border-2 border-primary border-t-transparent rounded-full animate-spin"
+          style={{ width: 'var(--app-spinner)', height: 'var(--app-spinner)' }}
+        />
       </div>
     );
   }
@@ -47,13 +50,13 @@ export default function Dashboard() {
   const etsDate = parseISO(user.ets_date);
   const pcsDate = user.pcs_date ? parseISO(user.pcs_date) : null;
 
-  const totalMs = etsDate - enlistmentDate;
-  const elapsedMs = now - enlistmentDate;
+  const totalMs = etsDate.getTime() - enlistmentDate.getTime();
+  const elapsedMs = now.getTime() - enlistmentDate.getTime();
   const percentage = Math.min(Math.max((elapsedMs / totalMs) * 100, 0), 100);
 
   const totalDays = differenceInDays(etsDate, enlistmentDate);
   const daysServed = differenceInDays(now, enlistmentDate);
-  const msRemaining = Math.max(etsDate - now, 0);
+  const msRemaining = Math.max(etsDate.getTime() - now.getTime(), 0);
   const daysRemaining = Math.floor(msRemaining / (1000 * 60 * 60 * 24));
   const hoursRemaining = Math.floor((msRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutesRemaining = Math.floor((msRemaining % (1000 * 60 * 60)) / (1000 * 60));
@@ -65,44 +68,50 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 pt-8 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+      <div className="flex items-center justify-between px-page pt-header-pt pb-header-pb">
+        <div className="flex min-w-0 flex-1 items-center gap-block-gap">
+          <div
+            className="flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary/20 bg-primary/10"
+            style={{ width: 'var(--app-touch-target)', height: 'var(--app-touch-target)' }}
+          >
             {user.rank && RANK_INSIGNIA[user.rank] ? (
               <img
                 src={RANK_INSIGNIA[user.rank]}
                 alt={user.rank}
-                className="w-8 h-8 object-contain"
+                className="object-contain"
+                style={{ width: 'var(--app-touch-inner)', height: 'var(--app-touch-inner)' }}
               />
             ) : (
-              <Shield className="w-5 h-5 text-primary" />
+              <Shield className="text-primary" style={{ width: 'var(--app-icon-header)', height: 'var(--app-icon-header)' }} />
             )}
           </div>
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
+          <div className="min-w-0">
+            <p className="text-[clamp(0.5625rem,2.6vw,0.625rem)] uppercase tracking-[0.2em] text-muted-foreground font-inter">
               {user.rank} • {user.mos}
             </p>
-            <p className="text-sm font-inter font-semibold text-foreground">
+            <p className="text-[clamp(0.8125rem,3.6vw,0.875rem)] font-inter font-semibold text-foreground">
               {user.preferred_name || user.first_name} {user.last_name}
             </p>
           </div>
         </div>
         <button
+          type="button"
           onClick={() => navigate('/settings')}
-          className="w-10 h-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          className="flex shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors hover:text-foreground"
+          style={{ width: 'var(--app-touch-target)', height: 'var(--app-touch-target)' }}
         >
-          <Settings className="w-4 h-4" />
+          <Settings style={{ width: 'var(--app-icon-header)', height: 'var(--app-icon-header)' }} />
         </button>
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center px-6 pt-4 pb-24 relative overflow-hidden">
+      <div className="relative flex flex-1 flex-col items-center overflow-hidden px-page pb-bottom-scroll pt-block-gap">
         {/* Circular progress */}
-        <div className="mb-6 relative z-10">
+        <div className="relative z-10 mb-block-gap">
           <CircularProgress
             percentage={percentage}
-            patchSrc={unitPatch}
-            patchAlt={unitKey ? `${unitKey} unit patch` : ''}
+            unitPatchSrc={unitPatch}
+            unitPatchAlt={unitKey ? `${user.unit} unit patch` : ''}
           />
         </div>
 
@@ -118,7 +127,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats grid */}
-        <div className="w-full grid grid-cols-2 gap-3 mt-6 mb-4 relative z-10">
+        <div className="relative z-10 mt-block-gap mb-4 grid w-full grid-cols-2 gap-block-gap">
           <StatsCard
             label="DAYS SERVED"
             value={Math.max(daysServed, 0).toLocaleString()}
@@ -139,18 +148,21 @@ export default function Dashboard() {
 
         {/* PCS countdown if applicable */}
         {pcsDate && pcsDaysRemaining !== null && (
-          <div className="w-full bg-card rounded-xl border border-border p-5 flex items-center gap-4 mb-4 relative z-10">
-            <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-accent" />
+          <div className="relative z-10 mb-4 flex w-full items-center gap-block-gap rounded-xl border border-border bg-card p-card">
+            <div
+              className="flex shrink-0 items-center justify-center rounded-lg border border-accent/20 bg-accent/10"
+              style={{ width: 'var(--app-touch-target)', height: 'var(--app-touch-target)' }}
+            >
+              <MapPin className="text-accent" style={{ width: 'var(--app-icon-header)', height: 'var(--app-icon-header)' }} />
             </div>
             <div className="flex-1">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter block">
+              <span className="block font-inter text-[clamp(0.5625rem,2.6vw,0.625rem)] uppercase tracking-[0.2em] text-muted-foreground">
                 PCS COUNTDOWN
               </span>
-              <span className="text-xl font-mono font-bold text-accent">
+              <span className="font-mono text-[clamp(1.125rem,5.5vmin,1.375rem)] font-bold text-accent">
                 {Math.max(pcsDaysRemaining, 0)}
               </span>
-              <span className="text-xs text-muted-foreground font-inter ml-1.5">
+              <span className="ml-1.5 font-inter text-[clamp(0.6875rem,3.1vw,0.75rem)] text-muted-foreground">
                 DAYS — {format(pcsDate, 'dd MMM yyyy').toUpperCase()}
               </span>
             </div>
@@ -164,7 +176,7 @@ export default function Dashboard() {
 
         {/* Footer quote */}
         <div className="w-full text-center py-4 relative z-10">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/50 font-inter">
+          <p className="font-inter text-[clamp(0.5625rem,2.6vw,0.625rem)] uppercase tracking-[0.25em] text-muted-foreground/50">
             THIS TOO SHALL PASS
           </p>
         </div>

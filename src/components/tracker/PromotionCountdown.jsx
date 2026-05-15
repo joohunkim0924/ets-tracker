@@ -71,8 +71,8 @@ export default function PromotionCountdown({ user, now }) {
 
   const daysRemaining = Math.max(differenceInDays(promotionDate, now), 0);
   const enlistmentDate = user.enlistment_date ? parseISO(user.enlistment_date) : null;
-  const totalMs = enlistmentDate ? promotionDate - enlistmentDate : null;
-  const elapsedMs = enlistmentDate ? now - enlistmentDate : null;
+  const totalMs = enlistmentDate ? promotionDate.getTime() - enlistmentDate.getTime() : null;
+  const elapsedMs = enlistmentDate ? now.getTime() - enlistmentDate.getTime() : null;
   const pct = totalMs && elapsedMs !== null
     ? Math.min(Math.max((elapsedMs / totalMs) * 100, 0), 100)
     : null;

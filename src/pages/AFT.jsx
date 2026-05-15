@@ -57,9 +57,9 @@ export default function AFT() {
   const totalDelta = latest && previous ? (latest.total_score || 0) - (previous.total_score || 0) : null;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col pb-20">
+    <div className="flex min-h-screen max-w-full flex-col overflow-x-hidden bg-background pb-bottom-scroll">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 pt-8 pb-4">
+      <div className="flex items-center justify-between px-page pb-header-pb pt-header-pt">
         <h1 className="text-lg font-inter font-bold uppercase tracking-[0.1em]">AFT TRACKER</h1>
         <button
           onClick={() => setShowAdd(true)}
@@ -70,7 +70,7 @@ export default function AFT() {
       </div>
 
       {/* Tabs */}
-      <div className="flex px-6 gap-1 mb-4">
+      <div className="mb-4 flex min-w-0 w-full max-w-full gap-1 overflow-x-hidden px-page">
         {TABS.map(t => (
           <button
             key={t}
@@ -82,7 +82,7 @@ export default function AFT() {
         ))}
       </div>
 
-      <div className="flex-1 px-6 overflow-y-auto">
+      <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-page">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -97,10 +97,10 @@ export default function AFT() {
             {tab === 'OVERVIEW' && (
               <div className="space-y-4">
                 {/* Latest score hero */}
-                <div className="bg-card rounded-xl border border-border p-5">
+                <div className="rounded-xl border border-border bg-card p-card">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-1">LATEST SCORE</p>
                   <div className="flex items-end gap-3">
-                    <span className="text-6xl font-mono font-black text-primary">{latest?.total_score ?? '—'}</span>
+                    <span className="font-mono font-black text-primary text-score-hero">{latest?.total_score ?? '—'}</span>
                     {totalDelta !== null && (
                       <span className={`text-sm font-mono font-semibold mb-2 ${totalDelta >= 0 ? 'text-primary' : 'text-destructive'}`}>
                         {totalDelta >= 0 ? '+' : ''}{totalDelta} pts
@@ -112,9 +112,10 @@ export default function AFT() {
 
                 {/* Progress chart */}
                 {chartData.length > 1 && (
-                  <div className="bg-card rounded-xl border border-border p-5">
+                  <div className="rounded-xl border border-border bg-card p-card">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-4">TOTAL SCORE OVER TIME</p>
-                    <ResponsiveContainer width="100%" height={160}>
+                    <div className="h-chart w-full min-h-0 max-w-full overflow-x-hidden">
+                      <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
@@ -122,12 +123,13 @@ export default function AFT() {
                         <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, fontSize: 12 }} />
                         <Line type="monotone" dataKey="total" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: 'hsl(var(--primary))', r: 4 }} />
                       </LineChart>
-                    </ResponsiveContainer>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 )}
 
                 {/* Event breakdown of latest */}
-                <div className="bg-card rounded-xl border border-border p-5">
+                <div className="rounded-xl border border-border bg-card p-card">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-3">LATEST EVENT BREAKDOWN</p>
                   <div className="space-y-2">
                     {EVENTS.map(ev => {
@@ -156,7 +158,7 @@ export default function AFT() {
                 {scores.map(s => (
                   <div key={s.id} className="bg-card rounded-xl border border-border overflow-hidden">
                     <button
-                      className="w-full flex items-center justify-between px-5 py-4"
+                      className="flex w-full items-center justify-between px-card py-4"
                       onClick={() => setExpandedId(expandedId === s.id ? null : s.id)}
                     >
                       <div className="text-left">
@@ -166,7 +168,7 @@ export default function AFT() {
                       {expandedId === s.id ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
                     </button>
                     {expandedId === s.id && (
-                      <div className="px-5 pb-4 space-y-1 border-t border-border pt-3">
+                      <div className="space-y-1 border-t border-border px-card pb-4 pt-3">
                         {EVENTS.map(ev => (
                           <div key={ev.key} className="flex justify-between text-xs py-1">
                             <span className="font-inter text-muted-foreground">{ev.label}</span>
@@ -204,12 +206,13 @@ export default function AFT() {
                   })).filter(d => d.raw !== null);
 
                   return (
-                    <div key={ev.key} className="bg-card rounded-xl border border-border p-5">
+                    <div key={ev.key} className="rounded-xl border border-border bg-card p-card">
                       <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-1">{ev.label}</p>
                       {evData.length < 2 ? (
                         <p className="text-xs text-muted-foreground font-inter py-4 text-center">Need 2+ scores to show trend.</p>
                       ) : (
-                        <ResponsiveContainer width="100%" height={120}>
+                        <div className="h-chart w-full min-h-0 max-w-full overflow-x-hidden">
+                        <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={evData}>
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                             <XAxis dataKey="date" tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }} />
@@ -218,6 +221,7 @@ export default function AFT() {
                             <Line type="monotone" dataKey="raw" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: 'hsl(var(--primary))', r: 3 }} />
                           </LineChart>
                         </ResponsiveContainer>
+                        </div>
                       )}
                     </div>
                   );

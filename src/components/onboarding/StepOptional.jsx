@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from "@/components/ui/input";
+import { DateInput } from '@/components/ui/date-input';
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Shield } from "lucide-react";
@@ -17,11 +17,10 @@ export default function StepOptional({ data, onChange, onSubmit, onBack, isSubmi
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
             PCS DATE (OPTIONAL)
           </Label>
-          <Input
-            type="date"
+          <DateInput
             value={data.pcs_date || ''}
             onChange={(e) => onChange({ ...data, pcs_date: e.target.value })}
-            className="bg-secondary border-border text-foreground font-mono h-12"
+            className="bg-secondary border-border text-foreground"
           />
         </div>
       </div>

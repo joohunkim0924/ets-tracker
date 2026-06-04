@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Dumbbell, Star, Settings, Crosshair } from 'lucide-react';
+import { Shield, Dumbbell, Star, BookOpen, Crosshair } from 'lucide-react';
 
 const tabs = [
   { path: '/', label: 'ETS', icon: Shield },
   { path: '/aft', label: 'AFT', icon: Dumbbell },
   { path: '/weapons', label: 'Weapons', icon: Crosshair },
   { path: '/benefits', label: 'Benefits', icon: Star },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/references', label: 'Refs', icon: BookOpen },
 ];
 
 export default function BottomNav() {

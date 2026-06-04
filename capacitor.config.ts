@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.yourname.dday',
-  appName: 'D-DAY',
+  appName: 'Army1',
   webDir: 'dist',
   plugins: {
     SplashScreen: {

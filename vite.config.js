@@ -88,9 +88,9 @@ export default defineConfig(({ mode }) => {
         },
         manifestFilename: 'manifest.json',
         manifest: {
-          name: 'ETS Tracker',
-          short_name: 'ETS Tracker',
-          description: 'Track and manage ETS progress.',
+          name: 'Army1',
+          short_name: 'Army1',
+          description: 'Track ETS, AFT, weapons, and Army benefits.',
           start_url: '/',
           scope: '/',
           display: 'standalone',

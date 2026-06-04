@@ -4,6 +4,7 @@ import { format, parseISO } from 'date-fns';
 import { Plus, ChevronDown, ChevronUp, Target, Trash2, Pencil } from 'lucide-react';
 import BottomNav from '@/components/layout/BottomNav';
 import AddWeaponsModal from '@/components/weapons/AddWeaponsModal';
+import { deriveQualification } from '@/lib/weapons-qualification';
 
 const QUAL_COLORS = {
   Unqualified: 'text-destructive bg-destructive/10 border-destructive/20',
@@ -13,6 +14,10 @@ const QUAL_COLORS = {
 };
 
 const TABS = ['OVERVIEW', 'HISTORY'];
+
+function recordQualification(record) {
+  return deriveQualification(record) || record.qualification || null;
+}
 
 export default function Weapons() {
   const [records, setRecords] = useState([]);
@@ -92,15 +97,16 @@ export default function Weapons() {
                         <p className="text-3xl font-mono font-black text-primary">{latest.weapon}</p>
                         <p className="text-xs text-muted-foreground font-mono mt-1">{latest.date ? format(parseISO(latest.date), 'dd MMM yyyy').toUpperCase() : ''}</p>
                       </div>
-                      {latest.qualification && (
-                        <span className={`px-3 py-1.5 rounded-lg border text-xs font-inter font-bold uppercase tracking-wider ${QUAL_COLORS[latest.qualification] || 'text-foreground bg-secondary border-border'}`}>
-                          {latest.qualification}
+                      {recordQualification(latest) && (
+                        <span className={`px-3 py-1.5 rounded-lg border text-xs font-inter font-bold uppercase tracking-wider ${QUAL_COLORS[recordQualification(latest)] || 'text-foreground bg-secondary border-border'}`}>
+                          {recordQualification(latest)}
                         </span>
                       )}
                     </div>
                     {(latest.hits !== undefined && latest.total_rounds !== undefined) && (
-                      <div className="mt-3 pt-3 border-t border-border flex gap-4 text-xs font-mono">
+                      <div className="mt-3 pt-3 border-t border-border flex flex-wrap gap-4 text-xs font-mono">
                         <span><span className="text-muted-foreground">Hits: </span><span className="font-bold">{latest.hits}/{latest.total_rounds}</span></span>
+                        {latest.optic_type && <span><span className="text-muted-foreground">Optic: </span><span className="font-bold">{latest.optic_type}</span></span>}
                         {latest.score !== undefined && <span><span className="text-muted-foreground">Score: </span><span className="font-bold text-primary">{latest.score}</span></span>}
                         {latest.range && <span className="text-muted-foreground">{latest.range}</span>}
                       </div>
@@ -114,8 +120,8 @@ export default function Weapons() {
                   <div className="space-y-3">
                     {Object.entries(byWeapon).map(([weapon, recs]) => {
                       const best = recs.reduce((b, r) => {
-                        const bq = ['Unqualified','Marksman','Sharpshooter','Expert'].indexOf(b.qualification || 'Unqualified');
-                        const rq = ['Unqualified','Marksman','Sharpshooter','Expert'].indexOf(r.qualification || 'Unqualified');
+                        const bq = ['Unqualified','Marksman','Sharpshooter','Expert'].indexOf(recordQualification(b) || 'Unqualified');
+                        const rq = ['Unqualified','Marksman','Sharpshooter','Expert'].indexOf(recordQualification(r) || 'Unqualified');
                         return rq > bq ? r : b;
                       }, recs[0]);
                       return (
@@ -128,9 +134,9 @@ export default function Weapons() {
                             {best.hits !== undefined && best.total_rounds !== undefined && (
                               <span className="text-xs font-mono text-muted-foreground">{best.hits}/{best.total_rounds}</span>
                             )}
-                            {best.qualification && (
-                              <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${QUAL_COLORS[best.qualification] || ''}`}>
-                                {best.qualification}
+                            {recordQualification(best) && (
+                              <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${QUAL_COLORS[recordQualification(best)] || ''}`}>
+                                {recordQualification(best)}
                               </span>
                             )}
                           </div>
@@ -155,9 +161,9 @@ export default function Weapons() {
                         <p className="text-xl font-mono font-black text-primary">{r.weapon}</p>
                       </div>
                       <div className="flex items-center gap-3">
-                        {r.qualification && (
-                          <span className={`px-2 py-1 rounded border text-[10px] font-bold uppercase tracking-wider ${QUAL_COLORS[r.qualification] || ''}`}>
-                            {r.qualification}
+                        {recordQualification(r) && (
+                          <span className={`px-2 py-1 rounded border text-[10px] font-bold uppercase tracking-wider ${QUAL_COLORS[recordQualification(r)] || ''}`}>
+                            {recordQualification(r)}
                           </span>
                         )}
                         {expandedId === r.id ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
@@ -169,6 +175,12 @@ export default function Weapons() {
                           <div className="flex justify-between py-1">
                             <span className="text-muted-foreground font-inter">Hits</span>
                             <span className="font-bold">{r.hits} / {r.total_rounds}</span>
+                          </div>
+                        )}
+                        {r.optic_type && (
+                          <div className="flex justify-between py-1">
+                            <span className="text-muted-foreground font-inter">Optic</span>
+                            <span>{r.optic_type}</span>
                           </div>
                         )}
                         {r.score !== undefined && (

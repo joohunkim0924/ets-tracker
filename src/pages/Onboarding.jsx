@@ -52,7 +52,7 @@ export default function Onboarding() {
           <Shield className="w-7 h-7 text-primary" />
         </div>
         <h1 className="text-lg font-inter font-bold text-foreground uppercase tracking-[0.15em]">
-          ETS TRACKER
+          ARMY1
         </h1>
       </div>
 

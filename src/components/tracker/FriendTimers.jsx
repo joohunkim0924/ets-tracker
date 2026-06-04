@@ -5,6 +5,9 @@ import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { DateInput } from '@/components/ui/date-input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RANKS, UNITS } from '@/lib/army-data';
 
 function AddFriendModal({ onClose, onSaved }) {
   const [form, setForm] = useState({ name: '', ets_date: '', rank: '', unit: '' });
@@ -31,16 +34,30 @@ function AddFriendModal({ onClose, onSaved }) {
         </div>
         <div className="space-y-2">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">ETS DATE *</Label>
-          <Input type="date" value={form.ets_date} onChange={e => set('ets_date', e.target.value)} className="h-12 font-mono bg-secondary border-border" />
+          <DateInput value={form.ets_date} onChange={e => set('ets_date', e.target.value)} className="bg-secondary border-border" />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">RANK</Label>
-            <Input placeholder="e.g. SPC" value={form.rank} onChange={e => set('rank', e.target.value)} className="h-12 bg-secondary border-border" />
+            <Select value={form.rank || ''} onValueChange={v => set('rank', v)}>
+              <SelectTrigger className="h-12 bg-secondary border-border">
+                <SelectValue placeholder="Rank" />
+              </SelectTrigger>
+              <SelectContent>
+                {RANKS.map(rank => <SelectItem key={rank} value={rank}>{rank}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">UNIT</Label>
-            <Input placeholder="e.g. 1-9 CAV" value={form.unit} onChange={e => set('unit', e.target.value)} className="h-12 bg-secondary border-border" />
+            <Select value={form.unit || ''} onValueChange={v => set('unit', v)}>
+              <SelectTrigger className="h-12 bg-secondary border-border">
+                <SelectValue placeholder="Unit" />
+              </SelectTrigger>
+              <SelectContent className="max-h-64">
+                {UNITS.map(u => <SelectItem key={u.value} value={u.value}>{u.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <Button onClick={handleSave} disabled={saving || !form.name || !form.ets_date} className="w-full h-12 font-inter font-semibold uppercase tracking-wider">
@@ -131,17 +148,22 @@ export default function FriendTimers({ now }) {
           + Add a friend to track their ETS
         </button>
       ) : (
-        <div className="flex flex-wrap justify-center gap-3 pb-2">
-          {friends.map(f => (
-            <FriendCard key={f.id} friend={f} now={now} onDelete={handleDelete} />
-          ))}
-          <div className="flex shrink-0 items-center justify-center">
-            <button
-              onClick={() => setShowAdd(true)}
-              className="w-12 h-12 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
+        <div className="-mx-page overflow-x-auto px-page pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex w-max min-w-full snap-x snap-mandatory gap-3">
+            {friends.map(f => (
+              <div key={f.id} className="snap-start">
+                <FriendCard friend={f} now={now} onDelete={handleDelete} />
+              </div>
+            ))}
+            <div className="flex shrink-0 snap-start items-center">
+              <button
+                onClick={() => setShowAdd(true)}
+                className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-dashed border-border bg-secondary text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                aria-label="Add battle buddy"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       )}

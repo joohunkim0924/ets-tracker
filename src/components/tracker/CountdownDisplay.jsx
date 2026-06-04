@@ -1,7 +1,21 @@
 import React from 'react';
 
-export default function CountdownDisplay({ daysRemaining, hoursRemaining, minutesRemaining, secondsRemaining, etsDate }) {
+/** Decimal places for live contract % (updates with sub-second dashboard clock). */
+const CONTRACT_PCT_DECIMALS = 11;
+
+export default function CountdownDisplay({
+  daysRemaining,
+  hoursRemaining,
+  minutesRemaining,
+  secondsRemaining,
+  etsDate,
+  contractPercentage = null,
+}) {
   const pad = (n) => String(n).padStart(2, '0');
+  const pct =
+    contractPercentage !== null && contractPercentage !== undefined
+      ? Math.min(Math.max(contractPercentage, 0), 100)
+      : null;
 
   return (
     <div className="space-y-[clamp(0.5rem,2.2vmin,0.75rem)] text-center">
@@ -26,6 +40,29 @@ export default function CountdownDisplay({ daysRemaining, hoursRemaining, minute
       <span className="block font-mono text-[clamp(0.6875rem,3.1vw,0.75rem)] text-muted-foreground">
         {etsDate}
       </span>
+
+      {pct !== null && (
+        <div className="mx-auto w-full max-w-[min(100%,22rem)] pt-2 text-left">
+          <div className="mb-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-muted-foreground">0%</span>
+              <span className="text-[10px] font-mono text-muted-foreground">100%</span>
+            </div>
+            <p className="mt-1 text-center font-mono text-[clamp(0.5rem,2.4vw,0.625rem)] font-bold leading-tight tabular-nums tracking-tight text-primary">
+              {pct.toFixed(CONTRACT_PCT_DECIMALS)}%
+            </p>
+          </div>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full rounded-full bg-primary transition-[width] duration-75 ease-linear"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <p className="mt-1 text-center text-[10px] font-inter uppercase tracking-[0.15em] text-muted-foreground/70">
+            Contract complete
+          </p>
+        </div>
+      )}
     </div>
   );
 }

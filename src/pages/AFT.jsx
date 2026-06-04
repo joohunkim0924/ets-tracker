@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import BottomNav from '@/components/layout/BottomNav';
 import AddScoreModal from '@/components/aft/AddScoreModal';
 import AFTAnalysis from '@/components/aft/AFTAnalysis';
+import { describeEventForScore, getProfileType, PROFILE_TYPES } from '@/lib/aft-profile';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', unit: 'lbs', timeFormat: false },
@@ -132,19 +133,22 @@ export default function AFT() {
                 <div className="rounded-xl border border-border bg-card p-card">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-3">LATEST EVENT BREAKDOWN</p>
                   <div className="space-y-2">
-                    {EVENTS.map(ev => {
-                      const pts = latest?.[ev.pointsKey] ?? '—';
-                      const raw = latest?.[ev.key] ?? '—';
-                      return (
-                        <div key={ev.key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                          <span className="text-xs font-inter text-foreground">{ev.label}</span>
-                          <div className="flex items-center gap-3 text-right">
-                            <span className="text-xs font-mono text-muted-foreground">{raw !== '—' ? ev.timeFormat ? formatMMSS(raw) : `${raw} ${ev.unit}` : '—'}</span>
-                            <span className="text-sm font-mono font-bold text-primary w-10 text-right">{pts}</span>
+                    {getProfileType(latest) === PROFILE_TYPES.TEMPORARY ? (
+                      <p className="text-xs font-inter text-amber-700 dark:text-amber-400 py-2">Temporary profile — testing unauthorized.</p>
+                    ) : (
+                      EVENTS.map(ev => {
+                        const row = describeEventForScore(latest, ev);
+                        return (
+                          <div key={ev.key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                            <span className="text-xs font-inter text-foreground">{row.label}</span>
+                            <div className="flex items-center gap-3 text-right">
+                              <span className="text-xs font-mono text-muted-foreground">{row.raw}</span>
+                              <span className="text-sm font-mono font-bold text-primary w-10 text-right">{row.pts}</span>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    )}
                   </div>
                 </div>
 
@@ -169,12 +173,19 @@ export default function AFT() {
                     </button>
                     {expandedId === s.id && (
                       <div className="space-y-1 border-t border-border px-card pb-4 pt-3">
-                        {EVENTS.map(ev => (
-                          <div key={ev.key} className="flex justify-between text-xs py-1">
-                            <span className="font-inter text-muted-foreground">{ev.label}</span>
-                            <span className="font-mono text-foreground">{s[ev.key] !== undefined && s[ev.key] !== null ? (ev.timeFormat ? formatMMSS(s[ev.key]) : `${s[ev.key]} ${ev.unit}`) : '—'} · <span className="text-primary font-semibold">{s[ev.pointsKey] ?? '—'} pts</span></span>
-                          </div>
-                        ))}
+                        {getProfileType(s) === PROFILE_TYPES.TEMPORARY ? (
+                          <p className="text-xs font-inter text-amber-700 py-1">Temporary profile — no scored events.</p>
+                        ) : (
+                          EVENTS.map(ev => {
+                            const row = describeEventForScore(s, ev);
+                            return (
+                              <div key={ev.key} className="flex justify-between text-xs py-1">
+                                <span className="font-inter text-muted-foreground">{row.label}</span>
+                                <span className="font-mono text-foreground">{row.raw} · <span className="text-primary font-semibold">{row.pts} pts</span></span>
+                              </div>
+                            );
+                          })
+                        )}
                         <div className="mt-2 flex items-center gap-4">
                           <button
                             onClick={() => { setEditingScore(s); setExpandedId(null); }}

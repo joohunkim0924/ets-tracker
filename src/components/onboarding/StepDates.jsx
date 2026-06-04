@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from "@/components/ui/input";
+import { DateInput } from '@/components/ui/date-input';
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronLeft } from "lucide-react";
@@ -19,11 +19,10 @@ export default function StepDates({ data, onChange, onNext, onBack }) {
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
             ENLISTMENT DATE
           </Label>
-          <Input
-            type="date"
+          <DateInput
             value={data.enlistment_date || ''}
             onChange={(e) => onChange({ ...data, enlistment_date: e.target.value })}
-            className="bg-secondary border-border text-foreground font-mono h-12"
+            className="bg-secondary border-border text-foreground"
           />
         </div>
 
@@ -31,11 +30,10 @@ export default function StepDates({ data, onChange, onNext, onBack }) {
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">
             ETS DATE
           </Label>
-          <Input
-            type="date"
+          <DateInput
             value={data.ets_date || ''}
             onChange={(e) => onChange({ ...data, ets_date: e.target.value })}
-            className="bg-secondary border-border text-foreground font-mono h-12"
+            className="bg-secondary border-border text-foreground"
           />
         </div>
       </div>

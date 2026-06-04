@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Input } from "@/components/ui/input";
+import { DateInput } from '@/components/ui/date-input';
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -144,26 +145,20 @@ export default function Settings() {
 
           <div className="min-w-0 max-w-full space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ENLISTMENT DATE</Label>
-            <div className="w-full min-w-0 max-w-full overflow-hidden">
-              <Input
-                type="date"
-                value={data.enlistment_date}
-                onChange={(e) => setData({ ...data, enlistment_date: e.target.value })}
-                className="box-border !block h-12 w-full min-w-0 max-w-full bg-secondary font-mono text-foreground border-border"
-              />
-            </div>
+            <DateInput
+              value={data.enlistment_date}
+              onChange={(e) => setData({ ...data, enlistment_date: e.target.value })}
+              className="bg-secondary text-foreground border-border"
+            />
           </div>
 
           <div className="min-w-0 max-w-full space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">ETS DATE</Label>
-            <div className="w-full min-w-0 max-w-full overflow-hidden">
-              <Input
-                type="date"
-                value={data.ets_date}
-                onChange={(e) => setData({ ...data, ets_date: e.target.value })}
-                className="box-border !block h-12 w-full min-w-0 max-w-full bg-secondary font-mono text-foreground border-border"
-              />
-            </div>
+            <DateInput
+              value={data.ets_date}
+              onChange={(e) => setData({ ...data, ets_date: e.target.value })}
+              className="bg-secondary text-foreground border-border"
+            />
           </div>
 
           <div className="space-y-2">
@@ -184,21 +179,18 @@ export default function Settings() {
 
           <div className="min-w-0 max-w-full space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">PCS DATE (OPTIONAL)</Label>
-            <div className="w-full min-w-0 max-w-full overflow-hidden">
-              <Input
-                type="date"
-                value={data.pcs_date}
-                onChange={(e) => setData({ ...data, pcs_date: e.target.value })}
-                className="box-border !block h-12 w-full min-w-0 max-w-full bg-secondary font-mono text-foreground border-border"
-              />
-            </div>
+            <DateInput
+              value={data.pcs_date}
+              onChange={(e) => setData({ ...data, pcs_date: e.target.value })}
+              className="bg-secondary text-foreground border-border"
+            />
           </div>
 
           <Button onClick={handleSave} disabled={saving} className="w-full h-12 bg-primary text-primary-foreground font-inter font-semibold uppercase tracking-wider text-sm hover:bg-primary/90">
             {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : <><Save className="w-4 h-4 mr-2" /> SAVE CHANGES</>}
           </Button>
 
-          <Button variant="outline" onClick={() => base44.auth.logout()} className="w-full h-12 border-destructive/30 text-destructive font-inter uppercase tracking-wider text-sm hover:bg-destructive/10">
+          <Button variant="outline" onClick={() => base44.auth.logout('/onboarding')} className="w-full h-12 border-destructive/30 text-destructive font-inter uppercase tracking-wider text-sm hover:bg-destructive/10">
             <LogOut className="w-4 h-4 mr-2" /> RESET OFFLINE DATA
           </Button>
         </div>

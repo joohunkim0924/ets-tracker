@@ -31,7 +31,7 @@ export default function Dashboard() {
   }, [navigate]);
 
   useEffect(() => {
-    const interval = setInterval(() => setNow(new Date()), 1000);
+    const interval = setInterval(() => setNow(new Date()), 100);
     return () => clearInterval(interval);
   }, []);
 
@@ -123,6 +123,7 @@ export default function Dashboard() {
             minutesRemaining={minutesRemaining}
             secondsRemaining={secondsRemaining}
             etsDate={format(etsDate, 'dd MMM yyyy').toUpperCase()}
+            contractPercentage={percentage}
           />
         </div>
 

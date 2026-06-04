@@ -1,8 +1,71 @@
 import React, { useState } from 'react';
 import BottomNav from '@/components/layout/BottomNav';
-import { ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { ExternalLink, ChevronDown, ChevronUp, FileText, GraduationCap, Calculator } from 'lucide-react';
+
+const VA_LINKS = [
+  {
+    name: 'VA Disability Compensation Rates',
+    description: 'Official VA.gov charts for disability percentages and monthly compensation rates.',
+    action: 'View VA Charts',
+    url: 'https://www.va.gov/disability/compensation-rates/veteran-rates/',
+    icon: FileText,
+  },
+  {
+    name: 'ArmyIgnitED (Tuition Assistance)',
+    description: 'Apply for TA, manage funding requests, and track education goals in one portal.',
+    action: 'Open ArmyIgnitED',
+    url: 'https://www.armyignited.army.mil/',
+    icon: GraduationCap,
+  },
+  {
+    name: 'Post-9/11 GI Bill Time Calculator',
+    description: 'Understand how active duty service counts toward Post-9/11 GI Bill eligibility and benefits.',
+    action: 'GI Bill Guide',
+    url: 'https://www.va.gov/education/about-gi-bill-benefits/post-9-11/',
+    icon: Calculator,
+  },
+];
 
 const CATEGORIES = [
+  {
+    id: 'discounts',
+    emoji: '🎟️',
+    label: 'Discounts & Recreation',
+    color: 'text-indigo-600',
+    bg: 'bg-indigo-50 border-indigo-200',
+    benefits: [
+      {
+        name: 'Commissary & Exchange (PX/BX)',
+        description: 'Tax-free shopping with prices typically 20–30% below retail. Open to all active duty and dependents.',
+        action: 'Shop Online',
+        url: 'https://www.myarmyonesource.com/FamilyProgramsAndServices/Shopping/default.aspx',
+      },
+      {
+        name: 'MWR Recreation',
+        description: 'Discounted tickets to theme parks, concerts, travel, gyms, and outdoor recreation.',
+        action: 'ITR / MWR Portal',
+        url: 'https://www.armymwr.com',
+      },
+      {
+        name: 'Space-A Travel',
+        description: 'Fly free or at low cost on military aircraft to available destinations worldwide.',
+        action: 'Space-A Info',
+        url: 'https://www.amc.af.mil/Home/Passenger-Terminal/',
+      },
+      {
+        name: 'ID.me Military Discounts',
+        description: 'Verify your military status once and unlock hundreds of civilian discounts (Amazon, Apple, etc.).',
+        action: 'Verify with ID.me',
+        url: 'https://www.id.me/military',
+      },
+      {
+        name: 'GOVX Special Pricing',
+        description: 'Similar to ID.me, verify your status and access special pricing on partners (Oakley, Sports Tickets, etc.).',
+        action: 'Savings For Those Who Serve',
+        url: 'https://www.govx.com/',
+      },
+    ],
+  },
   {
     id: 'pay',
     emoji: '💰',
@@ -255,46 +318,33 @@ const CATEGORIES = [
       },
     ],
   },
-  {
-    id: 'discounts',
-    emoji: '🎟️',
-    label: 'Discounts & Recreation',
-    color: 'text-indigo-600',
-    bg: 'bg-indigo-50 border-indigo-200',
-    benefits: [
-      {
-        name: 'Commissary & Exchange (PX/BX)',
-        description: 'Tax-free shopping with prices typically 20–30% below retail. Open to all active duty and dependents.',
-        action: 'Shop Online',
-        url: 'https://www.myarmyonesource.com/FamilyProgramsAndServices/Shopping/default.aspx',
-      },
-      {
-        name: 'MWR Recreation',
-        description: 'Discounted tickets to theme parks, concerts, travel, gyms, and outdoor recreation.',
-        action: 'ITR / MWR Portal',
-        url: 'https://www.armymwr.com',
-      },
-      {
-        name: 'Space-A Travel',
-        description: 'Fly free or at low cost on military aircraft to available destinations worldwide.',
-        action: 'Space-A Info',
-        url: 'https://www.amc.af.mil/Home/Passenger-Terminal/',
-      },
-      {
-        name: 'ID.me Military Discounts',
-        description: 'Verify your military status once and unlock hundreds of civilian discounts (Amazon, Apple, etc.).',
-        action: 'Verify with ID.me',
-        url: 'https://www.id.me/military',
-      },
-      {
-        name: 'GOVX Special Pricing',
-        description: 'Similar to ID.me, verify your status and access special pricing on partners (Oakley, Sports Tickets, etc.).',
-        action: 'Savings For Those Who Serve',
-        url: 'https://www.govx.com/',
-      },
-    ],
-  },
 ];
+
+function VaLinkCard({ link }) {
+  const Icon = link.icon;
+  return (
+    <a
+      href={link.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-inter font-semibold text-foreground">{link.name}</p>
+          <p className="mt-1 text-xs text-muted-foreground font-inter leading-relaxed">{link.description}</p>
+          <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-inter font-bold uppercase tracking-widest text-primary">
+            {link.action}
+            <ExternalLink className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+          </span>
+        </div>
+      </div>
+    </a>
+  );
+}
 
 function BenefitCard({ benefit }) {
   return (
@@ -352,6 +402,16 @@ export default function Benefits() {
       </div>
 
       <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-page pb-bottom-scroll">
+        <div className="mb-5 rounded-2xl border border-teal-200 bg-teal-50/80 p-4 dark:border-teal-900/50 dark:bg-teal-950/20">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-teal-800 dark:text-teal-300 font-inter mb-1">Education &amp; VA</p>
+          <h2 className="text-sm font-inter font-bold text-foreground uppercase tracking-wide mb-3">VA Disability &amp; TA Links</h2>
+          <div className="space-y-3">
+            {VA_LINKS.map(link => (
+              <VaLinkCard key={link.name} link={link} />
+            ))}
+          </div>
+        </div>
+
         {CATEGORIES.map(cat => (
           <CategorySection key={cat.id} cat={cat} />
         ))}

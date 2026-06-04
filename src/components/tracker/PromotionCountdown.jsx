@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { differenceInDays, parseISO, format } from 'date-fns';
 import { ChevronRight, Star } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { DateInput } from '@/components/ui/date-input';
 
 export default function PromotionCountdown({ user, now }) {
   const [editing, setEditing] = useState(false);
@@ -44,11 +45,10 @@ export default function PromotionCountdown({ user, now }) {
           <Star className="w-4 h-4 text-primary" />
           <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">Promotion Date</span>
         </div>
-        <input
-          type="date"
+        <DateInput
           value={dateInput}
           onChange={e => setDateInput(e.target.value)}
-          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-mono mb-3 focus:outline-none focus:ring-1 focus:ring-ring"
+          className="mb-3 bg-background border-input"
         />
         <div className="flex gap-2">
           <button

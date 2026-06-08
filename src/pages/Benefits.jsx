@@ -14,7 +14,7 @@ const VA_LINKS = [
     name: 'ArmyIgnitED (Tuition Assistance)',
     description: 'Apply for TA, manage funding requests, and track education goals in one portal.',
     action: 'Open ArmyIgnitED',
-    url: 'https://www.armyignited.army.mil/',
+    url: 'https://www.armyignited.army.mil/student/public/welcome',
     icon: GraduationCap,
   },
   {
@@ -50,7 +50,7 @@ const CATEGORIES = [
         name: 'Space-A Travel',
         description: 'Fly free or at low cost on military aircraft to available destinations worldwide.',
         action: 'Space-A Info',
-        url: 'https://www.amc.af.mil/Home/Passenger-Terminal/',
+        url: 'https://www.militaryonesource.mil/travel/',
       },
       {
         name: 'ID.me Military Discounts',
@@ -77,13 +77,13 @@ const CATEGORIES = [
         name: 'Basic Pay',
         description: 'Monthly base pay based on rank and years of service.',
         action: 'View Pay Tables',
-        url: 'https://www.dfas.mil/militarymembers/payentitlements/militarypaytables.html',
+        url: 'https://myarmybenefits.us.army.mil/Benefit-Library/Federal-Benefits/Basic-Pay',
       },
       {
         name: 'Basic Allowance for Housing (BAH)',
         description: 'Monthly housing stipend based on rank, dependency status, and duty location.',
         action: 'BAH Calculator',
-        url: 'https://www.defensetravel.dod.mil/site/bahCalc.cfm',
+        url: 'https://myarmybenefits.us.army.mil/Benefit-Library/Federal-Benefits/Basic-Allowance-for-Housing-(BAH)',
       },
       {
         name: 'Basic Allowance for Subsistence (BAS)',
@@ -95,7 +95,7 @@ const CATEGORIES = [
         name: 'Special & Incentive Pay',
         description: 'Hazardous duty pay, combat pay, flight pay, dive pay, and more.',
         action: 'View Special Pay',
-        url: 'https://militarypay.defense.gov/Pay/Special-and-Incentive-Pays/',
+        url: 'https://myarmybenefits.us.army.mil/Benefit-Library/Federal-Benefits/Bonuses',
       },
       {
         name: 'MyPay Portal',
@@ -154,8 +154,8 @@ const CATEGORIES = [
       {
         name: 'Tuition Assistance (TA)',
         description: 'Army pays up to $4,500/year for college courses taken while on active duty.',
-        action: 'Apply via GoArmyEd',
-        url: 'https://www.goarmyed.com',
+        action: 'Open ArmyIgnitED',
+        url: 'https://www.armyignited.army.mil/student/public/welcome',
       },
       {
         name: 'Montgomery GI Bill (Ch. 30)',

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Shield } from 'lucide-react';
 import StepIdentity from '../components/onboarding/StepIdentity';
 import StepDates from '../components/onboarding/StepDates';
 import StepOptional from '../components/onboarding/StepOptional';
@@ -48,9 +47,11 @@ export default function Onboarding() {
     <div className="min-h-screen max-w-full overflow-x-hidden bg-background flex flex-col">
       {/* Header */}
       <div className="px-page pb-block-gap pt-[clamp(2.25rem,7vw,3.5rem)] text-center">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mb-4">
-          <Shield className="w-7 h-7 text-primary" />
-        </div>
+        <img
+          src="/icons/icon-192x192.png"
+          alt="Army1"
+          className="mx-auto mb-4 h-16 w-16 rounded-2xl shadow-md"
+        />
         <h1 className="text-lg font-inter font-bold text-foreground uppercase tracking-[0.15em]">
           ARMY1
         </h1>

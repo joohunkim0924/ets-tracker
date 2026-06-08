@@ -1,3 +1,5 @@
+import { STORAGE_KEY as PROMOTION_TRACKER_KEY, resetPromotionTrackerState } from '@/lib/promotion-points';
+
 const STORAGE_KEYS = {
   user: 'ets-tracker:user',
   friends: 'ets-tracker:friends',
@@ -97,6 +99,9 @@ export function clearAllOfflineData() {
   Object.values(STORAGE_KEYS).forEach((key) => {
     window.localStorage.removeItem(key);
   });
+
+  window.localStorage.removeItem(PROMOTION_TRACKER_KEY);
+  resetPromotionTrackerState();
 }
 
 function createEntityStore(storageKey, prefix) {

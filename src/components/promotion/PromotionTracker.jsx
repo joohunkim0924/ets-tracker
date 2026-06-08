@@ -19,13 +19,12 @@ import {
   mapUserRankToPromotion,
   getRouteForRank,
   getPromotionTarget,
-  getJuniorProgress,
+  buildJuniorTrackRows,
   calculateSemiCentralizedTotal,
   validateAftScore,
   aftMinTotal,
   CATEGORY_CAPS,
   AWARD_VALUES,
-  JUNIOR_TRACKS,
 } from '@/lib/promotion-points';
 
 function loadState(userRank) {
@@ -99,18 +98,20 @@ function JuniorTrack({ rank, enlistmentDate, now }) {
   const monthsTis = enlistmentDate
     ? Math.max(differenceInMonths(now, parseISO(enlistmentDate)), 0)
     : 0;
-  const tracks = Object.keys(JUNIOR_TRACKS).map(r => ({
-    rankKey: r,
-    ...getJuniorProgress(r, monthsTis),
-  }));
+  const tracks = buildJuniorTrackRows(rank, monthsTis);
+  const isOfficer = rank === '2lt';
 
   return (
     <div className="space-y-4 animate-in fade-in duration-500">
       <div className="rounded-2xl border border-violet-500/20 bg-violet-950/40 p-5 shadow-lg">
         <p className="text-[10px] font-inter uppercase tracking-[0.2em] text-violet-300/80">Automatic promotion track</p>
-        <h3 className="mt-1 text-lg font-inter font-bold text-white">Time in service pathway</h3>
+        <h3 className="mt-1 text-lg font-inter font-bold text-white">
+          {isOfficer ? 'Time in grade pathway' : 'Time in service pathway'}
+        </h3>
         <p className="mt-2 text-xs text-violet-100/70">
-          {enlistmentDate ? `${monthsTis} months time in service` : 'Add enlistment date in settings for live TIS tracking'}
+          {enlistmentDate
+            ? `${monthsTis} months time in service`
+            : 'Add enlistment date in settings for live TIS tracking'}
         </p>
         <div className="mt-5 space-y-4">
           {tracks.map(track => {
@@ -144,27 +145,42 @@ function JuniorTrack({ rank, enlistmentDate, now }) {
       <div className="rounded-xl border border-white/10 bg-white/5 p-4">
         <p className="text-xs font-inter font-semibold text-white">Soldier tip</p>
         <p className="mt-1 text-[11px] leading-relaxed text-violet-100/70">
-          Focus on mastering your MOS, maintaining discipline, and practicing the 5 AFT core events (MDL, HRP, SDC, PLK, 2MR).
+          {isOfficer
+            ? 'Focus on leadership development, PME completion, and building a strong OER history for your next grade.'
+            : 'Focus on mastering your MOS, maintaining discipline, and practicing the 5 AFT core events (MDL, HRP, SDC, PLK, 2MR).'}
         </p>
       </div>
     </div>
   );
 }
 
-function BoardChecklist({ checklist, onChange }) {
-  const items = [
-    { key: 'ncoer', label: 'Review NCOER History and Ensure Consistency' },
-    { key: 'srb', label: 'Verify IPPS-A Soldier Record Brief (SRB) Accuracy' },
-    { key: 'deploymentAwards', label: 'Confirm Complete Deployment and Award Credits' },
-    { key: 'msaf', label: 'Complete Multi-Source Assessment and Feedback (MSAF) 360' },
-  ];
+function BoardChecklist({ checklist, onChange, isOfficer }) {
+  const items = isOfficer
+    ? [
+      { key: 'ncoer', label: 'Review OER History and Ensure Consistency' },
+      { key: 'srb', label: 'Verify Official Military Personnel File (OMPF) Accuracy' },
+      { key: 'deploymentAwards', label: 'Confirm Complete Deployment and Award Credits' },
+      { key: 'msaf', label: 'Complete Multi-Source Assessment and Feedback (MSAF) 360' },
+    ]
+    : [
+      { key: 'ncoer', label: 'Review NCOER History and Ensure Consistency' },
+      { key: 'srb', label: 'Verify IPPS-A Soldier Record Brief (SRB) Accuracy' },
+      { key: 'deploymentAwards', label: 'Confirm Complete Deployment and Award Credits' },
+      { key: 'msaf', label: 'Complete Multi-Source Assessment and Feedback (MSAF) 360' },
+    ];
 
   return (
     <div className="space-y-3 animate-in fade-in duration-500">
       <div className="rounded-2xl border border-violet-500/20 bg-violet-950/40 p-5">
         <p className="text-[10px] font-inter uppercase tracking-[0.2em] text-violet-300/80">Centralized board</p>
-        <h3 className="mt-1 text-lg font-inter font-bold text-white">NCO Board Readiness</h3>
-        <p className="mt-2 text-xs text-violet-100/70">SSG and above promotions are centralized. Use this checklist to prepare your record before the board.</p>
+        <h3 className="mt-1 text-lg font-inter font-bold text-white">
+          {isOfficer ? 'Officer Board Readiness' : 'NCO Board Readiness'}
+        </h3>
+        <p className="mt-2 text-xs text-violet-100/70">
+          {isOfficer
+            ? 'CPT and above promotions are centralized. Use this checklist to prepare your record before the board.'
+            : 'SSG and above promotions are centralized. Use this checklist to prepare your record before the board.'}
+        </p>
       </div>
       {items.map(item => (
         <label key={item.key} className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-4 transition-colors hover:border-violet-500/30">
@@ -209,7 +225,7 @@ export default function PromotionTracker({ user, now = new Date() }) {
     <div className="rounded-2xl border border-violet-900/50 bg-gradient-to-b from-zinc-950 via-violet-950/90 to-zinc-950 p-4 shadow-xl sm:p-5">
       <div className="mb-4 space-y-2">
         <Label className="text-[10px] uppercase tracking-[0.2em] text-violet-200/70">Current rank</Label>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-3">
           {RANK_OPTIONS.map(opt => (
             <button
               key={opt.value}
@@ -244,6 +260,7 @@ export default function PromotionTracker({ user, now = new Date() }) {
       {route === 'junior' && <JuniorTrack rank={state.rank} enlistmentDate={user?.enlistment_date} now={now} />}
       {route === 'board' && (
         <BoardChecklist
+          isOfficer={state.rank === 'cpt'}
           checklist={state.boardChecklist}
           onChange={(key, val) => setState(s => ({ ...s, boardChecklist: { ...s.boardChecklist, [key]: val } }))}
         />

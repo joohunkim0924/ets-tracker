@@ -11,6 +11,7 @@ import BottomNav from '@/components/layout/BottomNav';
 import FriendTimers from '@/components/tracker/FriendTimers';
 import PromotionCountdown from '@/components/tracker/PromotionCountdown';
 import PromotionPointsBar from '@/components/tracker/PromotionPointsBar';
+import { isPromotionDateReached, resetPromotionTrackerState } from '@/lib/promotion-points';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -35,6 +36,17 @@ export default function Dashboard() {
     const interval = setInterval(() => setNow(new Date()), 100);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (loading || !user?.promotion_date) return;
+    if (!isPromotionDateReached(user.promotion_date, now)) return;
+
+    (async () => {
+      resetPromotionTrackerState({ seedRank: user.rank });
+      const updated = await localStore.auth.updateMe({ promotion_date: '' });
+      setUser(updated);
+    })();
+  }, [loading, user?.promotion_date, user?.rank, now]);
 
   if (loading) {
     return (

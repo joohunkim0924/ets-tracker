@@ -1,4 +1,6 @@
-/** @typedef {'pv1'|'pv2'|'pfc'|'spc'|'sgt'|'ssg'} PromotionRank */
+import { isBefore, parseISO, startOfDay } from 'date-fns';
+
+/** @typedef {'pv1'|'pv2'|'pfc'|'spc'|'sgt'|'ssg'|'2lt'|'1lt'|'cpt'} PromotionRank */
 /** @typedef {'standard'|'combat'} MosCategory */
 /** @typedef {'e5'|'e6'} PromotionTarget */
 
@@ -9,10 +11,14 @@ export const RANK_OPTIONS = [
   { value: 'spc', label: 'SPC/CPL (E-4 → E-5)' },
   { value: 'sgt', label: 'SGT (E-5 → E-6)' },
   { value: 'ssg', label: 'SSG+ (E-6+)' },
+  { value: '2lt', label: '2LT (O-1 → O-2)' },
+  { value: '1lt', label: '1LT (O-2 → O-3)' },
+  { value: 'cpt', label: 'CPT+ (O-3+)' },
 ];
 
-export const JUNIOR_RANKS = new Set(['pv1', 'pv2', 'pfc']);
-export const SEMI_RANKS = new Set(['spc', 'sgt']);
+export const JUNIOR_RANKS = new Set(['pv1', 'pv2', 'pfc', '2lt']);
+export const SEMI_RANKS = new Set(['spc', 'sgt', '1lt']);
+export const OFFICER_BOARD_RANKS = new Set(['cpt']);
 
 export const CATEGORY_CAPS = {
   e5: { awards: 145, militaryEducation: 240, civilianEducation: 185 },
@@ -33,10 +39,13 @@ export const JUNIOR_TRACKS = {
   pfc: { next: 'SPC', tisMonths: 24, tigMonths: 6, label: 'PFC → SPC' },
 };
 
-const E6_PLUS_RANKS = new Set([
+export const OFFICER_JUNIOR_TRACKS = {
+  '2lt': { next: '1LT', tisMonths: 18, tigMonths: 18, label: '2LT → 1LT' },
+};
+
+const NCO_BOARD_RANKS = new Set([
   'SSG', 'SFC', 'MSG', '1SG', 'SGM', 'CSM', 'SMA',
   'WO1', 'CW2', 'CW3', 'CW4', 'CW5',
-  '2LT', '1LT', 'CPT', 'MAJ', 'LTC', 'COL', 'BG', 'MG', 'LTG', 'GEN',
 ]);
 
 export function mapUserRankToPromotion(userRank) {
@@ -47,13 +56,26 @@ export function mapUserRankToPromotion(userRank) {
   if (r === 'PFC') return 'pfc';
   if (r === 'SPC' || r === 'CPL') return 'spc';
   if (r === 'SGT') return 'sgt';
-  if (E6_PLUS_RANKS.has(r)) return 'ssg';
+  if (r === '2LT') return '2lt';
+  if (r === '1LT') return '1lt';
+  if (['CPT', 'MAJ', 'LTC', 'COL', 'BG', 'MG', 'LTG', 'GEN'].includes(r)) return 'cpt';
+  if (NCO_BOARD_RANKS.has(r)) return 'ssg';
   return null;
+}
+
+export function isOfficerPromotionRank(rank) {
+  return rank === '2lt' || rank === '1lt' || OFFICER_BOARD_RANKS.has(rank);
 }
 
 export function getPromotionTarget(rank) {
   if (rank === 'sgt') return 'e6';
-  if (rank === 'spc') return 'e5';
+  if (rank === 'spc' || rank === '1lt') return 'e5';
+  return null;
+}
+
+export function getJuniorTrackMap(rank) {
+  if (rank === '2lt') return OFFICER_JUNIOR_TRACKS;
+  if (JUNIOR_RANKS.has(rank) && rank !== '2lt') return JUNIOR_TRACKS;
   return null;
 }
 
@@ -134,11 +156,20 @@ export function calculateSemiCentralizedTotal(inputs, target) {
   };
 }
 
-export function getJuniorProgress(rank, monthsTis) {
-  const track = JUNIOR_TRACKS[rank];
+export function getJuniorProgress(rank, monthsTis, trackMap = JUNIOR_TRACKS) {
+  const track = trackMap[rank];
   if (!track) return null;
   const tisPct = Math.min(100, (monthsTis / track.tisMonths) * 100);
   return { ...track, monthsTis, tisPct };
+}
+
+export function buildJuniorTrackRows(rank, monthsTis) {
+  const trackMap = getJuniorTrackMap(rank);
+  if (!trackMap) return [];
+  return Object.keys(trackMap).map(rankKey => ({
+    rankKey,
+    ...getJuniorProgress(rankKey, monthsTis, trackMap),
+  }));
 }
 
 export const DEFAULT_PROMOTION_STATE = {
@@ -201,3 +232,27 @@ export function getPromotionPointsSummary() {
 }
 
 export const PROMOTION_TRACKER_UPDATED_EVENT = 'promotion-tracker-updated';
+
+export function isPromotionDateReached(promotionDate, now = new Date()) {
+  if (!promotionDate) return false;
+  try {
+    const promoDay = startOfDay(parseISO(promotionDate));
+    const today = startOfDay(now);
+    return !isBefore(today, promoDay);
+  } catch {
+    return false;
+  }
+}
+
+export function resetPromotionTrackerState({ seedRank } = {}) {
+  const next = { ...DEFAULT_PROMOTION_STATE };
+  const mapped = mapUserRankToPromotion(seedRank);
+  if (mapped) next.rank = mapped;
+
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.dispatchEvent(new CustomEvent(PROMOTION_TRACKER_UPDATED_EVENT));
+  }
+
+  return next;
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { localStore } from '@/lib/offline-store';
+import { isPromotionDateReached, resetPromotionTrackerState } from '@/lib/promotion-points';
 import BottomNav from '@/components/layout/BottomNav';
 import PromotionTracker from '@/components/promotion/PromotionTracker';
 
@@ -26,6 +27,17 @@ export default function PromotionTrackerPage() {
     const interval = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (loading || !user?.promotion_date) return;
+    if (!isPromotionDateReached(user.promotion_date, now)) return;
+
+    (async () => {
+      resetPromotionTrackerState({ seedRank: user.rank });
+      const updated = await localStore.auth.updateMe({ promotion_date: '' });
+      setUser(updated);
+    })();
+  }, [loading, user?.promotion_date, user?.rank, now]);
 
   if (loading) {
     return (

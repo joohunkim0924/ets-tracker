@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { differenceInDays, parseISO, format } from 'date-fns';
 import { ChevronRight, Star } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { DateInput } from '@/components/ui/date-input';
 
 export default function PromotionCountdown({ user, now }) {
@@ -13,7 +13,7 @@ export default function PromotionCountdown({ user, now }) {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.auth.updateMe({ promotion_date: dateInput });
+    await localStore.auth.updateMe({ promotion_date: dateInput });
     user.promotion_date = dateInput;
     setSaving(false);
     setEditing(false);

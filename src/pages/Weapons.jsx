@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { format, parseISO } from 'date-fns';
 import { Plus, ChevronDown, ChevronUp, Target, Trash2, Pencil } from 'lucide-react';
 import BottomNav from '@/components/layout/BottomNav';
@@ -28,7 +28,7 @@ export default function Weapons() {
   const [expandedId, setExpandedId] = useState(null);
 
   const load = async () => {
-    const data = await base44.entities.WeaponsRecord.list('-date');
+    const data = await localStore.entities.WeaponsRecord.list('-date');
     setRecords(data);
     setLoading(false);
   };
@@ -206,7 +206,7 @@ export default function Weapons() {
                             <Pencil className="w-3.5 h-3.5" /> Edit record
                           </button>
                           <button
-                            onClick={async () => { await base44.entities.WeaponsRecord.delete(r.id); load(); }}
+                            onClick={async () => { await localStore.entities.WeaponsRecord.delete(r.id); load(); }}
                             className="flex items-center gap-1.5 text-destructive text-[11px] font-inter font-semibold hover:opacity-70 transition-opacity"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Delete record

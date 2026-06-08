@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import StepIdentity from '../components/onboarding/StepIdentity';
 import StepDates from '../components/onboarding/StepDates';
 import StepOptional from '../components/onboarding/StepOptional';
@@ -25,7 +25,7 @@ export default function Onboarding() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    await base44.auth.updateMe({
+    await localStore.auth.updateMe({
       last_name: data.last_name,
       first_name: data.first_name,
       preferred_name: data.preferred_name || null,

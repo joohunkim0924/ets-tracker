@@ -2,7 +2,6 @@ import { getAlternateRunLabel } from '@/lib/aft-alternate-events';
 
 export const PROFILE_TYPES = {
   NONE: 'none',
-  TEMPORARY: 'temporary',
   PERMANENT: 'permanent',
 };
 
@@ -10,13 +9,14 @@ export const PROFILE_PASSING_POINTS = 60;
 
 export const PROFILE_OPTIONS = [
   { value: PROFILE_TYPES.NONE, label: 'No Profile' },
-  { value: PROFILE_TYPES.TEMPORARY, label: 'Temporary Profile' },
-  { value: PROFILE_TYPES.PERMANENT, label: 'Permanent Profile' },
+  { value: PROFILE_TYPES.PERMANENT, label: 'Profile' },
 ];
 
 export function getProfileType(score) {
-  if (score?.profile_type) return score.profile_type;
-  if (score?.permanent_profile) return PROFILE_TYPES.PERMANENT;
+  if (!score) return PROFILE_TYPES.NONE;
+  if (score.profile_type === 'temporary') return PROFILE_TYPES.NONE;
+  if (score.profile_type) return score.profile_type;
+  if (score.permanent_profile) return PROFILE_TYPES.PERMANENT;
   return PROFILE_TYPES.NONE;
 }
 
@@ -63,12 +63,7 @@ function isScoreEventExempt(score, eventKey) {
 
 /** Display row for history / overview */
 export function describeEventForScore(score, ev) {
-  const profileType = getProfileType(score);
   const exempt = isScoreEventExempt(score, ev.key);
-
-  if (profileType === PROFILE_TYPES.TEMPORARY) {
-    return { label: ev.label, raw: '—', pts: '—', note: 'Temp profile' };
-  }
 
   if (exempt && ev.key === 'two_mile_run') {
     const label = getAlternateRunLabel(score.alternate_run_event);
@@ -77,14 +72,14 @@ export function describeEventForScore(score, ev) {
       label,
       raw: pass ? 'PASS (profile)' : 'FAIL (profile)',
       pts: pass ? PROFILE_PASSING_POINTS : 0,
-      note: 'Profile exempt',
+      note: 'Profile',
     };
   }
 
   if (exempt) {
     return {
       label: ev.label,
-      raw: 'Profile exempt',
+      raw: 'Profile minimum',
       pts: PROFILE_PASSING_POINTS,
       note: '60 pts',
     };

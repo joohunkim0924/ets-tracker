@@ -53,7 +53,7 @@ export default function CircularProgress({ percentage, unitPatchSrc, unitPatchAl
           strokeLinecap="round"
           className="transition-all duration-1000 ease-out"
           style={{
-            filter: 'drop-shadow(0 0 8px hsl(142 69% 58% / 0.3))',
+            filter: 'drop-shadow(0 0 8px hsl(270 60% 55% / 0.35))',
           }}
         />
       </svg>

@@ -140,3 +140,36 @@ export const offlineEntities = {
   AFTScore: createEntityStore(STORAGE_KEYS.aftScores, 'aft'),
   WeaponsRecord: createEntityStore(STORAGE_KEYS.weaponsRecords, 'weapon'),
 };
+
+/** Local-first data API — all reads/writes go to device localStorage. */
+export const localStore = {
+  auth: {
+    async me() {
+      return getUser();
+    },
+
+    async updateMe(patch) {
+      return updateUser(patch);
+    },
+
+    logout(redirectTo) {
+      clearAllOfflineData();
+
+      if (typeof window === 'undefined') return;
+
+      if (redirectTo) {
+        window.location.href = redirectTo;
+        return;
+      }
+
+      window.location.reload();
+    },
+
+    redirectToLogin(redirectTo) {
+      if (typeof window === 'undefined') return;
+      window.location.href = redirectTo || '/onboarding';
+    },
+  },
+
+  entities: offlineEntities,
+};

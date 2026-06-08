@@ -12,6 +12,7 @@ import AFT from './pages/AFT';
 import Benefits from './pages/Benefits';
 import Weapons from './pages/Weapons';
 import References from './pages/References';
+import PromotionTrackerPage from './pages/PromotionTrackerPage';
 
 // Initialize theme
 applyTheme(getSavedTheme());
@@ -38,6 +39,7 @@ const AuthenticatedApp = () => {
         <Route path="/benefits" element={<Benefits />} />
         <Route path="/weapons" element={<Weapons />} />
         <Route path="/references" element={<References />} />
+        <Route path="/promotion" element={<PromotionTrackerPage />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </main>

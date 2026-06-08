@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { Input } from "@/components/ui/input";
 import { DateInput } from '@/components/ui/date-input';
 import { Label } from "@/components/ui/label";
@@ -26,7 +26,7 @@ export default function Settings() {
 
   useEffect(() => {
     const load = async () => {
-      const me = await base44.auth.me();
+      const me = await localStore.auth.me();
       setData({
         last_name: me.last_name || '',
         first_name: me.first_name || '',
@@ -47,7 +47,7 @@ export default function Settings() {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.auth.updateMe({
+    await localStore.auth.updateMe({
       ...data,
       unit: data.unit || null,
       pcs_date: data.pcs_date || null,
@@ -190,7 +190,7 @@ export default function Settings() {
             {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : <><Save className="w-4 h-4 mr-2" /> SAVE CHANGES</>}
           </Button>
 
-          <Button variant="outline" onClick={() => base44.auth.logout('/onboarding')} className="w-full h-12 border-destructive/30 text-destructive font-inter uppercase tracking-wider text-sm hover:bg-destructive/10">
+          <Button variant="outline" onClick={() => localStore.auth.logout('/onboarding')} className="w-full h-12 border-destructive/30 text-destructive font-inter uppercase tracking-wider text-sm hover:bg-destructive/10">
             <LogOut className="w-4 h-4 mr-2" /> RESET OFFLINE DATA
           </Button>
         </div>

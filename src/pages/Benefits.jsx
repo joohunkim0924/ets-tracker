@@ -70,8 +70,8 @@ const CATEGORIES = [
     id: 'pay',
     emoji: '💰',
     label: 'Pay & Allowances',
-    color: 'text-green-600',
-    bg: 'bg-green-50 border-green-200',
+    color: 'text-violet-600',
+    bg: 'bg-violet-50 border-violet-200',
     benefits: [
       {
         name: 'Basic Pay',

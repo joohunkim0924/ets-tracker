@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 
 const AuthContext = createContext();
 
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoadingAuth(true);
       setAuthError(null);
-      const currentUser = await base44.auth.me();
+      const currentUser = await localStore.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
       setIsLoadingAuth(false);
@@ -41,14 +41,14 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
 
     if (shouldRedirect) {
-      base44.auth.logout(window.location.href);
+      localStore.auth.logout(window.location.href);
     } else {
-      base44.auth.logout();
+      localStore.auth.logout();
     }
   };
 
   const navigateToLogin = () => {
-    base44.auth.redirectToLogin(window.location.href);
+    localStore.auth.redirectToLogin(window.location.href);
   };
 
   return (

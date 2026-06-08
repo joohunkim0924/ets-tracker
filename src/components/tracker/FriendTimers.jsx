@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { format, parseISO } from 'date-fns';
 import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ function AddFriendModal({ onClose, onSaved }) {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.entities.Friend.create({ name: form.name, ets_date: form.ets_date, rank: form.rank || undefined, unit: form.unit || undefined });
+    await localStore.entities.Friend.create({ name: form.name, ets_date: form.ets_date, rank: form.rank || undefined, unit: form.unit || undefined });
     setSaving(false);
     onSaved();
   };
@@ -117,14 +117,14 @@ export default function FriendTimers({ now }) {
   const [showAdd, setShowAdd] = useState(false);
 
   const load = async () => {
-    const data = await base44.entities.Friend.list('ets_date');
+    const data = await localStore.entities.Friend.list('ets_date');
     setFriends(data);
   };
 
   useEffect(() => { load(); }, []);
 
   const handleDelete = async (id) => {
-    await base44.entities.Friend.delete(id);
+    await localStore.entities.Friend.delete(id);
     setFriends(f => f.filter(x => x.id !== id));
   };
 

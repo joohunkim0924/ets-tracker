@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { differenceInDays, format, parseISO } from 'date-fns';
-import { Shield, Settings, MapPin } from 'lucide-react';
+import { Shield, Settings, MapPin, ChevronRight, TrendingUp } from 'lucide-react';
 import { UNIT_PATCHES, RANK_INSIGNIA } from '@/lib/army-data';
 import CircularProgress from '../components/tracker/CircularProgress';
 import CountdownDisplay from '../components/tracker/CountdownDisplay';
@@ -10,6 +10,7 @@ import StatsCard from '../components/tracker/StatsCard';
 import BottomNav from '@/components/layout/BottomNav';
 import FriendTimers from '@/components/tracker/FriendTimers';
 import PromotionCountdown from '@/components/tracker/PromotionCountdown';
+import PromotionPointsBar from '@/components/tracker/PromotionPointsBar';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loadUser = async () => {
-      const me = await base44.auth.me();
+      const me = await localStore.auth.me();
       if (!me.onboarded) {
         navigate('/onboarding');
         return;
@@ -143,8 +144,25 @@ export default function Dashboard() {
         </div>
 
         {/* Promotion countdown */}
-        <div className="w-full mb-4 relative z-10">
+        <div className="w-full mb-4 relative z-10 space-y-3">
           <PromotionCountdown user={user} now={now} />
+          <PromotionPointsBar />
+          <button
+            type="button"
+            onClick={() => navigate('/promotion')}
+            className="flex w-full items-center justify-between rounded-xl border border-violet-600 bg-violet-800 px-4 py-3.5 text-left transition-colors hover:bg-violet-700"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-600">
+                <TrendingUp className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <p className="text-[10px] font-inter uppercase tracking-[0.2em] text-violet-300">AR 600-8-19</p>
+                <p className="text-sm font-inter font-semibold text-white">Calculate Promotion Points</p>
+              </div>
+            </div>
+            <ChevronRight className="h-5 w-5 shrink-0 text-violet-400" />
+          </button>
         </div>
 
         {/* PCS countdown if applicable */}

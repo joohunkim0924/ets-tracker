@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DateInput } from '@/components/ui/date-input';
-import { X, HeartPulse } from 'lucide-react';
+import { X } from 'lucide-react';
 import { calculatePoints } from '@/lib/aft-scoring';
 import { ALTERNATE_RUN_EVENTS, DEFAULT_ALTERNATE_RUN_EVENT } from '@/lib/aft-alternate-events';
 import {
@@ -93,23 +93,12 @@ function buildInitialForm(existingScore) {
   return form;
 }
 
-function EventExemptRow({ label, checked, onCheckedChange }) {
-  return (
-    <div className="flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/80 px-3 py-2">
-      <Label className="text-[10px] font-inter text-muted-foreground cursor-pointer">{label}</Label>
-      <Switch checked={checked} onCheckedChange={onCheckedChange} />
-    </div>
-  );
-}
-
 export default function AddScoreModal({ onClose, onSaved, userAge, userGender, existingScore = null }) {
   const [form, setForm] = useState(() => buildInitialForm(existingScore));
   const [saving, setSaving] = useState(false);
   const isEditing = !!existingScore;
 
-  const profileType = form.profile_type;
-  const isTemporary = profileType === PROFILE_TYPES.TEMPORARY;
-  const isPermanent = profileType === PROFILE_TYPES.PERMANENT;
+  const hasProfile = form.profile_type === PROFILE_TYPES.PERMANENT;
   const noProfile = !userAge || !userGender;
 
   const setExempt = (eventKey, enabled) => {
@@ -164,20 +153,18 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
   };
 
   const handleSave = async () => {
-    if (isTemporary) return;
-
     setSaving(true);
     const payload = {
       date: form.date,
-      profile_type: profileType,
-      permanent_profile: isPermanent,
-      event_exemptions: isPermanent ? form.event_exemptions : null,
+      profile_type: form.profile_type,
+      permanent_profile: hasProfile,
+      event_exemptions: hasProfile ? form.event_exemptions : null,
     };
 
     let total = 0;
 
     EVENTS.forEach(ev => {
-      const exempt = isPermanent && form.event_exemptions?.[ev.key];
+      const exempt = hasProfile && form.event_exemptions?.[ev.key];
 
       if (exempt && ev.key === 'two_mile_run') {
         payload[ev.key] = null;
@@ -207,7 +194,7 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
       total += pts;
     });
 
-    if (!isPermanent) {
+    if (!hasProfile) {
       payload.alternate_run_event = null;
       payload.alternate_run_pass = null;
       payload.event_exemptions = null;
@@ -217,9 +204,9 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
     payload.total_score = total;
 
     if (isEditing) {
-      await base44.entities.AFTScore.update(existingScore.id, payload);
+      await localStore.entities.AFTScore.update(existingScore.id, payload);
     } else {
-      await base44.entities.AFTScore.create(payload);
+      await localStore.entities.AFTScore.create(payload);
     }
     setSaving(false);
     onSaved();
@@ -237,7 +224,7 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
 
         <div className="mb-4 space-y-2">
           <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Profile status</Label>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2">
             {PROFILE_OPTIONS.map(opt => (
               <button
                 key={opt.value}
@@ -248,7 +235,7 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
                   event_exemptions: opt.value === PROFILE_TYPES.PERMANENT ? f.event_exemptions : createEmptyExemptions(),
                 }))}
                 className={`rounded-xl border px-3 py-2.5 text-[10px] font-inter font-semibold uppercase tracking-wider transition-all ${
-                  profileType === opt.value
+                  form.profile_type === opt.value
                     ? 'border-primary bg-primary/10 text-primary shadow-sm'
                     : 'border-border bg-secondary text-muted-foreground hover:border-primary/30'
                 }`}
@@ -259,146 +246,124 @@ export default function AddScoreModal({ onClose, onSaved, userAge, userGender, e
           </div>
         </div>
 
-        {isTemporary && (
-          <div className="mb-6 rounded-2xl border border-amber-200/80 bg-amber-50/90 p-5 shadow-sm dark:border-amber-900/40 dark:bg-amber-950/30">
-            <div className="flex items-start gap-3">
-              <HeartPulse className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-              <div>
-                <p className="text-sm font-inter font-bold text-foreground">Recovery mode</p>
-                <p className="mt-2 text-xs font-inter leading-relaxed text-muted-foreground">
-                  Per AR regulations, testing is unauthorized. Focus on recovery and reconditioning!
-                </p>
-              </div>
-            </div>
+        {!noProfile && (
+          <div className="mb-4 p-3 bg-primary/5 border border-primary/20 rounded-xl text-xs text-muted-foreground font-inter">
+            Auto-calculating for {userGender}, age {userAge}
+          </div>
+        )}
+        {noProfile && !hasProfile && (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded-xl text-xs text-destructive font-inter">
+            Age and gender not set — go to Settings to enable auto point calculation.
           </div>
         )}
 
-        {!isTemporary && (
-          <>
-            {!noProfile && (
-              <div className="mb-4 p-3 bg-primary/5 border border-primary/20 rounded-xl text-xs text-muted-foreground font-inter">
-                Auto-calculating for {userGender}, age {userAge}
-              </div>
-            )}
-            {noProfile && !isPermanent && (
-              <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded-xl text-xs text-destructive font-inter">
-                Age and gender not set — go to Settings to enable auto point calculation.
-              </div>
-            )}
+        <div className="space-y-2 mb-4">
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">TEST DATE</Label>
+          <DateInput
+            value={form.date}
+            onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+            className="bg-secondary border-border"
+          />
+        </div>
 
-            <div className="space-y-2 mb-4">
-              <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">TEST DATE</Label>
-              <DateInput
-                value={form.date}
-                onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-                className="bg-secondary border-border"
-              />
-            </div>
+        {EVENTS.map(ev => {
+          const exempt = isEventExempt(form, ev.key);
+          const runExempt = ev.key === 'two_mile_run' && exempt;
 
-            {EVENTS.map(ev => {
-              const exempt = isEventExempt(form, ev.key);
-              const runExempt = ev.key === 'two_mile_run' && exempt;
-
-              return (
-                <div key={ev.key} className="mb-4 p-4 bg-secondary rounded-xl border border-border">
-                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-xs font-inter font-semibold uppercase tracking-widest text-foreground">{ev.label}</p>
-                    {isPermanent && (
-                      <EventExemptRow
-                        label="Exempt due to profile"
-                        checked={!!form.event_exemptions?.[ev.key]}
-                        onCheckedChange={checked => setExempt(ev.key, checked)}
-                      />
-                    )}
+          return (
+            <div key={ev.key} className="mb-4 p-4 bg-secondary rounded-xl border border-border">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <p className="text-xs font-inter font-semibold uppercase tracking-widest text-foreground">{ev.label}</p>
+                {hasProfile && (
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="text-[10px] font-inter font-semibold uppercase tracking-wider text-muted-foreground">Profile</span>
+                    <Switch
+                      checked={!!form.event_exemptions?.[ev.key]}
+                      onCheckedChange={checked => setExempt(ev.key, checked)}
+                    />
                   </div>
+                )}
+              </div>
 
-                  {runExempt ? (
-                    <div className="space-y-3">
-                      <div className="space-y-2">
-                        <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Alternate event</Label>
-                        <Select
-                          value={form.alternate_run_event}
-                          onValueChange={val => setForm(f => ({ ...f, alternate_run_event: val }))}
-                        >
-                          <SelectTrigger className="h-10 bg-background border-border">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ALTERNATE_RUN_EVENTS.map(alt => (
-                              <SelectItem key={alt.key} value={alt.key}>{alt.label}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5">
-                        <Checkbox
-                          id="alternate-run-pass"
-                          checked={form.alternate_run_pass}
-                          onCheckedChange={checked => setForm(f => ({
-                            ...f,
-                            alternate_run_pass: checked === true,
-                            two_mile_run_points: checked === true ? PROFILE_PASSING_POINTS : 0,
-                          }))}
-                        />
-                        <Label htmlFor="alternate-run-pass" className="text-xs font-inter font-semibold cursor-pointer">
-                          Pass ({PROFILE_PASSING_POINTS} pts if checked)
-                        </Label>
-                      </div>
-                      <div className="h-10 px-3 bg-muted/50 border border-border rounded-md flex items-center justify-between font-mono text-sm">
-                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Points</span>
-                        <span className="font-bold text-primary">
-                          {form.alternate_run_pass ? PROFILE_PASSING_POINTS : 0}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-                          RAW ({ev.unit}){exempt ? ' — exempt' : ''}
-                        </Label>
-                        <Input
-                          type={ev.timeInput ? 'text' : 'number'}
-                          inputMode="numeric"
-                          disabled={exempt}
-                          placeholder={exempt ? '60 pts (profile)' : ev.timeInput ? 'MM:SS' : '0'}
-                          value={exempt ? 'Profile minimum' : (form[ev.key] ?? '')}
-                          onChange={e => setRaw(ev, e.target.value)}
-                          className="h-10 font-mono bg-background border-border disabled:opacity-70"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">POINTS</Label>
-                        <div className="h-10 px-3 bg-muted/50 border border-border rounded-md flex items-center font-mono text-sm text-primary font-bold">
-                          {exempt
-                            ? PROFILE_PASSING_POINTS
-                            : (form[ev.pointsKey] !== '' && form[ev.pointsKey] !== undefined ? form[ev.pointsKey] : '—')}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+              {runExempt ? (
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Alternate event</Label>
+                    <Select
+                      value={form.alternate_run_event}
+                      onValueChange={val => setForm(f => ({ ...f, alternate_run_event: val }))}
+                    >
+                      <SelectTrigger className="h-10 bg-background border-border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ALTERNATE_RUN_EVENTS.map(alt => (
+                          <SelectItem key={alt.key} value={alt.key}>{alt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5">
+                    <Checkbox
+                      id="alternate-run-pass"
+                      checked={form.alternate_run_pass}
+                      onCheckedChange={checked => setForm(f => ({
+                        ...f,
+                        alternate_run_pass: checked === true,
+                        two_mile_run_points: checked === true ? PROFILE_PASSING_POINTS : 0,
+                      }))}
+                    />
+                    <Label htmlFor="alternate-run-pass" className="text-xs font-inter font-semibold cursor-pointer">
+                      Pass ({PROFILE_PASSING_POINTS} pts if checked)
+                    </Label>
+                  </div>
+                  <div className="h-10 px-3 bg-muted/50 border border-border rounded-md flex items-center justify-between font-mono text-sm">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Points</span>
+                    <span className="font-bold text-primary">
+                      {form.alternate_run_pass ? PROFILE_PASSING_POINTS : 0}
+                    </span>
+                  </div>
                 </div>
-              );
-            })}
-
-            <div className="flex items-center justify-between px-4 py-3 bg-primary/10 rounded-xl border border-primary/20 mb-4">
-              <span className="text-xs font-inter font-semibold uppercase tracking-widest text-muted-foreground">TOTAL</span>
-              <span className="text-2xl font-mono font-black text-primary">
-                {computeTotalScore(form, EVENTS)}
-              </span>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                      RAW ({ev.unit}){exempt ? ' — profile' : ''}
+                    </Label>
+                    <Input
+                      type={ev.timeInput ? 'text' : 'number'}
+                      inputMode="numeric"
+                      disabled={exempt}
+                      placeholder={exempt ? '60 pts (profile)' : ev.timeInput ? 'MM:SS' : '0'}
+                      value={exempt ? 'Profile minimum' : (form[ev.key] ?? '')}
+                      onChange={e => setRaw(ev, e.target.value)}
+                      className="h-10 font-mono bg-background border-border disabled:opacity-70"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">POINTS</Label>
+                    <div className="h-10 px-3 bg-muted/50 border border-border rounded-md flex items-center font-mono text-sm text-primary font-bold">
+                      {exempt
+                        ? PROFILE_PASSING_POINTS
+                        : (form[ev.pointsKey] !== '' && form[ev.pointsKey] !== undefined ? form[ev.pointsKey] : '—')}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
+          );
+        })}
 
-            <Button onClick={handleSave} disabled={saving} className="w-full h-12 font-inter font-semibold uppercase tracking-wider">
-              {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : isEditing ? 'UPDATE SCORE' : 'SAVE SCORE'}
-            </Button>
-          </>
-        )}
+        <div className="flex items-center justify-between px-4 py-3 bg-primary/10 rounded-xl border border-primary/20 mb-4">
+          <span className="text-xs font-inter font-semibold uppercase tracking-widest text-muted-foreground">TOTAL</span>
+          <span className="text-2xl font-mono font-black text-primary">
+            {computeTotalScore(form, EVENTS)}
+          </span>
+        </div>
 
-        {isTemporary && (
-          <Button variant="outline" onClick={onClose} className="w-full h-12 font-inter uppercase tracking-wider">
-            Close
-          </Button>
-        )}
+        <Button onClick={handleSave} disabled={saving} className="w-full h-12 font-inter font-semibold uppercase tracking-wider">
+          {saving ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : isEditing ? 'UPDATE SCORE' : 'SAVE SCORE'}
+        </Button>
       </div>
     </div>
   );

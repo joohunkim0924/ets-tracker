@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { format, parseISO } from 'date-fns';
 import { Plus, ChevronDown, ChevronUp, Trash2, Pencil } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import BottomNav from '@/components/layout/BottomNav';
 import AddScoreModal from '@/components/aft/AddScoreModal';
 import AFTAnalysis from '@/components/aft/AFTAnalysis';
-import { describeEventForScore, getProfileType, PROFILE_TYPES } from '@/lib/aft-profile';
+import { describeEventForScore } from '@/lib/aft-profile';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', unit: 'lbs', timeFormat: false },
@@ -37,8 +37,8 @@ export default function AFT() {
 
   const load = async () => {
     const [data, me] = await Promise.all([
-      base44.entities.AFTScore.list('-date'),
-      base44.auth.me(),
+      localStore.entities.AFTScore.list('-date'),
+      localStore.auth.me(),
     ]);
     setScores(data);
     setUserAge(me.age || null);
@@ -133,22 +133,18 @@ export default function AFT() {
                 <div className="rounded-xl border border-border bg-card p-card">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter mb-3">LATEST EVENT BREAKDOWN</p>
                   <div className="space-y-2">
-                    {getProfileType(latest) === PROFILE_TYPES.TEMPORARY ? (
-                      <p className="text-xs font-inter text-amber-700 dark:text-amber-400 py-2">Temporary profile — testing unauthorized.</p>
-                    ) : (
-                      EVENTS.map(ev => {
-                        const row = describeEventForScore(latest, ev);
-                        return (
-                          <div key={ev.key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                            <span className="text-xs font-inter text-foreground">{row.label}</span>
-                            <div className="flex items-center gap-3 text-right">
-                              <span className="text-xs font-mono text-muted-foreground">{row.raw}</span>
-                              <span className="text-sm font-mono font-bold text-primary w-10 text-right">{row.pts}</span>
-                            </div>
+                    {EVENTS.map(ev => {
+                      const row = describeEventForScore(latest, ev);
+                      return (
+                        <div key={ev.key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                          <span className="text-xs font-inter text-foreground">{row.label}</span>
+                          <div className="flex items-center gap-3 text-right">
+                            <span className="text-xs font-mono text-muted-foreground">{row.raw}</span>
+                            <span className="text-sm font-mono font-bold text-primary w-10 text-right">{row.pts}</span>
                           </div>
-                        );
-                      })
-                    )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -173,19 +169,15 @@ export default function AFT() {
                     </button>
                     {expandedId === s.id && (
                       <div className="space-y-1 border-t border-border px-card pb-4 pt-3">
-                        {getProfileType(s) === PROFILE_TYPES.TEMPORARY ? (
-                          <p className="text-xs font-inter text-amber-700 py-1">Temporary profile — no scored events.</p>
-                        ) : (
-                          EVENTS.map(ev => {
-                            const row = describeEventForScore(s, ev);
-                            return (
-                              <div key={ev.key} className="flex justify-between text-xs py-1">
-                                <span className="font-inter text-muted-foreground">{row.label}</span>
-                                <span className="font-mono text-foreground">{row.raw} · <span className="text-primary font-semibold">{row.pts} pts</span></span>
-                              </div>
-                            );
-                          })
-                        )}
+                        {EVENTS.map(ev => {
+                          const row = describeEventForScore(s, ev);
+                          return (
+                            <div key={ev.key} className="flex justify-between text-xs py-1">
+                              <span className="font-inter text-muted-foreground">{row.label}</span>
+                              <span className="font-mono text-foreground">{row.raw} · <span className="text-primary font-semibold">{row.pts} pts</span></span>
+                            </div>
+                          );
+                        })}
                         <div className="mt-2 flex items-center gap-4">
                           <button
                             onClick={() => { setEditingScore(s); setExpandedId(null); }}
@@ -194,7 +186,7 @@ export default function AFT() {
                             <Pencil className="w-3.5 h-3.5" /> Edit record
                           </button>
                           <button
-                            onClick={async () => { await base44.entities.AFTScore.delete(s.id); load(); }}
+                            onClick={async () => { await localStore.entities.AFTScore.delete(s.id); load(); }}
                             className="flex items-center gap-1.5 text-destructive text-[11px] font-inter font-semibold hover:opacity-70 transition-opacity"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Delete record

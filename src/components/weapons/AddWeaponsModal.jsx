@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localStore } from '@/lib/offline-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -61,9 +61,9 @@ export default function AddWeaponsModal({ onClose, onSaved, existingRecord = nul
     if (form.score !== '') payload.score = Math.max(0, Number(form.score));
 
     if (isEditing) {
-      await base44.entities.WeaponsRecord.update(existingRecord.id, payload);
+      await localStore.entities.WeaponsRecord.update(existingRecord.id, payload);
     } else {
-      await base44.entities.WeaponsRecord.create(payload);
+      await localStore.entities.WeaponsRecord.create(payload);
     }
     setSaving(false);
     onSaved();

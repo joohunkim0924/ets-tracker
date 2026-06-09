@@ -23,27 +23,24 @@ export default function PromotionPointsBar() {
   if (!summary) return null;
 
   return (
-    <div className="rounded-xl border border-violet-700 bg-violet-950 p-4">
+    <div className="promotion-panel rounded-xl p-4">
       <div className="mb-2 flex items-center justify-between">
-        <p className="text-[10px] font-inter uppercase tracking-[0.2em] text-violet-300">Promotion points</p>
-        <p className="font-mono text-sm font-bold text-violet-400">
+        <p className="promotion-label">Promotion points</p>
+        <p className="font-mono text-sm font-bold promotion-accent">
           {summary.total}
-          <span className="text-violet-600"> / {summary.max}</span>
+          <span className="promotion-accent-muted"> / {summary.max}</span>
         </p>
       </div>
-      <div className="h-3 overflow-hidden rounded-full bg-violet-900">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-violet-500 to-violet-400 shadow-[0_0_10px_rgba(167,139,250,0.5)] transition-all duration-500"
-          style={{ width: `${summary.pct}%` }}
-        />
+      <div className="promotion-progress-track h-3">
+        <div className="promotion-progress-fill-gradient" style={{ width: `${summary.pct}%` }} />
       </div>
-      <div className="mt-1.5 flex items-center justify-between text-[10px] font-mono text-violet-500">
+      <div className="mt-1.5 flex items-center justify-between text-[10px] font-mono promotion-accent-muted">
         <span>0</span>
         <span>{Math.round(summary.pct)}% to max</span>
         <span>{summary.max}</span>
       </div>
       {summary.cutoff > 0 && (
-        <p className="mt-2 text-center text-[10px] font-inter text-violet-400">
+        <p className="mt-2 text-center text-[10px] font-inter promotion-accent">
           {summary.total >= summary.cutoff
             ? `At or above cutoff (${summary.cutoff})`
             : `${summary.cutoff - summary.total} pts to cutoff (${summary.cutoff})`}

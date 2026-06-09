@@ -3,16 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#F2C200" />
     <link rel="icon" href="/icons/icon-192x192.png" type="image/png" />
     <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
     <title>Army1</title>
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('aft-tracker-color-mode');
+          if (!mode) {
+            var legacy = localStorage.getItem('aft-tracker-theme');
+            if (legacy === 'dark' || legacy === 'midnight' || legacy === 'sf-grey') mode = 'dark';
+          }
+          if (mode === 'dark') document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
     <style>
-      /* Quick fix to ensure the background color flows into the notch area */
       html, body {
-        background-color: #000000;
+        background-color: #F9F6E8;
         margin: 0;
         padding: 0;
+      }
+      html.dark, html.dark body {
+        background-color: #0f0f0f;
       }
     </style>
   </head>

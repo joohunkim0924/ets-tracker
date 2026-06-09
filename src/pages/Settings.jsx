@@ -6,10 +6,10 @@ import { DateInput } from '@/components/ui/date-input';
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, LogOut } from "lucide-react";
+import { Save, LogOut, Sun, Moon } from "lucide-react";
 import { MOS_LIST } from "@/lib/mos-list";
 import BottomNav from '@/components/layout/BottomNav';
-import { THEMES, applyTheme, getSavedTheme } from '@/lib/theme';
+import { applyColorMode, getSavedColorMode } from '@/lib/theme';
 import { RANKS, UNITS } from '@/lib/army-data';
 
 export default function Settings() {
@@ -17,11 +17,11 @@ export default function Settings() {
   const [data, setData] = useState(null);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [activeTheme, setActiveTheme] = useState(getSavedTheme());
+  const [colorMode, setColorMode] = useState(getSavedColorMode());
 
-  const handleTheme = (id) => {
-    setActiveTheme(id);
-    applyTheme(id);
+  const handleColorMode = (mode) => {
+    setColorMode(mode);
+    applyColorMode(mode);
   };
 
   useEffect(() => {
@@ -74,23 +74,24 @@ export default function Settings() {
       <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-page pb-bottom-scroll">
         <div className="mx-auto min-w-0 w-full max-w-content space-y-5">
 
-        {/* Theme Picker */}
+        {/* Appearance */}
         <div className="space-y-3">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">APP THEME</Label>
-          <div className="grid grid-cols-3 gap-2">
-            {THEMES.map(t => {
-              const isActive = activeTheme === t.id;
+          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">APPEARANCE</Label>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { id: 'light', label: 'Light', icon: Sun },
+              { id: 'dark', label: 'Dark', icon: Moon },
+            ].map(({ id, label, icon: Icon }) => {
+              const isActive = colorMode === id;
               return (
                 <button
-                  key={t.id}
-                  onClick={() => handleTheme(t.id)}
-                  className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${isActive ? 'border-primary bg-primary/10' : 'border-border bg-secondary hover:border-primary/40'}`}
+                  key={id}
+                  type="button"
+                  onClick={() => handleColorMode(id)}
+                  className={`flex items-center justify-center gap-2 rounded-xl border p-3 transition-all ${isActive ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-secondary text-muted-foreground hover:border-primary/40'}`}
                 >
-                  <div
-                    className="w-8 h-8 rounded-full border-2 border-white/30 shadow"
-                    style={{ background: `hsl(${t.primary})` }}
-                  />
-                  <span className={`text-[9px] font-inter font-bold uppercase tracking-widest ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>{t.label}</span>
+                  <Icon className="h-4 w-4" />
+                  <span className="text-xs font-inter font-bold uppercase tracking-widest">{label}</span>
                 </button>
               );
             })}

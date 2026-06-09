@@ -118,7 +118,7 @@ export default function Dashboard() {
       </div>
 
       {/* Main content */}
-      <div className="relative flex flex-1 flex-col items-center overflow-hidden px-page pb-bottom-scroll pt-block-gap">
+      <div className="relative flex flex-1 flex-col items-center overflow-x-hidden overflow-y-auto px-page pb-bottom-scroll pt-block-gap">
         {/* Circular progress */}
         <div className="relative z-10 mb-block-gap">
           <CircularProgress
@@ -162,18 +162,18 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={() => navigate('/promotion')}
-            className="flex w-full items-center justify-between rounded-xl border border-violet-600 bg-violet-800 px-4 py-3.5 text-left transition-colors hover:bg-violet-700"
+            className="promotion-cta"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-600">
-                <TrendingUp className="h-5 w-5 text-white" />
+              <div className="promotion-cta-icon">
+                <TrendingUp className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-[10px] font-inter uppercase tracking-[0.2em] text-violet-300">AR 600-8-19</p>
-                <p className="text-sm font-inter font-semibold text-white">Calculate Promotion Points</p>
+                <p className="text-[10px] font-inter uppercase tracking-[0.2em] opacity-80">AR 600-8-19</p>
+                <p className="text-sm font-inter font-semibold">Calculate Promotion Points</p>
               </div>
             </div>
-            <ChevronRight className="h-5 w-5 shrink-0 text-violet-400" />
+            <ChevronRight className="h-5 w-5 shrink-0 opacity-80" />
           </button>
         </div>
 

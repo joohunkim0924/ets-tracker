@@ -1,4 +1,4 @@
-# Army1
+# Hooah!
 
 Offline-first tracker for soldiers to manage ETS countdowns, AFT history, weapons records, and battle buddy timers.
 

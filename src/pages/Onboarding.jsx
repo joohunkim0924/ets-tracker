@@ -49,11 +49,11 @@ export default function Onboarding() {
       <div className="px-page pb-block-gap pt-[clamp(2.25rem,7vw,3.5rem)] text-center">
         <img
           src="/icons/icon-192x192.png"
-          alt="Army1"
+          alt="Hooah!"
           className="mx-auto mb-4 h-16 w-16 rounded-2xl shadow-md"
         />
         <h1 className="text-lg font-inter font-bold text-foreground uppercase tracking-[0.15em]">
-          ARMY1
+          Hooah!
         </h1>
       </div>
 

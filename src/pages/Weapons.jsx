@@ -17,14 +17,18 @@ const QUAL_COLORS = {
 const TABS = ['OVERVIEW', 'HISTORY'];
 
 const WEAPON_TREND_COLORS = [
-  'hsl(var(--primary))',
-  '#f59e0b',
-  '#eab308',
   '#facc15',
-  '#d97706',
-  '#fde047',
   '#b45309',
+  '#fde047',
+  '#d97706',
+  '#f59e0b',
+  '#a16207',
+  '#eab308',
+  '#78350f',
+  '#fbbf24',
   '#ca8a04',
+  '#92400e',
+  '#fff176',
 ];
 
 function recordQualification(record) {

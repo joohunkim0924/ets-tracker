@@ -5,46 +5,11 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  .dark {
     --font-inter: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    --background: 48 30% 97%;
-    --foreground: 0 0% 8%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
-    --primary: 52 96% 48%;
-    --primary-foreground: 0 0% 6%;
-    --secondary: 48 25% 92%;
-    --secondary-foreground: 0 0% 12%;
-    --muted: 48 20% 94%;
-    --muted-foreground: 0 0% 38%;
-    --accent: 52 96% 48%;
-    --accent-foreground: 0 0% 6%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 48 15% 85%;
-    --input: 48 15% 85%;
-    --ring: 52 96% 48%;
-    --chart-1: 52 96% 48%;
-    --chart-2: 52 80% 40%;
-    --chart-3: 48 20% 50%;
-    --chart-4: 0 84% 60%;
-    --chart-5: 200 60% 50%;
-    --radius: 0.75rem;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 8%;
-    --sidebar-primary: 52 96% 48%;
-    --sidebar-primary-foreground: 0 0% 6%;
-    --sidebar-accent: 48 25% 92%;
-    --sidebar-accent-foreground: 0 0% 8%;
-    --sidebar-border: 48 15% 85%;
-    --sidebar-ring: 52 96% 48%;
-  }
-
-  .dark {
     --background: 0 0% 6%;
     --foreground: 48 15% 94%;
     --card: 0 0% 10%;
@@ -69,6 +34,7 @@
     --chart-3: 48 15% 45%;
     --chart-4: 0 84% 60%;
     --chart-5: 200 60% 50%;
+    --radius: 0.75rem;
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 48 15% 94%;
     --sidebar-primary: 52 96% 48%;

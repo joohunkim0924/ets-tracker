@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/toaster"
-import { applyColorMode, getSavedColorMode } from '@/lib/theme';
+import { applyAppTheme } from '@/lib/theme';
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -14,9 +14,9 @@ import BenefitsCategory from './pages/BenefitsCategory';
 import Weapons from './pages/Weapons';
 import References from './pages/References';
 import PromotionTrackerPage from './pages/PromotionTrackerPage';
+import ScrollToTop from '@/components/layout/ScrollToTop';
 
-// Initialize light/dark mode
-applyColorMode(getSavedColorMode());
+applyAppTheme();
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings } = useAuth();
@@ -53,6 +53,7 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
+          <ScrollToTop />
           <AuthenticatedApp />
         </Router>
         <Toaster />

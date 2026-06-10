@@ -6,10 +6,9 @@ import { DateInput } from '@/components/ui/date-input';
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, LogOut, Sun, Moon } from "lucide-react";
+import { Save, LogOut } from "lucide-react";
 import { MOS_LIST } from "@/lib/mos-list";
 import BottomNav from '@/components/layout/BottomNav';
-import { applyColorMode, getSavedColorMode } from '@/lib/theme';
 import { RANKS, UNITS } from '@/lib/army-data';
 
 export default function Settings() {
@@ -17,13 +16,6 @@ export default function Settings() {
   const [data, setData] = useState(null);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [colorMode, setColorMode] = useState(getSavedColorMode());
-
-  const handleColorMode = (mode) => {
-    setColorMode(mode);
-    applyColorMode(mode);
-  };
-
   useEffect(() => {
     const load = async () => {
       const me = await localStore.auth.me();
@@ -74,31 +66,7 @@ export default function Settings() {
       <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-page pb-bottom-scroll">
         <div className="mx-auto min-w-0 w-full max-w-content space-y-5">
 
-        {/* Appearance */}
-        <div className="space-y-3">
-          <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">APPEARANCE</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { id: 'light', label: 'Light', icon: Sun },
-              { id: 'dark', label: 'Dark', icon: Moon },
-            ].map(({ id, label, icon: Icon }) => {
-              const isActive = colorMode === id;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => handleColorMode(id)}
-                  className={`flex items-center justify-center gap-2 rounded-xl border p-3 transition-all ${isActive ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-secondary text-muted-foreground hover:border-primary/40'}`}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="text-xs font-inter font-bold uppercase tracking-widest">{label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="border-t border-border pt-2 space-y-5">
+        <div className="space-y-5">
           <div className="space-y-2">
             <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">LAST NAME</Label>
             <Input value={data.last_name} onChange={(e) => setData({ ...data, last_name: e.target.value })} className="bg-secondary border-border text-foreground font-inter h-12" />

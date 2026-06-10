@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { localStore } from '@/lib/offline-store';
 import { format, parseISO } from 'date-fns';
 import { Plus, ChevronDown, ChevronUp, Target, Trash2, Pencil } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import BottomNav from '@/components/layout/BottomNav';
 import AddWeaponsModal from '@/components/weapons/AddWeaponsModal';
 import { deriveQualification } from '@/lib/weapons-qualification';
@@ -15,8 +16,25 @@ const QUAL_COLORS = {
 
 const TABS = ['OVERVIEW', 'HISTORY'];
 
+const WEAPON_TREND_COLORS = [
+  'hsl(var(--primary))',
+  '#f59e0b',
+  '#eab308',
+  '#facc15',
+  '#d97706',
+  '#fde047',
+  '#b45309',
+  '#ca8a04',
+];
+
 function recordQualification(record) {
   return deriveQualification(record) || record.qualification || null;
+}
+
+function recordTrendValue(record) {
+  if (record.score !== undefined && record.score !== null && record.score !== '') return Number(record.score);
+  if (record.hits !== undefined && record.hits !== null && record.hits !== '') return Number(record.hits);
+  return null;
 }
 
 export default function Weapons() {
@@ -43,6 +61,27 @@ export default function Weapons() {
   }, {});
 
   const latest = records[0];
+  const weaponSeries = Object.keys(byWeapon).sort((a, b) => a.localeCompare(b));
+  const weaponKeyMap = weaponSeries.reduce((acc, weapon, index) => {
+    acc[weapon] = `weapon_${index}`;
+    return acc;
+  }, {});
+  const valuedRecords = records.filter((record) => recordTrendValue(record) !== null);
+  const trendRowsByDate = valuedRecords
+    .slice()
+    .reverse()
+    .reduce((acc, record) => {
+      const dateKey = record.date || 'Unknown';
+      if (!acc[dateKey]) {
+        acc[dateKey] = {
+          dateKey,
+          date: record.date ? format(parseISO(record.date), 'MMM d') : 'Unknown',
+        };
+      }
+      acc[dateKey][weaponKeyMap[record.weapon]] = recordTrendValue(record);
+      return acc;
+    }, {});
+  const weaponTrendData = Object.values(trendRowsByDate);
 
   return (
     <div className="flex min-h-screen max-w-full flex-col overflow-x-hidden bg-background pb-bottom-scroll">
@@ -113,6 +152,62 @@ export default function Weapons() {
                     )}
                   </div>
                 )}
+
+                {/* Weapons trend chart */}
+                <div className="rounded-xl border border-border bg-card p-card">
+                  <div className="mb-4 flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-inter">WEAPONS TREND</p>
+                      <p className="mt-1 text-xs text-muted-foreground font-inter">Score over time by weapon system. Records without score use hits.</p>
+                    </div>
+                    <span className="rounded-lg border border-primary/20 bg-primary/10 px-2 py-1 text-[10px] font-inter font-bold uppercase tracking-widest text-primary">
+                      {weaponSeries.length} system{weaponSeries.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  {valuedRecords.length < 2 ? (
+                    <p className="py-6 text-center text-xs text-muted-foreground font-inter">Need 2+ scored or hit-count records to show trend.</p>
+                  ) : (
+                    <>
+                      <div className="h-chart w-full min-h-0 max-w-full overflow-x-hidden">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart data={weaponTrendData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                            <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
+                            <YAxis tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} domain={['auto', 'auto']} />
+                            <Tooltip
+                              contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, fontSize: 12 }}
+                              formatter={(value, name) => [value, name]}
+                            />
+                            {weaponSeries.map((weapon, index) => (
+                              <Line
+                                key={weapon}
+                                type="monotone"
+                                dataKey={weaponKeyMap[weapon]}
+                                name={weapon}
+                                stroke={WEAPON_TREND_COLORS[index % WEAPON_TREND_COLORS.length]}
+                                strokeWidth={2}
+                                dot={{ fill: WEAPON_TREND_COLORS[index % WEAPON_TREND_COLORS.length], r: 3 }}
+                                activeDot={{ r: 5 }}
+                                connectNulls
+                              />
+                            ))}
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {weaponSeries.map((weapon, index) => (
+                          <span key={weapon} className="inline-flex items-center gap-1.5 rounded-md border border-border bg-secondary px-2 py-1 text-[10px] font-inter font-semibold uppercase tracking-wider text-muted-foreground">
+                            <span
+                              className="h-2 w-2 rounded-full"
+                              style={{ backgroundColor: WEAPON_TREND_COLORS[index % WEAPON_TREND_COLORS.length] }}
+                            />
+                            {weapon}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
 
                 {/* Per-weapon best */}
                 <div className="rounded-xl border border-border bg-card p-card">

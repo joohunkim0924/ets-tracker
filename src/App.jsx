@@ -15,6 +15,7 @@ import Weapons from './pages/Weapons';
 import References from './pages/References';
 import PromotionTrackerPage from './pages/PromotionTrackerPage';
 import ScrollToTop from '@/components/layout/ScrollToTop';
+import AppIntro from '@/components/layout/AppIntro';
 
 applyAppTheme();
 
@@ -54,7 +55,9 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <ScrollToTop />
-          <AuthenticatedApp />
+          <AppIntro>
+            <AuthenticatedApp />
+          </AppIntro>
         </Router>
         <Toaster />
       </QueryClientProvider>

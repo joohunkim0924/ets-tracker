@@ -173,6 +173,217 @@
     appearance: none;
   }
 
+  .app-intro-content {
+    height: 100%;
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.99);
+    transition: opacity 0.42s ease, transform 0.42s ease;
+  }
+
+  .app-intro-content--ready {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .app-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, hsl(var(--primary) / 0.08) 1px, transparent 1px),
+      linear-gradient(0deg, hsl(var(--primary) / 0.06) 1px, transparent 1px),
+      hsl(0 0% 3%);
+    background-size: 4rem 4rem;
+    pointer-events: none;
+    animation: app-intro-fade 4s ease forwards;
+  }
+
+  .app-intro__burst {
+    position: absolute;
+    width: 34rem;
+    height: 34rem;
+    max-width: 92%;
+    max-height: 72%;
+    border-radius: 9999px;
+    background:
+      repeating-conic-gradient(
+        from -12deg,
+        hsl(var(--primary) / 0.22) 0deg 5deg,
+        transparent 5deg 18deg
+      );
+    opacity: 0;
+    transform: scale(0.25);
+    animation: app-intro-burst 4s ease forwards;
+  }
+
+  .app-intro__bubble {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: 16rem;
+    height: 10rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem;
+    background: hsl(var(--primary));
+    clip-path: polygon(
+      50% 0%,
+      58% 13%,
+      72% 5%,
+      75% 22%,
+      94% 21%,
+      84% 38%,
+      100% 50%,
+      83% 60%,
+      92% 79%,
+      73% 78%,
+      69% 97%,
+      55% 85%,
+      43% 100%,
+      35% 82%,
+      15% 88%,
+      22% 68%,
+      0% 60%,
+      16% 48%,
+      3% 31%,
+      23% 30%,
+      20% 9%,
+      39% 18%
+    );
+    filter:
+      drop-shadow(0.35rem 0.45rem 0 hsl(0 0% 0%))
+      drop-shadow(0 0 1.4rem hsl(var(--primary) / 0.5));
+    transform-origin: 64% 52%;
+    animation: app-intro-bubble 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .app-intro__bubble span {
+    display: block;
+    color: hsl(0 0% 4%);
+    font-family: var(--font-inter);
+    font-size: 2.75rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1;
+    text-transform: uppercase;
+    transform: rotate(-5deg);
+  }
+
+  @media (max-width: 380px) {
+    .app-intro__bubble {
+      width: 14rem;
+      height: 8.75rem;
+    }
+
+    .app-intro__bubble span {
+      font-size: 2.3rem;
+    }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-intro-content {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .app-intro {
+      display: none;
+    }
+  }
+
+  @keyframes app-intro-fade {
+    0%,
+    92% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes app-intro-burst {
+    0% {
+      opacity: 0;
+      transform: scale(0.25) rotate(0deg);
+    }
+
+    10% {
+      opacity: 0;
+      transform: scale(0.35) rotate(0deg);
+    }
+
+    24% {
+      opacity: 0.55;
+      transform: scale(1) rotate(8deg);
+    }
+
+    48%,
+    78% {
+      opacity: 0.18;
+      transform: scale(1.12) rotate(14deg);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1.25) rotate(18deg);
+    }
+  }
+
+  @keyframes app-intro-bubble {
+    0% {
+      opacity: 0;
+      transform: translateX(115vw) translateY(-0.5rem) rotate(8deg) scale(0.78);
+    }
+
+    16% {
+      opacity: 1;
+      transform: translateX(-0.9rem) translateY(-0.5rem) rotate(-7deg) scale(1.08);
+    }
+
+    24% {
+      opacity: 1;
+      transform: translateX(0.35rem) translateY(0.25rem) rotate(4deg) scale(0.97);
+    }
+
+    31% {
+      opacity: 1;
+      transform: translateX(0) translateY(0) rotate(-2deg) scale(1.02);
+    }
+
+    37% {
+      opacity: 1;
+      transform: translateX(-0.16rem) translateY(0.1rem) rotate(-4deg) scale(1.03);
+    }
+
+    43% {
+      opacity: 1;
+      transform: translateX(0.16rem) translateY(-0.08rem) rotate(3deg) scale(1.04);
+    }
+
+    50%,
+    82% {
+      opacity: 1;
+      transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+    }
+
+    91% {
+      opacity: 1;
+      transform: translateX(0) translateY(-0.1rem) rotate(-3deg) scale(0.96);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateX(0) translateY(-0.35rem) rotate(-9deg) scale(0.62);
+    }
+  }
+
   /* Promotion board — neon glow follows active theme (--primary) on black panels */
   .promotion-panel {
     border: 1px solid hsl(var(--primary) / 0.5);

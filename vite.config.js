@@ -88,8 +88,8 @@ export default defineConfig(({ mode }) => {
         },
         manifestFilename: 'manifest.json',
         manifest: {
-          name: 'Hooah!',
-          short_name: 'Hooah!',
+          name: 'Hooah',
+          short_name: 'Hooah',
           description: 'Track ETS, AFT, weapons, and Army benefits.',
           start_url: '/',
           scope: '/',

@@ -15,7 +15,7 @@ export default function CircularProgress({ percentage, unitPatchSrc, unitPatchAl
           <img
             src={unitPatchSrc}
             alt={unitPatchAlt || ''}
-            className="h-[86%] w-[86%] object-contain opacity-[0.16]"
+            className="aspect-square h-[86%] w-[86%] max-h-[86%] max-w-[86%] object-contain object-center opacity-[0.16]"
             style={{
               filter: 'grayscale(20%) saturate(85%)',
             }}

@@ -9,7 +9,9 @@
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync-patches": "node scripts/download-missing-patches.mjs",
+    "normalize-patches": "node scripts/normalize-all-patches.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.1",

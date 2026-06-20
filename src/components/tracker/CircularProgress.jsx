@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function CircularProgress({ percentage, unitPatchSrc, unitPatchAlt }) {
   const [patchFailed, setPatchFailed] = useState(false);
@@ -8,6 +8,10 @@ export default function CircularProgress({ percentage, unitPatchSrc, unitPatchAl
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
 
+  useEffect(() => {
+    setPatchFailed(false);
+  }, [unitPatchSrc]);
+
   return (
     <div className="ring-progress-root relative flex aspect-square h-ring w-ring shrink-0 items-center justify-center">
       {unitPatchSrc && !patchFailed && (
@@ -15,7 +19,7 @@ export default function CircularProgress({ percentage, unitPatchSrc, unitPatchAl
           <img
             src={unitPatchSrc}
             alt={unitPatchAlt || ''}
-            className="aspect-square h-[86%] w-[86%] max-h-[86%] max-w-[86%] object-contain object-center opacity-[0.16]"
+            className="ring-progress-patch object-contain object-center opacity-[0.16]"
             style={{
               filter: 'grayscale(20%) saturate(85%)',
             }}

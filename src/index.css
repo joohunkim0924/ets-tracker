@@ -138,6 +138,15 @@
     container-name: ring;
   }
 
+  .ring-progress-patch {
+    display: block;
+    width: 62%;
+    height: 62%;
+    max-width: 62%;
+    max-height: 62%;
+    flex: none;
+  }
+
   .ring-progress-pct {
     /* vw + vmin track screen size; cqmin refines to the actual ring box when supported */
     font-size: clamp(2.125rem, min(14vw, 11vmin), 4.75rem);

@@ -1,0 +1,41 @@
+{
+  "name": "Friend",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Friend's name or nickname"
+    },
+    "ets_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Friend's ETS date"
+    },
+    "rank": {
+      "type": "string",
+      "description": "Friend's rank (optional)"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Friend's unit (optional)"
+    }
+  },
+  "required": [
+    "name",
+    "ets_date"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

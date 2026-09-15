@@ -152,6 +152,7 @@ export default function Dashboard() {
             label="CONTRACT"
             value={totalDays.toLocaleString()}
             unit="DAYS"
+            highlight="green"
           />
         </div>
 

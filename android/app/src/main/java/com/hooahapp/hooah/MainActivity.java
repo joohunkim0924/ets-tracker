@@ -1,4 +1,4 @@
-package com.yourname.dday;
+package com.hooahapp.hooah;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,0 +1,68 @@
+{
+  "name": "AFTScore",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "deadlift": {
+      "type": "number",
+      "description": "Max weight in lbs"
+    },
+    "deadlift_points": {
+      "type": "number"
+    },
+    "pushups": {
+      "type": "number",
+      "description": "Reps"
+    },
+    "pushups_points": {
+      "type": "number"
+    },
+    "sprint_drag_carry": {
+      "type": "number",
+      "description": "Time in seconds"
+    },
+    "sprint_drag_carry_points": {
+      "type": "number"
+    },
+    "plank": {
+      "type": "number",
+      "description": "Time in seconds"
+    },
+    "plank_points": {
+      "type": "number"
+    },
+    "two_mile_run": {
+      "type": "number",
+      "description": "Time in seconds"
+    },
+    "two_mile_run_points": {
+      "type": "number"
+    },
+    "total_score": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

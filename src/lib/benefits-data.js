@@ -117,7 +117,7 @@ const RAW_CATEGORIES = [
   },
   {
     id: 'family',
-    emoji: '👨‍👩‍👧',
+    emoji: '👥',
     label: 'Family',
     tileGradient: 'from-pink-500 to-rose-700',
     benefits: [
@@ -129,7 +129,7 @@ const RAW_CATEGORIES = [
   },
   {
     id: 'more',
-    emoji: '📚',
+    emoji: '⭐',
     label: 'More',
     tileGradient: 'from-slate-500 to-zinc-700',
     benefits: [

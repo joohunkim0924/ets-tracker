@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { generateAftAnalysis } from '@/api/aftAnalysisClient';
 
 const EVENTS = [
   { key: 'deadlift', label: 'Deadlift', pointsKey: 'deadlift_points', timeBased: false },
@@ -25,12 +26,54 @@ const levelColors = {
 
 const levelLabels = { weak: 'WEAK', moderate: 'MODERATE', strong: 'STRONG' };
 
+function getTrendSummary(scores) {
+  const chronologicalScores = [...scores].reverse();
+  const earliest = chronologicalScores[0] ?? null;
+  const latest = scores[0] ?? null;
+  const previous = scores[1] ?? null;
+
+  return {
+    total: {
+      earliest: earliest?.total_score ?? null,
+      previous: previous?.total_score ?? null,
+      latest: latest?.total_score ?? null,
+      delta_from_previous: latest && previous ? (latest.total_score || 0) - (previous.total_score || 0) : null,
+      delta_from_earliest: latest && earliest ? (latest.total_score || 0) - (earliest.total_score || 0) : null,
+    },
+    events: EVENTS.map((ev) => {
+      const values = chronologicalScores
+        .map((score) => ({
+          date: score.date,
+          raw: score[ev.key] ?? null,
+          points: score[ev.pointsKey] ?? null,
+        }))
+        .filter((entry) => entry.raw !== null || entry.points !== null);
+      const first = values[0] ?? null;
+      const last = values[values.length - 1] ?? null;
+      const prior = values[values.length - 2] ?? null;
+
+      return {
+        key: ev.key,
+        label: ev.label,
+        time_based: ev.timeBased,
+        earliest: first,
+        previous: prior,
+        latest: last,
+        points_delta_from_previous: last && prior ? (last.points || 0) - (prior.points || 0) : null,
+        points_delta_from_earliest: last && first ? (last.points || 0) - (first.points || 0) : null,
+      };
+    }),
+  };
+}
+
 export default function AFTAnalysis({ scores }) {
   const [analysis, setAnalysis] = useState(null);
   const [expanded, setExpanded] = useState(true);
-  const [comingSoon, setComingSoon] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const latest = scores[0];
+  const previous = scores[1] ?? null;
 
   if (!latest) return null;
 
@@ -41,10 +84,26 @@ export default function AFTAnalysis({ scores }) {
     level: getLevel(latest[ev.pointsKey]),
   }));
 
-  const showComingSoon = () => {
-    setComingSoon(true);
+  const runAnalysis = async () => {
+    setLoading(true);
+    setError(null);
     setExpanded(true);
-    setAnalysis(null);
+
+    try {
+      const payload = await generateAftAnalysis({
+        scores,
+        latest,
+        previous,
+        eventSummary,
+        trendSummary: getTrendSummary(scores),
+        requestId: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      });
+      setAnalysis(payload.analysis);
+    } catch (err) {
+      setError(err?.message || 'Unable to generate analysis.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,11 +127,12 @@ export default function AFTAnalysis({ scores }) {
           )}
           <button
             type="button"
-            onClick={showComingSoon}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-[10px] font-inter font-semibold uppercase tracking-widest"
+            onClick={runAnalysis}
+            disabled={loading}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-[10px] font-inter font-semibold uppercase tracking-widest disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <RefreshCw className="w-3 h-3" />
-            Analyze with AI
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+            {loading ? 'Analyzing' : 'Analyze with AI'}
           </button>
         </div>
       </div>
@@ -88,7 +148,7 @@ export default function AFTAnalysis({ scores }) {
         ))}
       </div>
 
-      {!comingSoon && !analysis && (
+      {!loading && !analysis && !error && (
         <div className="px-5 py-8 text-center">
           <p className="text-xs text-muted-foreground font-inter">
             Tap <strong>Analyze with AI</strong> for a Master Fitness Trainer–style review, weaknesses, and a{' '}
@@ -97,15 +157,19 @@ export default function AFTAnalysis({ scores }) {
         </div>
       )}
 
-      {comingSoon && !analysis && (
+      {loading && (
         <div className="px-5 py-8 text-center">
           <div className="mx-auto max-w-sm rounded-xl border border-primary/25 bg-primary/10 px-4 py-5">
-            <p className="text-sm font-inter font-semibold text-primary">
-              Feature coming soon!
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground font-inter leading-relaxed">
-              AI analysis isn&apos;t available yet. We&apos;re working on it — check back in a future update.
-            </p>
+            <p className="text-sm font-inter font-semibold text-primary">Building your analysis...</p>
+          </div>
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="px-5 py-8 text-center">
+          <div className="mx-auto max-w-sm rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-5">
+            <p className="text-sm font-inter font-semibold text-destructive">AI analysis failed</p>
+            <p className="mt-2 text-xs text-muted-foreground font-inter leading-relaxed">{error}</p>
           </div>
         </div>
       )}

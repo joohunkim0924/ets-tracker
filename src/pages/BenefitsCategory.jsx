@@ -64,7 +64,7 @@ export default function BenefitsCategory() {
           <ArrowLeft className="h-4 w-4" />
           Benefits
         </button>
-        <div className={`mb-3 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-br ${category.tileGradient} px-4 py-3 shadow-md`}>
+        <div className={`mb-3 inline-flex items-center gap-2 rounded-2xl border-2 bg-black px-4 py-3 ${category.tileBorder}`}>
           <span className="text-2xl">{category.emoji}</span>
           <div>
             <h1 className="text-xl font-inter font-black uppercase tracking-tight text-white">{category.label}</h1>

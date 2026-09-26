@@ -23,7 +23,7 @@ const RAW_CATEGORIES = [
     id: 'discounts',
     emoji: '🎟️',
     label: 'Discounts',
-    tileGradient: 'from-fuchsia-500 to-purple-700',
+    tileBorder: 'border-fuchsia-500',
     benefits: [
       { name: 'Commissary & Exchange (PX/BX)', description: 'Tax-free shopping with prices typically 20–30% below retail. Open to all active duty and dependents.', action: 'Shop Online', url: 'https://www.shopmyexchange.com/' },
       { name: 'MWR Recreation', description: 'Discounted tickets to theme parks, concerts, travel, gyms, and outdoor recreation.', action: 'ITR / MWR Portal', url: 'https://www.armymwr.com' },
@@ -36,7 +36,7 @@ const RAW_CATEGORIES = [
     id: 'pay',
     emoji: '💰',
     label: 'Pay',
-    tileGradient: 'from-amber-500 to-orange-700',
+    tileBorder: 'border-amber-500',
     benefits: [
       { name: 'Basic Pay', description: 'Monthly base pay based on rank and years of service.', action: 'View Pay Tables', url: 'https://myarmybenefits.us.army.mil/Benefit-Library/Federal-Benefits/Basic-Pay' },
       { name: 'Basic Allowance for Housing (BAH)', description: 'Monthly housing stipend based on rank, dependency status, and duty location.', action: 'BAH Calculator', url: 'https://myarmybenefits.us.army.mil/Benefit-Library/Federal-Benefits/Basic-Allowance-for-Housing-(BAH)' },
@@ -49,7 +49,7 @@ const RAW_CATEGORIES = [
     id: 'healthcare',
     emoji: '🏥',
     label: 'Healthcare',
-    tileGradient: 'from-sky-500 to-blue-700',
+    tileBorder: 'border-sky-500',
     benefits: [
       { name: 'TRICARE Health Insurance', description: 'Comprehensive health coverage for active duty members and their families at little or no cost.', action: 'TRICARE Portal', url: 'https://www.tricare.mil' },
       { name: 'TRICARE Dental Program', description: 'Affordable dental coverage for service members and eligible dependents.', action: 'Enroll / Manage', url: 'https://www.tricare.mil/CoveredServices/Dental' },
@@ -61,7 +61,7 @@ const RAW_CATEGORIES = [
     id: 'education',
     emoji: '🎓',
     label: 'Education',
-    tileGradient: 'from-violet-500 to-indigo-700',
+    tileBorder: 'border-violet-500',
     benefits: [
       { name: 'Post-9/11 GI Bill (Ch. 33)', description: 'Covers full tuition, housing allowance (BAH E-5 w/ dependents), and book stipend up to 36 months.', action: 'Apply on VA.gov', url: 'https://www.va.gov/education/how-to-apply/' },
       { name: 'Tuition Assistance (TA)', description: 'Army pays up to $4,500/year for college courses taken while on active duty.', action: 'Open ArmyIgnitED', url: 'https://www.armyignited.army.mil/student/public/welcome' },
@@ -73,7 +73,7 @@ const RAW_CATEGORIES = [
     id: 'retirement',
     emoji: '📈',
     label: 'Finance',
-    tileGradient: 'from-emerald-500 to-teal-700',
+    tileBorder: 'border-emerald-500',
     benefits: [
       { name: 'Blended Retirement System (BRS)', description: 'Combines 20-year defined-benefit retirement with TSP matching contributions.', action: 'BRS Overview', url: 'https://myarmybenefits.us.army.mil/Benefit-Library/Federal-Benefits/Blended-Retirement-System?serv=125' },
       { name: 'Thrift Savings Plan (TSP)', description: 'Federal 401(k)-equivalent with up to 5% matching under BRS. Contribute any amount.', action: 'Manage TSP', url: 'https://www.tsp.gov' },
@@ -85,7 +85,7 @@ const RAW_CATEGORIES = [
     id: 'insurance',
     emoji: '🛡️',
     label: 'Insurance',
-    tileGradient: 'from-rose-500 to-red-700',
+    tileBorder: 'border-rose-500',
     benefits: [
       { name: 'Servicemembers Group Life Insurance (SGLI)', description: 'Low-cost term life insurance up to $500,000 for active duty members.', action: 'Manage SGLI', url: 'https://www.va.gov/life-insurance/options-eligibility/sgli/' },
       { name: 'Family SGLI (FSGLI)', description: 'Spouse coverage up to $100,000 and $10,000 per child at low cost.', action: 'Learn More', url: 'https://www.va.gov/life-insurance/options-eligibility/fsgli/' },
@@ -96,7 +96,7 @@ const RAW_CATEGORIES = [
     id: 'transition',
     emoji: '🚀',
     label: 'Career',
-    tileGradient: 'from-cyan-500 to-blue-700',
+    tileBorder: 'border-cyan-500',
     benefits: [
       { name: 'Transition Assistance Program (TAP)', description: 'Mandatory pre-separation program covering employment, VA benefits, and transition planning.', action: 'TAP Resources', url: 'https://www.tapevents.mil' },
       { name: 'SkillBridge', description: 'Work at a civilian company for up to 180 days before ETS while still drawing full pay.', action: 'Find Opportunities', url: 'https://skillbridge.osd.mil' },
@@ -108,7 +108,7 @@ const RAW_CATEGORIES = [
     id: 'housing',
     emoji: '🏠',
     label: 'Housing',
-    tileGradient: 'from-yellow-500 to-amber-700',
+    tileBorder: 'border-yellow-500',
     benefits: [
       { name: 'VA Home Loan Guarantee', description: 'Buy a home with 0% down, no PMI, and competitive rates. Available after 90+ days of service.', action: 'Get a Certificate', url: 'https://www.va.gov/housing-assistance/home-loans/' },
       { name: 'On-Post / Barracks Housing', description: 'Government-furnished quarters on installation at no cost (single soldiers, typically E-5 and below).', action: 'Army Housing Portal', url: 'https://www.housing.army.mil' },
@@ -119,7 +119,7 @@ const RAW_CATEGORIES = [
     id: 'family',
     emoji: '👥',
     label: 'Family',
-    tileGradient: 'from-pink-500 to-rose-700',
+    tileBorder: 'border-pink-500',
     benefits: [
       { name: 'Army Family Action Plan (AFAP)', description: 'Advocacy program improving Army quality-of-life issues identified by Soldiers and Families.', action: 'Learn More', url: 'https://www.armymwr.com/programs-and-services/personal-assistance/army-family-action-plan' },
       { name: 'Military OneSource', description: 'Free counseling (12 sessions), financial coaching, tax prep (MilTax), and more.', action: 'Access Now', url: 'https://www.militaryonesource.mil' },
@@ -131,7 +131,7 @@ const RAW_CATEGORIES = [
     id: 'more',
     emoji: '⭐',
     label: 'More',
-    tileGradient: 'from-slate-500 to-zinc-700',
+    tileBorder: 'border-slate-400',
     benefits: [
       { name: 'Military Benefits Compilation File', description: 'A bundled PDF with additional military and veteran benefits, freebies, and reference links.', action: 'Open PDF', url: 'https://drive.google.com/file/d/1KvUZYJ7ND20tifNiuw66IYYAn29V9H2H/view?usp=sharing' },
     ],
